@@ -49,10 +49,23 @@ final public class BBCSprite {
         }
     }
 
-    public void ModeFrame(int currentIndex, int newIndex) {
+    public void MoveFrame(int currentIndex, int newIndex) {
         if (currentIndex != newIndex && currentIndex >= 0 && newIndex >=0 && currentIndex < frames.size() && newIndex < frames.size()) {
             frames.add(newIndex, frames.get(currentIndex));
             frames.remove(currentIndex);
+        }
+    }
+
+    public void DuplicateFrame(BBCSpriteFrame bsf) {
+        if (bsf != null) {
+            final int frameIndex = frames.indexOf(bsf);
+            if (frameIndex >= 0) {
+                BBCSpriteFrame newBsf = new BBCSpriteFrame(this);
+                final byte[] sourceData = bsf.GetData();
+                byte[] destData = newBsf.GetData();
+                for (int i = 0; i < sourceData.length; i++) destData[i] = sourceData[i];
+                frames.add(frameIndex + 1, newBsf);
+            }
         }
     }
 

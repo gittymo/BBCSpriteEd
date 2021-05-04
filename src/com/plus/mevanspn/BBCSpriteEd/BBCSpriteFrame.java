@@ -31,11 +31,57 @@ final public class BBCSpriteFrame {
         return parent.GetColours();
     }
 
+    public byte[] GetData() {
+        return data;
+    }
+
     public void SetPixel(int x, int y, byte colourIndex) {
         if (data != null) {
             if (x >= 0 && x < GetWidth() && y >= 0 && y < GetHeight()) {
                 int offset = (y * GetWidth()) + x;
                 if (data[offset] != colourIndex) data[offset] = colourIndex;
+            }
+        }
+    }
+
+    public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
+        if (data != null && left > 0 && top > 0 && width > 0 && height > 0) {
+            if (left + width > GetWidth()) width = GetWidth() - left;
+            if (top + height > GetHeight()) height = GetHeight() - top;
+            for (int y = top; y < top + height; y++) {
+                int offset = (y * GetWidth()) + left;
+                for (int x = 0; x < width; x++) {
+                    if (filled || (!filled && (x == 0 || x == width - 1))) data[offset] = colourIndex;
+                    offset++;
+                }
+            }
+        }
+    }
+
+    public void DrawLine(Point leftPoint, Point rightPoint, byte colourIndex) {
+        if (data != null) {
+            if (leftPoint.x > rightPoint.x) {
+                Point tempPoint = leftPoint;
+                leftPoint = rightPoint;
+                rightPoint = tempPoint;
+            }
+            final int yDistance = leftPoint.y > rightPoint.y ? leftPoint.y - rightPoint.y : rightPoint.y - leftPoint.y;
+            final float gradient = (rightPoint.x - leftPoint.x) / (float) yDistance;
+            final int yDir = leftPoint.y > rightPoint.y ? -1 : 1;
+            System.out.println("Drawing line from " + leftPoint.toString() + " to " + rightPoint.toString());
+            System.out.println("Gradient = " + gradient + ", vdir = " + yDir);
+            float nextX = 0;
+            int intNextX = 0, lastIntNextX = 0;
+            int offset = (leftPoint.y * GetWidth()) + leftPoint.x, endOffset = 0;
+            for (int i = 0; i <= yDistance; i++) {
+                lastIntNextX = intNextX;
+                nextX += gradient;
+                intNextX = (int) nextX;
+                endOffset = offset + intNextX - lastIntNextX;
+                while (offset < data.length && offset < endOffset) {
+                    data[offset++] = colourIndex;
+                }
+                offset += GetWidth() * yDir;
             }
         }
     }
