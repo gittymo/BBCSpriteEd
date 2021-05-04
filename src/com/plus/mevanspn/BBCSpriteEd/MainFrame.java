@@ -79,6 +79,10 @@ final public class MainFrame extends JFrame {
         imagePane.repaint();
     }
 
+    public ImagePane GetImagePane() {
+        return imagePane;
+    }
+
     public BBCSprite GetSprite() {
         return sprite;
     }
