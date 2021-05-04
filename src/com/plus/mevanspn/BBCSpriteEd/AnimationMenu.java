@@ -14,6 +14,7 @@ final public class AnimationMenu extends JMenu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 parent.GetSprite().AddFrame();
+                parent.UpdateTimeline();
             }
         });
 
@@ -25,6 +26,7 @@ final public class AnimationMenu extends JMenu {
                 final int currentFrameIndex = currentSprite.GetCurrentFrameIndex();
                 if (currentFrameIndex < currentSprite.GetFrameCount() - 1) {
                     currentSprite.SetActiveFrame(currentSprite.GetFrame(currentFrameIndex + 1));
+                    parent.UpdateTimeline();
                 }
             }
         });
@@ -37,6 +39,7 @@ final public class AnimationMenu extends JMenu {
                 final int currentFrameIndex = currentSprite.GetCurrentFrameIndex();
                 if (currentFrameIndex > 0) {
                     currentSprite.SetActiveFrame(currentSprite.GetFrame(currentFrameIndex - 1));
+                    parent.UpdateTimeline();
                 }
             }
         });

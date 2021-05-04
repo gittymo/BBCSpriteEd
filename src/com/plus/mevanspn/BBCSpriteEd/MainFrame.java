@@ -28,13 +28,16 @@ final public class MainFrame extends JFrame {
         this.setLayout(this.borderLayout);
 
         this.scrollPane = new JScrollPane();
-        this.imagePane = new ImagePane(this);
-        this.scrollPane.setViewportView(imagePane);
+        this.imagePanel = new ImagePanel(this);
+        this.scrollPane.setViewportView(imagePanel);
         this.scrollPane.setPreferredSize(new Dimension(640, 480));
         getContentPane().add(this.scrollPane,BorderLayout.CENTER);
 
         this.colourPickerToolbar = new ColourPickerToolbar(this);
         getContentPane().add(this.colourPickerToolbar, BorderLayout.WEST);
+
+        this.timelinePanel = new TimelinePanel(this);
+        getContentPane().add(this.timelinePanel, BorderLayout.SOUTH);
 
         this.menubar = new JMenuBar();
         this.menubar.add(new FileMenu(this));
@@ -48,6 +51,7 @@ final public class MainFrame extends JFrame {
         if (sprite != null && sprite.GetActiveFrame() != null) {
             ResizeImagePane();
             colourPickerToolbar.CreatePaletteUsingSprite(sprite);
+            timelinePanel.SetSprite(sprite);
         }
     }
 
@@ -69,23 +73,27 @@ final public class MainFrame extends JFrame {
     }
 
     public void RefreshImagePane() {
-        if (imagePane != null) imagePane.repaint();
+        if (imagePanel != null) imagePanel.repaint();
     }
 
     public void ResizeImagePane() {
-        imagePane.setPreferredSize(new Dimension(
+        imagePanel.setPreferredSize(new Dimension(
                 (int) (sprite.GetWidth() * zoom * sprite.GetHorizontalPixelRatio()) + 8,
                 (int) (sprite.GetHeight() * zoom) + 8));
         scrollPane.revalidate();
-        imagePane.repaint();
+        imagePanel.repaint();
     }
 
-    public ImagePane GetImagePane() {
-        return imagePane;
+    public ImagePanel GetImagePane() {
+        return imagePanel;
     }
 
     public BBCSprite GetSprite() {
         return sprite;
+    }
+
+    public void UpdateTimeline() {
+        timelinePanel.Refresh();
     }
 
     public void Quit() {
@@ -93,9 +101,10 @@ final public class MainFrame extends JFrame {
     }
 
     private BBCSprite sprite;
-    private ImagePane imagePane;
+    private ImagePanel imagePanel;
     private JScrollPane scrollPane;
     private ColourPickerToolbar colourPickerToolbar;
+    private TimelinePanel timelinePanel;
     private BorderLayout borderLayout;
     private JMenuBar menubar;
     private float zoom;

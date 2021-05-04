@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-final public class ImagePane extends JPanel implements MouseListener, MouseMotionListener {
-    public ImagePane(MainFrame parent) {
+final public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
+    public ImagePanel(MainFrame parent) {
         super();
         this.parent = parent;
         this.addMouseListener(this);
@@ -85,6 +85,7 @@ final public class ImagePane extends JPanel implements MouseListener, MouseMotio
             if (p != null) {
                 activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
                 repaint();
+                parent.UpdateTimeline();
             }
         }
     }
@@ -118,6 +119,7 @@ final public class ImagePane extends JPanel implements MouseListener, MouseMotio
                 if (p != null) {
                     activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
                     repaint();
+                    parent.UpdateTimeline();
                 }
             }
         }
