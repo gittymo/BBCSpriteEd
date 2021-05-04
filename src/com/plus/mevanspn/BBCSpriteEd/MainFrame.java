@@ -39,6 +39,7 @@ final public class MainFrame extends JFrame {
         this.menubar = new JMenuBar();
         this.menubar.add(new FileMenu(this));
         this.menubar.add(new ZoomMenu(this));
+        this.menubar.add(new AnimationMenu(this));
         setJMenuBar(this.menubar);
     }
 

@@ -53,6 +53,12 @@ final public class ImagePane extends JPanel implements MouseListener, MouseMotio
             Rectangle r = GetImageArea();
             if (r != null) {
                 g2.drawImage(activeImage.GetRenderedImage(zoom), r.x, r.y, r.width, r.height, null);
+                final int frameIndex = parent.GetSprite().GetFrameIndex(activeImage);
+                if (frameIndex > 0) {
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
+                    g2.drawImage(parent.GetSprite().GetFrame(frameIndex - 1).GetRenderedImage(zoom), r.x, r.y, r.width, r.height, null);
+                    g2.setComposite(AlphaComposite.SrcOver);
+                }
                 if (zoom > 4) {
                     g2.setColor(new Color(0, 0, 128, 255));
                     g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,

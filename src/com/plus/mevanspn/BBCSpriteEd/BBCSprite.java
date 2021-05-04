@@ -10,6 +10,7 @@ final public class BBCSprite {
         this.displayMode = displayMode;
         this.parent = parent;
         this.activeFrame = null;
+        this.frames = new LinkedList<>();
         this.colours = new Color[displayMode.colours.length];
         for (int i = 0; i < this.colours.length; i++) {
             this.colours[i] = displayMode.colours[i];
@@ -19,6 +20,7 @@ final public class BBCSprite {
 
     public BBCSpriteFrame AddFrame() {
         BBCSpriteFrame bsf = new BBCSpriteFrame(this);
+        frames.add(bsf);
         SetActiveFrame(bsf);
         return bsf;
     }
@@ -34,6 +36,18 @@ final public class BBCSprite {
 
     public BBCSpriteFrame GetFrame(int frameIndex) {
         return frameIndex >= 0 && frameIndex < frames.size() ? frames.get(frameIndex) : null;
+    }
+
+    public int GetFrameIndex(BBCSpriteFrame bsf) {
+        return frames.indexOf(bsf);
+    }
+
+    public int GetFrameCount() {
+        return frames.size();
+    }
+
+    public int GetCurrentFrameIndex() {
+        return GetFrameIndex(activeFrame);
     }
 
     public void SetFrame(int frameIndex, BBCSpriteFrame bsf) {

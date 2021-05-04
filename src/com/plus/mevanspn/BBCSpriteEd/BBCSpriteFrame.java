@@ -104,24 +104,9 @@ final public class BBCSpriteFrame {
                     final int zoomX = (int) (x * zoom);
                     final int zoomY = (int) (y * zoom);
                     final int offset = (y * width) + x;
-                    if (zoom >= 2) {
-                        if (data[offset] < palette.length) {
-                            g2.setColor(palette[data[offset]]);
-                            g2.fillRect(zoomX, zoomY, (int) zoom, (int) zoom);
-                        } else {
-                            final int halfZoom = (int) zoom / 2;
-                            for (int my = zoomY; my < (int) (zoomY + zoom); my += halfZoom) {
-                                for (int mx = zoomX; mx < (int) (zoomX + zoom); mx += halfZoom) {
-                                    g2.setColor(maskColours[mo]);
-                                    g2.fillRect(mx, my, halfZoom, halfZoom);
-                                    mo = (mo + 1) % maskColours.length;
-                                }
-                                mo = (mo + 1) % maskColours.length;
-                            }
-                        }
-                    } else {
-                        Color pixelColour = data[offset] < palette.length ? palette[data[offset]] : maskColours[0];
-                        render.setRGB(zoomX, zoomY, pixelColour.getRGB());
+                    if (data[offset] < palette.length) {
+                        g2.setColor(palette[data[offset]]);
+                        g2.fillRect(zoomX, zoomY, (int) zoom, (int) zoom);
                     }
                 }
             }
