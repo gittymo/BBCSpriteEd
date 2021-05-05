@@ -18,6 +18,26 @@ final public class BBCSprite {
         AddFrame();
     }
 
+    public BBCSpriteFrame GetFrame(int frameIndex) {
+        return frameIndex >= 0 && frameIndex < frames.size() ? frames.get(frameIndex) : null;
+    }
+
+    public int GetFrameIndex(BBCSpriteFrame bsf) {
+        return frames.indexOf(bsf);
+    }
+
+    public BBCSpriteFrame GetActiveFrame() {
+        return activeFrame;
+    }
+
+    public int GetFrameCount() {
+        return frames.size();
+    }
+
+    public int GetCurrentFrameIndex() {
+        return GetFrameIndex(activeFrame);
+    }
+
     public BBCSpriteFrame AddFrame() {
         BBCSpriteFrame bsf = new BBCSpriteFrame(this);
         frames.add(bsf);
@@ -34,24 +54,9 @@ final public class BBCSprite {
         } else return null;
     }
 
-    public BBCSpriteFrame GetFrame(int frameIndex) {
-        return frameIndex >= 0 && frameIndex < frames.size() ? frames.get(frameIndex) : null;
-    }
-
-    public int GetFrameIndex(BBCSpriteFrame bsf) {
-        return frames.indexOf(bsf);
-    }
-
-    public int GetFrameCount() {
-        return frames.size();
-    }
-
-    public int GetCurrentFrameIndex() {
-        return GetFrameIndex(activeFrame);
-    }
-
     public void SetFrame(int frameIndex, BBCSpriteFrame bsf) {
         if (frameIndex >=0 && frameIndex < frames.size()) frames.set(frameIndex, bsf);
+        SetActiveFrame(bsf);
     }
 
     public void SwapFrames(int frameOneIndex, int frameTwoIndex) {
@@ -70,7 +75,7 @@ final public class BBCSprite {
         }
     }
 
-    public void DuplicateFrame(BBCSpriteFrame bsf) {
+    public void DuplicateFrame(BBCSpriteFrame bsf, boolean atEnd) {
         if (bsf != null) {
             final int frameIndex = frames.indexOf(bsf);
             if (frameIndex >= 0) {
@@ -78,7 +83,9 @@ final public class BBCSprite {
                 final byte[] sourceData = bsf.GetData();
                 byte[] destData = newBsf.GetData();
                 for (int i = 0; i < sourceData.length; i++) destData[i] = sourceData[i];
-                frames.add(frameIndex + 1, newBsf);
+                if (atEnd) frames.add(newBsf);
+                else frames.add(frameIndex + 1, newBsf);
+                SetActiveFrame(newBsf);
             }
         }
     }
@@ -87,15 +94,18 @@ final public class BBCSprite {
         if (activeFrame != bsf) {
             activeFrame = bsf;
             parent.RefreshImagePane();
+            parent.UpdateTimeline();
         }
     }
 
-    public BBCSpriteFrame GetActiveFrame() {
-        return activeFrame;
-    }
-
     public void DeleteFrame(int frameIndex) {
-        if (frameIndex >= 0 && frameIndex < frames.size()) frames.remove(frameIndex);
+        if (frameIndex >= 0 && frameIndex < frames.size()) {
+            final int activeFrameIndex = GetCurrentFrameIndex();
+            BBCSpriteFrame newActiveFrame = frameIndex == activeFrameIndex ? frameIndex > 0 ?
+                    GetFrame(frameIndex - 1) : frameIndex < frames.size() - 1 ? GetFrame(frameIndex + 1) : null : activeFrame;
+            frames.remove(frameIndex);
+            SetActiveFrame(newActiveFrame);
+        }
     }
 
     public MainFrame GetParent() {

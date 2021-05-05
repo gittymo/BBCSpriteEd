@@ -72,6 +72,12 @@ final public class MainFrame extends JFrame {
         return sprite != null ? sprite.GetActiveFrame() : null;
     }
 
+    public void SetActiveFrameIndex(int index) {
+        sprite.SetActiveFrame(sprite.GetFrame(index));
+        RefreshImagePane();
+        UpdateTimeline();
+    }
+
     public void RefreshImagePane() {
         if (imagePanel != null) imagePanel.repaint();
     }

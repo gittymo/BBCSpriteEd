@@ -10,7 +10,7 @@ import java.awt.event.MouseListener;
 final public class TimelinePanel extends JScrollPane {
     public TimelinePanel(MainFrame parent) {
         super();
-        this.setPreferredSize(new Dimension(640, TimelinePanelViewportView.PREVIEW_HEIGHT_IN_PIXELS + TimelinePanelViewportView.SEPARATOR_WIDTH));
+        this.setPreferredSize(new Dimension(640, TimelinePanelViewportView.PREVIEW_HEIGHT_IN_PIXELS + (TimelinePanelViewportView.SEPARATOR_WIDTH * 2)));
         this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.parent = parent;
     }
@@ -22,9 +22,11 @@ final public class TimelinePanel extends JScrollPane {
     }
 
     public void Refresh() {
-        viewportView.revalidate();
-        viewportView.repaint();
-        revalidate();
+        if (viewportView != null) {
+            viewportView.revalidate();
+            viewportView.repaint();
+            revalidate();
+        }
     }
 
     private MainFrame parent;
@@ -40,16 +42,29 @@ final public class TimelinePanel extends JScrollPane {
             repaint();
         }
 
-        void DuplicateFrame(MouseEvent e) {
+        private int GetClickFrame(MouseEvent e) {
             final float yRatio = (float) PREVIEW_HEIGHT_IN_PIXELS / (float) sprite.GetHeight();
             final int scaledWidth = (int) (sprite.GetWidth() * yRatio);
             final int halfSep = SEPARATOR_WIDTH / 2;
-            final int frameToDuplicate = (e.getX() - halfSep) / (scaledWidth + halfSep);
-            if (frameToDuplicate < sprite.GetFrameCount()) {
-                sprite.DuplicateFrame(sprite.GetFrame(frameToDuplicate));
-                parent.parent.UpdateTimeline();
-                parent.parent.RefreshImagePane();
+            final int frame = (e.getX() - halfSep) / (scaledWidth + halfSep);
+            return frame < sprite.GetFrameCount() ? frame : -1;
+        }
+
+        void DuplicateFrame(MouseEvent e, boolean atEnd) {
+            final int frameToDuplicate = GetClickFrame(e);
+            if (frameToDuplicate > -1) {
+                sprite.DuplicateFrame(sprite.GetFrame(frameToDuplicate), atEnd);
             }
+        }
+
+        void InsertFrame(MouseEvent e) {
+            final int previousFrame = GetClickFrame(e);
+            sprite.AddFrame(previousFrame + 1);
+        }
+
+        void DeleteFrame(MouseEvent e) {
+            final int targetFrameIndex = GetClickFrame(e);
+            sprite.DeleteFrame(targetFrameIndex);
         }
 
         @Override
@@ -57,26 +72,27 @@ final public class TimelinePanel extends JScrollPane {
             super.paintComponent(g);
             if (sprite != null) {
                 Graphics2D g2 = (Graphics2D) g;
-                int x = SEPARATOR_WIDTH / 2;
+                int x = SEPARATOR_WIDTH;
                 int y = SEPARATOR_WIDTH / 2;
                 final float yRatio = (float) PREVIEW_HEIGHT_IN_PIXELS / (float) sprite.GetHeight();
                 final int scaledWidth = (int) (sprite.GetWidth() * yRatio);
                 for (int i = 0; i < sprite.GetFrameCount(); i++) {
                     g2.drawImage(sprite.GetFrame(i).GetRenderedImage(), x, y, scaledWidth, PREVIEW_HEIGHT_IN_PIXELS, null);
                     g2.setColor(i == sprite.GetCurrentFrameIndex() ? Color.BLUE : Color.BLACK);
+                    g2.setStroke(new BasicStroke(i == sprite.GetCurrentFrameIndex() ? 2.0f : 1.0f));
                     g2.drawRect(x - 1, y - 1, scaledWidth + 2, PREVIEW_HEIGHT_IN_PIXELS + 2);
-                    x += scaledWidth + (SEPARATOR_WIDTH / 2);
+                    x += scaledWidth + SEPARATOR_WIDTH;
                 }
             }
         }
 
         @Override
         public Dimension getMinimumSize() {
-            int requiredWidth = 640, requiredHeight = PREVIEW_HEIGHT_IN_PIXELS + SEPARATOR_WIDTH;
+            int requiredWidth = 640, requiredHeight = PREVIEW_HEIGHT_IN_PIXELS + (SEPARATOR_WIDTH * 2);
             if (sprite != null && sprite.GetFrameCount() > 0) {
                 final float yRatio = (float) PREVIEW_HEIGHT_IN_PIXELS / (float) sprite.GetHeight();
                 final int scaledWidth = (int) (sprite.GetWidth() * yRatio);
-                requiredWidth = SEPARATOR_WIDTH + (SEPARATOR_WIDTH * (sprite.GetFrameCount() - 1)) +
+                requiredWidth = SEPARATOR_WIDTH + (SEPARATOR_WIDTH * sprite.GetFrameCount()) +
                         (sprite.GetFrameCount() * scaledWidth);
             }
             return new Dimension(requiredWidth, requiredHeight);
@@ -94,15 +110,20 @@ final public class TimelinePanel extends JScrollPane {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-
+            if (e.getButton() == 3) {
+                TimelinePanelViewportViewPopup popup = new TimelinePanelViewportViewPopup(this, e);
+                popup.show(e.getComponent(), e.getX(), e.getY());
+            } else {
+                final int clickedFrame = GetClickFrame(e);
+                if (clickedFrame > -1) {
+                    parent.parent.SetActiveFrameIndex(clickedFrame);
+                }
+            }
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            if (e.getButton() == 3) {
-                TimelinePanelViewportViewPopup popup = new TimelinePanelViewportViewPopup(this, e);
-                popup.show(e.getComponent(), e.getX(), e.getY());
-            }
+
         }
 
         @Override
@@ -122,7 +143,7 @@ final public class TimelinePanel extends JScrollPane {
 
         private TimelinePanel parent;
         private BBCSprite sprite;
-        private final static int SEPARATOR_WIDTH = 32, PREVIEW_HEIGHT_IN_PIXELS = 64;
+        private final static int SEPARATOR_WIDTH = 24, PREVIEW_HEIGHT_IN_PIXELS = 64;
 
         final class TimelinePanelViewportViewPopup extends JPopupMenu {
             public TimelinePanelViewportViewPopup(TimelinePanelViewportView parent, MouseEvent me) {
@@ -131,13 +152,41 @@ final public class TimelinePanel extends JScrollPane {
                 this.duplicateFrame.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        parent.DuplicateFrame(me);
+                        parent.DuplicateFrame(me, false);
                     }
                 });
                 add(duplicateFrame);
+                this.duplicateFrameEnd = new JMenuItem("Duplicate (At End)");
+                this.duplicateFrameEnd.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        parent.DuplicateFrame(me, true);
+                    }
+                });
+                add(duplicateFrameEnd);
+                this.insertFrame = new JMenuItem("Insert Frame (after)");
+                this.insertFrame.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        parent.InsertFrame(me);
+                    }
+                });
+                add(insertFrame);
+                this.deleteFrame = new JMenuItem("Delete Frame");
+                this.deleteFrame.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        parent.DeleteFrame(me);
+                    }
+                });
+                add(deleteFrame);
             }
 
             private JMenuItem duplicateFrame;
+            private JMenuItem duplicateFrameEnd;
+            private JMenuItem insertFrame;
+            private JMenuItem deleteFrame;
+
             private TimelinePanelViewportView parent;
         }
     }
