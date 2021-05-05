@@ -7,6 +7,7 @@ final public class MainFrame extends JFrame {
     public MainFrame() {
         super("BBC Sprite Editor - By Morgan Evans");
         this.sprite = null;
+        this.onionSkinManager = null;
         this.zoom = 16;
         initComponents();
         pack();
@@ -47,11 +48,14 @@ final public class MainFrame extends JFrame {
     }
 
     public void LoadSprite(BBCSprite newSprite) {
+        if (onionSkinManager != null) onionSkinManager.Quit();
         sprite = newSprite;
         if (sprite != null && sprite.GetActiveFrame() != null) {
             ResizeImagePane();
             colourPickerToolbar.CreatePaletteUsingSprite(sprite);
             timelinePanel.SetSprite(sprite);
+            onionSkinManager = new OnionSkinManager(this);
+            onionSkinManager.start();
         }
     }
 
@@ -102,6 +106,10 @@ final public class MainFrame extends JFrame {
         timelinePanel.Refresh();
     }
 
+    public OnionSkinManager GetOnionSkinManager() {
+        return onionSkinManager;
+    }
+
     public void Quit() {
         System.exit(-1);
     }
@@ -113,6 +121,7 @@ final public class MainFrame extends JFrame {
     private TimelinePanel timelinePanel;
     private BorderLayout borderLayout;
     private JMenuBar menubar;
+    private OnionSkinManager onionSkinManager;
     private float zoom;
 
     public static Color[] maskColours = new Color[] { Color.LIGHT_GRAY, Color.DARK_GRAY };

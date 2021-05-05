@@ -5,12 +5,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-final public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
+final public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
     public ImagePanel(MainFrame parent) {
         super();
         this.parent = parent;
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
+        this.addMouseWheelListener(this);
         BBCSpriteFrame activeImage = null;
     }
 
@@ -72,9 +73,11 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 g2.drawImage(GetBackground(), r.x, r.y, r.width, r.height, null);
                 g2.drawImage(activeImage.GetRenderedImage(), r.x, r.y, r.width, r.height, null);
                 final int frameIndex = parent.GetSprite().GetFrameIndex(activeImage);
-                if (frameIndex > 0) {
+                final OnionSkinManager osm = parent.GetOnionSkinManager();
+                if (osm != null) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
-                    g2.drawImage(parent.GetSprite().GetFrame(frameIndex - 1).GetRenderedImage(), r.x, r.y, r.width, r.height, null);
+                    BBCSpriteFrame onionSkinFrame = osm.GetOnionSkin();
+                    if (onionSkinFrame != null) g2.drawImage(onionSkinFrame.GetRenderedImage(), r.x, r.y, r.width, r.height, null);
                     g2.setComposite(AlphaComposite.SrcOver);
                 }
                 if (zoom > 4) {
@@ -146,6 +149,15 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     @Override
     public void mouseMoved(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        final OnionSkinManager osm = parent.GetOnionSkinManager();
+        if (osm != null) {
+            if (e.getWheelRotation() > 0) osm.UserRollForward();
+            else osm.UserRollBack();
+        }
     }
 
     private final MainFrame parent;

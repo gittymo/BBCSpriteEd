@@ -18,6 +18,10 @@ final public class BBCSprite {
         AddFrame();
     }
 
+    public MainFrame GetParent() {
+        return parent;
+    }
+
     public BBCSpriteFrame GetFrame(int frameIndex) {
         return frameIndex >= 0 && frameIndex < frames.size() ? frames.get(frameIndex) : null;
     }
@@ -36,6 +40,30 @@ final public class BBCSprite {
 
     public int GetCurrentFrameIndex() {
         return GetFrameIndex(activeFrame);
+    }
+
+    public Color[] GetColours() {
+        return colours;
+    }
+
+    public void SetColourAt(int index, Color newColour) {
+        if (index >= 0 && index < colours.length) colours[index] = newColour;
+    }
+
+    public int GetWidth() {
+        return width;
+    }
+
+    public int GetHeight() {
+        return height;
+    }
+
+    public float GetHorizontalPixelRatio() {
+        return displayMode.pixelRatio;
+    }
+
+    public DisplayMode GetDisplayMode() {
+        return displayMode;
     }
 
     public BBCSpriteFrame AddFrame() {
@@ -95,6 +123,7 @@ final public class BBCSprite {
             activeFrame = bsf;
             parent.RefreshImagePane();
             parent.UpdateTimeline();
+            if (parent.GetOnionSkinManager() != null) parent.GetOnionSkinManager().Update();
         }
     }
 
@@ -106,34 +135,6 @@ final public class BBCSprite {
             frames.remove(frameIndex);
             SetActiveFrame(newActiveFrame);
         }
-    }
-
-    public MainFrame GetParent() {
-        return parent;
-    }
-
-    public Color[] GetColours() {
-        return colours;
-    }
-
-    public int GetWidth() {
-        return width;
-    }
-
-    public int GetHeight() {
-        return height;
-    }
-
-    public float GetHorizontalPixelRatio() {
-        return displayMode.pixelRatio;
-    }
-
-    public DisplayMode GetDisplayMode() {
-        return displayMode;
-    }
-
-    public void SetColourAt(int index, Color newColour) {
-        if (index >= 0 && index < colours.length) colours[index] = newColour;
     }
 
     private LinkedList<BBCSpriteFrame> frames;
