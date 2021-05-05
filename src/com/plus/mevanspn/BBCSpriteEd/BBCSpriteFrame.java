@@ -86,28 +86,17 @@ final public class BBCSpriteFrame {
         }
     }
 
-    public BufferedImage GetRenderedImage(float zoom) {
+    public BufferedImage GetRenderedImage() {
         if (data != null) {
-            if (zoom < 1) zoom = 1.0f;
             final int width = GetWidth();
             final int height = GetHeight();
             final Color[] palette = GetColours();
-            final Color[] maskColours = GetParent().GetParent().maskColours;
-            final int zoomedWidth = (int) (width * zoom);
-            final int zoomedHeight = (int) (height * zoom);
-
-            BufferedImage render = new BufferedImage(zoomedWidth, zoomedHeight, BufferedImage.TYPE_4BYTE_ABGR);
-            Graphics2D g2 = (Graphics2D) render.getGraphics();
-            int mo = 0;
+            BufferedImage render = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    final int zoomX = (int) (x * zoom);
-                    final int zoomY = (int) (y * zoom);
                     final int offset = (y * width) + x;
-                    if (data[offset] < palette.length) {
-                        g2.setColor(palette[data[offset]]);
-                        g2.fillRect(zoomX, zoomY, (int) zoom, (int) zoom);
-                    }
+                    final int paletteIndex = data[offset];
+                    if (paletteIndex < palette.length) render.setRGB(x, y, palette[paletteIndex].getRGB());
                 }
             }
             return render;

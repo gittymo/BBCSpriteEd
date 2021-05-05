@@ -3,6 +3,7 @@ package com.plus.mevanspn.BBCSpriteEd;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 final public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
     public ImagePanel(MainFrame parent) {
@@ -43,6 +44,22 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         return null;
     }
 
+    private BufferedImage GetBackground() {
+        final int width = parent.GetSprite().GetWidth() * 2;
+        final int height = parent.GetSprite().GetHeight() * 2;
+        BufferedImage background = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        int mo = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                final Color maskColour = parent.maskColours[mo];
+                background.setRGB(x, y, maskColour.getRGB());
+                mo = (mo + 1) % parent.maskColours.length;
+            }
+            mo = (mo + 1) % parent.maskColours.length;
+        }
+        return background;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -52,11 +69,12 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         if (activeImage != null) {
             Rectangle r = GetImageArea();
             if (r != null) {
-                g2.drawImage(activeImage.GetRenderedImage(zoom), r.x, r.y, r.width, r.height, null);
+                g2.drawImage(GetBackground(), r.x, r.y, r.width, r.height, null);
+                g2.drawImage(activeImage.GetRenderedImage(), r.x, r.y, r.width, r.height, null);
                 final int frameIndex = parent.GetSprite().GetFrameIndex(activeImage);
                 if (frameIndex > 0) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
-                    g2.drawImage(parent.GetSprite().GetFrame(frameIndex - 1).GetRenderedImage(zoom), r.x, r.y, r.width, r.height, null);
+                    g2.drawImage(parent.GetSprite().GetFrame(frameIndex - 1).GetRenderedImage(), r.x, r.y, r.width, r.height, null);
                     g2.setComposite(AlphaComposite.SrcOver);
                 }
                 if (zoom > 4) {
