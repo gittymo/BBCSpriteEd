@@ -44,9 +44,19 @@ final public class TimelinePanel extends JScrollPane {
 
         private int GetClickFrame(MouseEvent e) {
             final float yRatio = (float) PREVIEW_HEIGHT_IN_PIXELS / (float) sprite.GetHeight();
-            final int scaledWidth = (int) (sprite.GetWidth() * yRatio);
-            final int frame = (e.getX() - SEPARATOR_WIDTH) / (scaledWidth + SEPARATOR_WIDTH);
-            return frame < sprite.GetFrameCount() ? frame : -1;
+            final int scaledWidth = (int) (sprite.GetWidth() * yRatio * sprite.GetHorizontalPixelRatio());
+            int frameX = SEPARATOR_WIDTH;
+            int frame = 0;
+            boolean found = false;
+            while (!found && frame < sprite.GetFrameCount()) {
+                if (e.getX() > frameX && e.getX() < frameX + scaledWidth && e.getY() > SEPARATOR_WIDTH &&
+                    e.getY() < SEPARATOR_WIDTH + PREVIEW_HEIGHT_IN_PIXELS) found = true;
+                if (!found) {
+                    frameX += SEPARATOR_WIDTH + scaledWidth;
+                    frame++;
+                }
+            }
+            return found ? frame : -1;
         }
 
         void DuplicateFrame(MouseEvent e, boolean atEnd) {
@@ -74,7 +84,7 @@ final public class TimelinePanel extends JScrollPane {
                 int x = SEPARATOR_WIDTH;
                 int y = SEPARATOR_WIDTH / 2;
                 final float yRatio = (float) PREVIEW_HEIGHT_IN_PIXELS / (float) sprite.GetHeight();
-                final int scaledWidth = (int) (sprite.GetWidth() * yRatio);
+                final int scaledWidth = (int) (sprite.GetWidth() * yRatio * sprite.GetHorizontalPixelRatio());
                 for (int i = 0; i < sprite.GetFrameCount(); i++) {
                     g2.drawImage(sprite.GetFrame(i).GetRenderedImage(), x, y, scaledWidth, PREVIEW_HEIGHT_IN_PIXELS, null);
                     g2.setColor(i == sprite.GetCurrentFrameIndex() ? Color.BLUE : Color.BLACK);

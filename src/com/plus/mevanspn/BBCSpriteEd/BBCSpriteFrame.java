@@ -86,6 +86,35 @@ final public class BBCSpriteFrame {
         }
     }
 
+    public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplaceIndex) {
+        if (p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
+            final int pixelOffset = (p.y * GetWidth()) + p.x;
+            final int startOfLineOffset = p.y * GetWidth();
+            final int endOfLineOffset = startOfLineOffset + GetWidth();
+            if (colourToReplaceIndex == 127) colourToReplaceIndex = data[pixelOffset];
+            else if (colourToReplaceIndex != data[pixelOffset] && colourToUseIndex != data[pixelOffset]) return;
+            if (colourToReplaceIndex != colourToUseIndex) {
+                int offset = pixelOffset;
+                while (offset >= startOfLineOffset && data[offset] == colourToReplaceIndex) {
+                    data[offset] = colourToUseIndex;
+                    if (p.y > 0) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex);
+                    if (p.y < GetHeight() - 1) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex);
+                    offset--;
+                }
+                offset = pixelOffset + 1;
+                while (offset < endOfLineOffset && data[offset] == colourToReplaceIndex) {
+                    data[offset] = colourToUseIndex;
+                    if (p.y > 0) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex);
+                    if (p.y < GetHeight() - 1) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex);
+                    offset++;
+                }
+            } else {
+                if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplaceIndex);
+                if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplaceIndex);
+            }
+        }
+    }
+
     public BufferedImage GetRenderedImage() {
         if (data != null) {
             final int width = GetWidth();

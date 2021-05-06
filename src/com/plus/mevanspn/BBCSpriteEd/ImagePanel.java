@@ -98,14 +98,24 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        final BBCSpriteFrame activeImage = parent.GetActiveFrame();
-        if (activeImage != null) {
-            final Point p = GetImageXY(e.getX(), e.getY());
-            if (p != null) {
-                activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
-                repaint();
-                parent.UpdateTimeline();
+        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonPencil ||
+            parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonEraser) {
+            final BBCSpriteFrame activeImage = parent.GetActiveFrame();
+            if (activeImage != null) {
+                final Point p = GetImageXY(e.getX(), e.getY());
+                if (p != null) {
+                    activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
+                    repaint();
+                    parent.UpdateTimeline();
+                }
             }
+        }
+        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonFill) {
+            final Point p = GetImageXY(e.getX(), e.getY());
+            final BBCSpriteFrame activeImage = parent.GetActiveFrame();
+            activeImage.FloodFill(p, parent.GetActiveColourIndex(), (byte) 127);
+            repaint();
+            parent.UpdateTimeline();
         }
     }
 
@@ -132,13 +142,16 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     @Override
     public void mouseDragged(MouseEvent e) {
         if (mouseDown) {
-            final BBCSpriteFrame activeImage = parent.GetActiveFrame();
-            if (activeImage != null) {
-                final Point p = GetImageXY(e.getX(), e.getY());
-                if (p != null) {
-                    activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
-                    repaint();
-                    parent.UpdateTimeline();
+            if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonPencil ||
+                    parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonEraser) {
+                final BBCSpriteFrame activeImage = parent.GetActiveFrame();
+                if (activeImage != null) {
+                    final Point p = GetImageXY(e.getX(), e.getY());
+                    if (p != null) {
+                        activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
+                        repaint();
+                        parent.UpdateTimeline();
+                    }
                 }
             }
         }
@@ -153,8 +166,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     public void mouseWheelMoved(MouseWheelEvent e) {
         final OnionSkinManager osm = parent.GetOnionSkinManager();
         if (osm != null) {
-            if (e.getWheelRotation() > 0) osm.UserRollForward();
-            else osm.UserRollBack();
+            if (e.getWheelRotation() > 0) osm.UserRollBack();
+            else osm.UserRollForward();
         }
     }
 

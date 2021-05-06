@@ -35,7 +35,9 @@ final public class MainFrame extends JFrame {
         getContentPane().add(this.scrollPane,BorderLayout.CENTER);
 
         this.colourPickerToolbar = new ColourPickerToolbar(this);
-        getContentPane().add(this.colourPickerToolbar, BorderLayout.WEST);
+        this.drawingToolbar = new DrawingToolbar(this);
+        ToolbarsContainer tbc = new ToolbarsContainer(this);
+        getContentPane().add(tbc, BorderLayout.WEST);
 
         this.timelinePanel = new TimelinePanel(this);
         getContentPane().add(this.timelinePanel, BorderLayout.SOUTH);
@@ -69,6 +71,7 @@ final public class MainFrame extends JFrame {
     }
 
     public byte GetActiveColourIndex() {
+        if (drawingToolbar.GetActiveButton() == drawingToolbar.buttonEraser) return (byte) GetSprite().GetDisplayMode().colours.length;
         return colourPickerToolbar.GetActiveColourIndex();
     }
 
@@ -98,6 +101,14 @@ final public class MainFrame extends JFrame {
         return imagePanel;
     }
 
+    public ColourPickerToolbar GetColourPickerToolbar() {
+        return colourPickerToolbar;
+    }
+
+    public DrawingToolbar GetDrawingToolbar() {
+        return drawingToolbar;
+    }
+
     public BBCSprite GetSprite() {
         return sprite;
     }
@@ -118,6 +129,7 @@ final public class MainFrame extends JFrame {
     private ImagePanel imagePanel;
     private JScrollPane scrollPane;
     private ColourPickerToolbar colourPickerToolbar;
+    private DrawingToolbar drawingToolbar;
     private TimelinePanel timelinePanel;
     private BorderLayout borderLayout;
     private JMenuBar menubar;

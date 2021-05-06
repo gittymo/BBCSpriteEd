@@ -46,21 +46,25 @@ final public class OnionSkinManager extends Thread {
         } else return null;
     }
 
-    public void UserRollBack() {
+    public void UserRollForward() {
         if (parent.GetSprite() != null) {
-            frameOffset = 1;
-            if (onionSkinFrame < parent.GetSprite().GetFrameCount() - 1) onionSkinFrame += frameOffset;
-            wait = 4;
-            parent.RefreshImagePane();
+            if (onionSkinFrame < parent.GetSprite().GetFrameCount() - 1) {
+                frameOffset = 1;
+                onionSkinFrame += frameOffset;
+                wait = 15;
+                parent.RefreshImagePane();
+            }
         }
     }
 
-    public void UserRollForward() {
+    public void UserRollBack() {
         if (parent.GetSprite() != null) {
-            frameOffset = -1;
-            if (onionSkinFrame > 0) onionSkinFrame += frameOffset;
-            wait = 4;
-            parent.RefreshImagePane();
+            if (onionSkinFrame > 0) {
+                frameOffset = -1;
+                onionSkinFrame += frameOffset;
+                wait = 15;
+                parent.RefreshImagePane();
+            }
         }
     }
 
@@ -90,7 +94,7 @@ final public class OnionSkinManager extends Thread {
         while (!quit) {
             try {
                 Animate();
-                sleep(500);
+                sleep(100);
             } catch (Exception ex) {}
         }
     }

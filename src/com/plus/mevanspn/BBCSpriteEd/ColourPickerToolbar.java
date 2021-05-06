@@ -7,6 +7,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.LinkedList;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 final public class ColourPickerToolbar extends JPanel {
     public ColourPickerToolbar(MainFrame parent) {
@@ -14,6 +15,7 @@ final public class ColourPickerToolbar extends JPanel {
         this.activeColourButton = null;
         this.colourPickerButtons = new LinkedList<>();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBorder(new EmptyBorder(4, 4, 4, 4));
     }
 
     MainFrame GetParent() {
@@ -25,7 +27,7 @@ final public class ColourPickerToolbar extends JPanel {
             reset();
             if (sprite != null) {
                 Color[] spriteColours = sprite.GetColours();
-                for (int i = 0; i <= spriteColours.length; i++) {
+                for (int i = 0; i < spriteColours.length; i++) {
                     addColourPickerButton(new ColourPickerButton((byte) i, spriteColours, this));
                 }
                 revalidate();
