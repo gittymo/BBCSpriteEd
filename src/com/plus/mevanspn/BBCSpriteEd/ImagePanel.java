@@ -75,10 +75,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 final int frameIndex = parent.GetSprite().GetFrameIndex(activeImage);
                 final OnionSkinManager osm = parent.GetOnionSkinManager();
                 if (osm != null) {
-                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
-                    BBCSpriteFrame onionSkinFrame = osm.GetOnionSkin();
-                    if (onionSkinFrame != null) g2.drawImage(onionSkinFrame.GetRenderedImage(), r.x, r.y, r.width, r.height, null);
-                    g2.setComposite(AlphaComposite.SrcOver);
+                    BufferedImage onionSkinImage = osm.GetOnionSkin();
+                    if (onionSkinImage != null) g2.drawImage(onionSkinImage, r.x, r.y, r.width, r.height, null);
                 }
                 if (zoom > 4) {
                     g2.setColor(new Color(0, 0, 128, 255));

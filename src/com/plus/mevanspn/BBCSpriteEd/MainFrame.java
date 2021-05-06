@@ -124,5 +124,5 @@ final public class MainFrame extends JFrame {
     private OnionSkinManager onionSkinManager;
     private float zoom;
 
-    public static Color[] maskColours = new Color[] { Color.LIGHT_GRAY, Color.DARK_GRAY };
+    public static Color[] maskColours = new Color[] { new Color(176, 176, 176), new Color( 176, 192, 192) };
 }

@@ -45,8 +45,7 @@ final public class TimelinePanel extends JScrollPane {
         private int GetClickFrame(MouseEvent e) {
             final float yRatio = (float) PREVIEW_HEIGHT_IN_PIXELS / (float) sprite.GetHeight();
             final int scaledWidth = (int) (sprite.GetWidth() * yRatio);
-            final int halfSep = SEPARATOR_WIDTH / 2;
-            final int frame = (e.getX() - halfSep) / (scaledWidth + halfSep);
+            final int frame = (e.getX() - SEPARATOR_WIDTH) / (scaledWidth + SEPARATOR_WIDTH);
             return frame < sprite.GetFrameCount() ? frame : -1;
         }
 
