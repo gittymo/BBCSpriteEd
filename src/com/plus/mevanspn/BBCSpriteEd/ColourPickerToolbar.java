@@ -1,10 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.*;
+import java.nio.file.DirectoryNotEmptyException;
 import java.util.LinkedList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -59,7 +57,7 @@ final public class ColourPickerToolbar extends JPanel {
         repaint();
     }
 
-    final class ColourPickerButton extends JButton implements ActionListener, MouseWheelListener {
+    final class ColourPickerButton extends JButton implements ActionListener, MouseWheelListener, MouseListener {
         ColourPickerButton(byte paletteIndex, Color[] colourPalette, ColourPickerToolbar parent) {
             super();
             this.parent = parent;
@@ -69,6 +67,7 @@ final public class ColourPickerToolbar extends JPanel {
             this.isActive = false;
             this.addActionListener(this);
             this.addMouseWheelListener(this);
+            this.addMouseListener(this);
         }
 
         @Override
@@ -112,11 +111,77 @@ final public class ColourPickerToolbar extends JPanel {
             parent.GetParent().RefreshPanels();
         }
 
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == 3) {
+                ColourMenu cm = new ColourMenu(this);
+                cm.show(parent, e.getX(), e.getY());
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) { }
+
+        @Override
+        public void mouseReleased(MouseEvent e) { }
+
+        @Override
+        public void mouseEntered(MouseEvent e) { }
+
+        @Override
+        public void mouseExited(MouseEvent e) { }
+
         private Color colour;
         private final ColourPickerToolbar parent;
         private final Color[] colourPalette;
         private boolean isActive;
         private final byte paletteIndex;
+
+        final class ColourMenu extends JPopupMenu {
+            public ColourMenu(ColourPickerButton colourPickerButton) {
+                super();
+                this.colourPickerButton = colourPickerButton;
+                for (int i = 0; i < BBCSprite.DisplayMode.allColours.length; i++)
+                    add(new ColourMenuItem(BBCSprite.DisplayMode.allColours, (byte) i));
+            }
+
+            private ColourPickerButton colourPickerButton;
+            final class ColourMenuItem extends JMenuItem implements ActionListener {
+                public ColourMenuItem(Color[] colours, byte colourIndex) {
+                    super();
+                    this.colours = colours;
+                    this.colourIndex = colourIndex;
+                    addActionListener(this);
+                }
+
+                @Override
+                public Dimension getPreferredSize() {
+                    return new Dimension(48, 24);
+                }
+
+                @Override
+                public void paintComponent(Graphics g) {
+                    // super.paint(g);
+                    Graphics2D g2 = (Graphics2D) g;
+                    Rectangle r = ColourMenu.this.getVisibleRect();
+                    g2.setColor(colours[colourIndex]);
+                    g2.fillRect(r.x + 1, r.y + 1, r.width - 2, r.height - 2);
+                    g2.setColor(Color.BLACK);
+                    g2.drawRect(r.x, r.y, r.width, r.height);
+                }
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    colourPickerButton.colourPalette[colourPickerButton.paletteIndex] = this.colours[this.colourIndex];
+                    colourPickerButton.colour = this.colours[this.colourIndex];
+                    parent.repaint();
+                    parent.parent.RefreshPanels();
+                }
+
+                private Color[] colours;
+                private byte colourIndex;
+            }
+        }
     }
 
     private final MainFrame parent;
