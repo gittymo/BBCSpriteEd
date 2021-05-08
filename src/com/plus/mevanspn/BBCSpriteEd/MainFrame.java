@@ -15,18 +15,16 @@ final public class MainFrame extends JFrame {
         LoadSprite(new BBCSprite(24, 24, BBCSprite.DisplayMode.ModeOne, this));
     }
 
-    public static void main(String args[]) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
+    public static void main(String[] args) {
+        javax.swing.SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
     }
 
     private void initComponents() {
-        this.borderLayout = new BorderLayout();
-        this.setLayout(this.borderLayout);
+        BorderLayout borderLayout = new BorderLayout();
+        this.setLayout(borderLayout);
+
+        this.mainFrameMenuBar = new MainFrameMenuBar(this);
+        setJMenuBar(this.mainFrameMenuBar);
 
         this.scrollPane = new JScrollPane();
         this.imagePanel = new ImagePanel(this);
@@ -36,17 +34,11 @@ final public class MainFrame extends JFrame {
 
         this.colourPickerToolbar = new ColourPickerToolbar(this);
         this.drawingToolbar = new DrawingToolbar(this);
-        ToolbarsContainer tbc = new ToolbarsContainer(this);
-        getContentPane().add(tbc, BorderLayout.WEST);
+        ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
+        getContentPane().add(toolbarsContainer, BorderLayout.WEST);
 
         this.timelinePanel = new TimelinePanel(this);
         getContentPane().add(this.timelinePanel, BorderLayout.SOUTH);
-
-        this.menubar = new JMenuBar();
-        this.menubar.add(new FileMenu(this));
-        this.menubar.add(new ZoomMenu(this));
-        this.menubar.add(new AnimationMenu(this));
-        setJMenuBar(this.menubar);
     }
 
     public void LoadSprite(BBCSprite newSprite) {
@@ -81,12 +73,12 @@ final public class MainFrame extends JFrame {
 
     public void SetActiveFrameIndex(int index) {
         sprite.SetActiveFrame(sprite.GetFrame(index));
-        RefreshImagePane();
-        UpdateTimeline();
+        RefreshPanels();
     }
 
-    public void RefreshImagePane() {
+    public void RefreshPanels() {
         if (imagePanel != null) imagePanel.repaint();
+        if (timelinePanel != null) UpdateTimeline();
     }
 
     public void ResizeImagePane() {
@@ -97,10 +89,6 @@ final public class MainFrame extends JFrame {
         imagePanel.repaint();
     }
 
-    public ImagePanel GetImagePane() {
-        return imagePanel;
-    }
-
     public ColourPickerToolbar GetColourPickerToolbar() {
         return colourPickerToolbar;
     }
@@ -108,6 +96,8 @@ final public class MainFrame extends JFrame {
     public DrawingToolbar GetDrawingToolbar() {
         return drawingToolbar;
     }
+
+    public MainFrameMenuBar GetMenuBar() { return mainFrameMenuBar; }
 
     public BBCSprite GetSprite() {
         return sprite;
@@ -126,15 +116,15 @@ final public class MainFrame extends JFrame {
     }
 
     private BBCSprite sprite;
+    private OnionSkinManager onionSkinManager;
+    private float zoom;
+
     private ImagePanel imagePanel;
     private JScrollPane scrollPane;
     private ColourPickerToolbar colourPickerToolbar;
     private DrawingToolbar drawingToolbar;
     private TimelinePanel timelinePanel;
-    private BorderLayout borderLayout;
-    private JMenuBar menubar;
-    private OnionSkinManager onionSkinManager;
-    private float zoom;
+    private MainFrameMenuBar mainFrameMenuBar;
 
     public static Color[] maskColours = new Color[] { new Color(176, 176, 176), new Color( 176, 192, 192) };
 }

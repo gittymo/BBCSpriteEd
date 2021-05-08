@@ -11,10 +11,6 @@ final public class BBCSpriteFrame {
         for (int i = 0; i < dataLength; i++) this.data[i] = (byte) parent.GetColours().length;
     }
 
-    public BBCSprite GetParent() {
-        return this.parent;
-    }
-
     public int GetWidth() {
         return parent.GetWidth();
     }
@@ -51,7 +47,9 @@ final public class BBCSpriteFrame {
             for (int y = top; y < top + height; y++) {
                 int offset = (y * GetWidth()) + left;
                 for (int x = 0; x < width; x++) {
-                    if (filled || (!filled && (x == 0 || x == width - 1))) data[offset] = colourIndex;
+                    if (filled || (!filled && (x == 0 || x == width - 1 || y == top || y == (top + height - 1)))) {
+                        data[offset] = colourIndex;
+                    }
                     offset++;
                 }
             }
@@ -65,52 +63,53 @@ final public class BBCSpriteFrame {
                 leftPoint = rightPoint;
                 rightPoint = tempPoint;
             }
-            final int yDistance = leftPoint.y > rightPoint.y ? leftPoint.y - rightPoint.y : rightPoint.y - leftPoint.y;
-            final float gradient = (rightPoint.x - leftPoint.x) / (float) yDistance;
-            final int yDir = leftPoint.y > rightPoint.y ? -1 : 1;
-            System.out.println("Drawing line from " + leftPoint.toString() + " to " + rightPoint.toString());
-            System.out.println("Gradient = " + gradient + ", vdir = " + yDir);
-            float nextX = 0;
-            int intNextX = 0, lastIntNextX = 0;
-            int offset = (leftPoint.y * GetWidth()) + leftPoint.x, endOffset = 0;
-            for (int i = 0; i <= yDistance; i++) {
-                lastIntNextX = intNextX;
-                nextX += gradient;
-                intNextX = (int) nextX;
-                endOffset = offset + intNextX - lastIntNextX;
-                while (offset < data.length && offset < endOffset) {
-                    data[offset++] = colourIndex;
-                }
-                offset += GetWidth() * yDir;
-            }
+            final int vDiff = 1 + (leftPoint.y > rightPoint.y ? leftPoint.y - rightPoint.y : rightPoint.y - leftPoint.y);
+            final int hDiff = 1 + (rightPoint.x - leftPoint.x);
+            final float gradient = vDiff > 1 ? hDiff / (float) vDiff : hDiff;
+            final int vDir = leftPoint.y > rightPoint.y ? -1 : 1;
+            int y = 0, lines = 0;
+            float x = leftPoint.x;
+            do {
+                int offset = (leftPoint.y + y) * GetWidth() + (int) x;
+                float nextX = x + gradient > leftPoint.x + hDiff ? (leftPoint.x + hDiff) - x : gradient;
+                int drawToOffset = offset + (int) Math.ceil(nextX);
+                do {
+                    data[offset] = colourIndex;
+                    if (offset < drawToOffset) offset++;
+                } while (offset < drawToOffset);
+                y += vDir;
+                lines++;
+                x += nextX;
+            } while (x < leftPoint.x + hDiff && lines < vDiff);
         }
     }
 
-    public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplaceIndex) {
+    public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplaceIndex, boolean border) {
         if (p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
             final int pixelOffset = (p.y * GetWidth()) + p.x;
             final int startOfLineOffset = p.y * GetWidth();
             final int endOfLineOffset = startOfLineOffset + GetWidth();
+            if (data[pixelOffset] == colourToUseIndex && !border) return;
             if (colourToReplaceIndex == 127) colourToReplaceIndex = data[pixelOffset];
             else if (colourToReplaceIndex != data[pixelOffset] && colourToUseIndex != data[pixelOffset]) return;
-            if (colourToReplaceIndex != colourToUseIndex) {
+            if (colourToReplaceIndex != colourToUseIndex && !border) {
                 int offset = pixelOffset;
                 while (offset >= startOfLineOffset && data[offset] == colourToReplaceIndex) {
                     data[offset] = colourToUseIndex;
-                    if (p.y > 0) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex);
-                    if (p.y < GetHeight() - 1) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex);
+                    if (p.y > 0) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex, false);
+                    if (p.y < GetHeight() - 1) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex, false);
                     offset--;
                 }
                 offset = pixelOffset + 1;
                 while (offset < endOfLineOffset && data[offset] == colourToReplaceIndex) {
                     data[offset] = colourToUseIndex;
-                    if (p.y > 0) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex);
-                    if (p.y < GetHeight() - 1) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex);
+                    if (p.y > 0) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex, false);
+                    if (p.y < GetHeight() - 1) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex, false);
                     offset++;
                 }
             } else {
-                if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplaceIndex);
-                if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplaceIndex);
+                if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplaceIndex, true);
+                if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplaceIndex, true);
             }
         }
     }
@@ -132,6 +131,6 @@ final public class BBCSpriteFrame {
         } else return null;
     }
 
-    private byte[] data;
-    private BBCSprite parent;
+    private final byte[] data;
+    private final BBCSprite parent;
 }

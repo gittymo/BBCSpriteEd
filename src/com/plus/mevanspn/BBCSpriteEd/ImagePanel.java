@@ -12,7 +12,6 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.addMouseWheelListener(this);
-        BBCSpriteFrame activeImage = null;
     }
 
     private Rectangle GetImageArea() {
@@ -26,17 +25,17 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         return new Rectangle((panelWidth - imageWidth) / 2, (panelHeight - imageHeight) / 2, imageWidth, imageHeight);
     }
 
-    private boolean ClickInImageArea(int x, int y) {
+    private boolean ClickIsInImageArea(int x, int y) {
         Rectangle r = GetImageArea();
         return (r != null && x >= r.x && x <= r.x + r.width && y >= r.y && y <= r.y + r.height);
     }
 
-    private Point GetImageXY(int x, int y) {
-        if (!ClickInImageArea(x, y)) return null;
+    private Point GetPixelPositionInImage(int x, int y) {
+        if (!ClickIsInImageArea(x, y)) return null;
         final Rectangle r = GetImageArea();
-        if (r != null) {
+        final BBCSpriteFrame image = parent.GetActiveFrame();
+        if (r != null && image != null) {
             final float zoom = parent.GetZoom();
-            final BBCSpriteFrame image = parent.GetActiveFrame();
             Point p = new Point();
             p.x = (int) ((x - r.x) / (zoom * image.GetHorizontalPixelRatio()));
             p.y = (int) ((y - r.y) / zoom);
@@ -45,7 +44,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         return null;
     }
 
-    private BufferedImage GetBackground() {
+    private BufferedImage GetBackgroundImage() {
         final int width = parent.GetSprite().GetWidth() * 2;
         final int height = parent.GetSprite().GetHeight() * 2;
         BufferedImage background = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
@@ -70,9 +69,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         if (activeImage != null) {
             Rectangle r = GetImageArea();
             if (r != null) {
-                g2.drawImage(GetBackground(), r.x, r.y, r.width, r.height, null);
+                g2.drawImage(GetBackgroundImage(), r.x, r.y, r.width, r.height, null);
                 g2.drawImage(activeImage.GetRenderedImage(), r.x, r.y, r.width, r.height, null);
-                final int frameIndex = parent.GetSprite().GetFrameIndex(activeImage);
                 final OnionSkinManager osm = parent.GetOnionSkinManager();
                 if (osm != null) {
                     BufferedImage onionSkinImage = osm.GetOnionSkin();
@@ -90,6 +88,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     }
                     g2.setStroke(new BasicStroke());
                 }
+                if (realLineStart != null && realLineEnd != null) {
+                    g2.setColor(activeImage.GetColours()[parent.GetActiveColourIndex()]);
+                    g2.drawLine(realLineStart.x, realLineStart.y, realLineEnd.x, realLineEnd.y);
+                }
                 g2.setColor(Color.BLACK);
                 g2.drawRect(r.x - 1, r.y - 1, r.width + 1, r.height + 1);
             }
@@ -98,46 +100,53 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonPencil ||
-            parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonEraser) {
-            final BBCSpriteFrame activeImage = parent.GetActiveFrame();
-            if (activeImage != null) {
-                final Point p = GetImageXY(e.getX(), e.getY());
-                if (p != null) {
+        final BBCSpriteFrame activeImage = parent.GetActiveFrame();
+        if (activeImage != null) {
+            final Point p = GetPixelPositionInImage(e.getX(), e.getY());
+            if (p != null) {
+                if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonPencil ||
+                        parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonEraser) {
                     activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
                     repaint();
                     parent.UpdateTimeline();
                 }
+                if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonFill) {
+                    activeImage.FloodFill(p, parent.GetActiveColourIndex(), (byte) 127, false);
+                    repaint();
+                    parent.UpdateTimeline();
+                }
             }
-        }
-        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonFill) {
-            final Point p = GetImageXY(e.getX(), e.getY());
-            final BBCSpriteFrame activeImage = parent.GetActiveFrame();
-            activeImage.FloodFill(p, parent.GetActiveColourIndex(), (byte) 127);
-            repaint();
-            parent.UpdateTimeline();
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         if (!mouseDown) mouseDown = true;
+        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonLine) {
+            lineStart = GetPixelPositionInImage(e.getX(), e.getY());
+            realLineStart = new Point(e.getX(), e.getY());
+            lineEnd = null;
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseDown = false;
+        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonLine) {
+            lineEnd = GetPixelPositionInImage(e.getX(), e.getY());
+            final BBCSpriteFrame activeImage = parent.GetActiveFrame();
+            if (activeImage != null) {
+                activeImage.DrawLine(lineStart, lineEnd, parent.GetActiveColourIndex());
+                lineStart = lineEnd = realLineStart = null;
+            }
+        }
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
+    public void mouseEntered(MouseEvent e) { }
 
     @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseExited(MouseEvent e) { }
 
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -146,21 +155,22 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonEraser) {
                 final BBCSpriteFrame activeImage = parent.GetActiveFrame();
                 if (activeImage != null) {
-                    final Point p = GetImageXY(e.getX(), e.getY());
+                    final Point p = GetPixelPositionInImage(e.getX(), e.getY());
                     if (p != null) {
                         activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
                         repaint();
                         parent.UpdateTimeline();
                     }
                 }
+            } else if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonLine) {
+                realLineEnd = new Point(e.getX(), e.getY());
+                repaint();
             }
         }
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
+    public void mouseMoved(MouseEvent e) { }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -173,4 +183,5 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
 
     private final MainFrame parent;
     private boolean mouseDown = false;
+    private Point lineStart, lineEnd, realLineStart, realLineEnd;
 }

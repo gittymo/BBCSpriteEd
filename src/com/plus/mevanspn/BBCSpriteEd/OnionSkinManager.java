@@ -26,18 +26,18 @@ final public class OnionSkinManager extends Thread {
                 if (zoom > 4) {
                     byte[] samples = new byte[4 * onionSkinImageWidth * onionSkinImageHeight];
                     onionSkinImage.getRaster().getDataElements(0, 0, onionSkinImageWidth, onionSkinImageHeight, samples);
-                    final int izoom = (int) zoom;
-                    final int halfizoom = (izoom / 2) < 1 ? 1 : izoom / 2;
+                    final int iZoom = (int) zoom;
+                    final int halfIZoom = Math.max((iZoom / 2), 1);
                     final int rowStride = onionSkinImageWidth * 4;
-                    int offinc = 0, zoomCount = 0;
+                    int offsetInc = 0, zoomCount = 0;
                     for (int offset = 0; offset < samples.length; offset += 4) {
                         if (offset % rowStride == 0) {
-                            offset += (4 * offinc);
-                            offinc = (offinc + 1) % halfizoom;
+                            offset += (4 * offsetInc);
+                            offsetInc = (offsetInc + 1) % halfIZoom;
                             zoomCount = 0;
                         }
-                        if (zoomCount < halfizoom) samples[offset + 3] = 0;
-                        zoomCount = (zoomCount + 1) % izoom;
+                        if (zoomCount < halfIZoom) samples[offset + 3] = 0;
+                        zoomCount = (zoomCount + 1) % iZoom;
                     }
                     onionSkinImage.getRaster().setDataElements(0, 0, onionSkinImageWidth, onionSkinImageHeight, samples);
                 }
@@ -52,7 +52,7 @@ final public class OnionSkinManager extends Thread {
                 frameOffset = 1;
                 onionSkinFrame += frameOffset;
                 wait = 15;
-                parent.RefreshImagePane();
+                parent.RefreshPanels();
             }
         }
     }
@@ -63,15 +63,15 @@ final public class OnionSkinManager extends Thread {
                 frameOffset = -1;
                 onionSkinFrame += frameOffset;
                 wait = 15;
-                parent.RefreshImagePane();
+                parent.RefreshPanels();
             }
         }
     }
 
     public void Update() {
         if (parent.GetSprite() != null) {
-            onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex() + frameOffset;
-            parent.RefreshImagePane();
+            onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex();
+            parent.RefreshPanels();
         }
     }
 
@@ -80,7 +80,7 @@ final public class OnionSkinManager extends Thread {
             if (wait == 0) {
                 if (onionSkinFrame > parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame--;
                 else if (onionSkinFrame < parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame++;
-                parent.RefreshImagePane();
+                parent.RefreshPanels();
             } else wait--;
         }
     }
@@ -99,7 +99,7 @@ final public class OnionSkinManager extends Thread {
         }
     }
 
-    private MainFrame parent;
-    private int frameOffset, onionSkinFrame = 0, wait = 0;
+    private final MainFrame parent;
+    private int frameOffset, onionSkinFrame, wait = 0;
     private boolean quit = false;
 }

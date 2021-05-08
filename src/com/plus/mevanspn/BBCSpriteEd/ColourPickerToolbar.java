@@ -47,10 +47,6 @@ final public class ColourPickerToolbar extends JPanel {
         colourPickerButtons.clear();
     }
 
-    public Color GetActiveColour() {
-        return activeColourButton != null ? activeColourButton.colour : null;
-    }
-
     public byte GetActiveColourIndex() {
         return activeColourButton != null ? activeColourButton.paletteIndex : -1;
     }
@@ -58,7 +54,7 @@ final public class ColourPickerToolbar extends JPanel {
     public void SetActiveColourButton(ColourPickerButton colourButton) {
         activeColourButton = colourButton;
         for (ColourPickerButton cpb : colourPickerButtons) {
-            cpb.isActive = cpb == activeColourButton ? true : false;
+            cpb.isActive = cpb == activeColourButton;
         }
         repaint();
     }
@@ -101,10 +97,6 @@ final public class ColourPickerToolbar extends JPanel {
             return new Dimension(24, 24);
         }
 
-        public int GetPaletteIndex() {
-            return paletteIndex;
-        }
-
         @Override
         public void actionPerformed(ActionEvent e) {
             parent.SetActiveColourButton(this);
@@ -117,17 +109,17 @@ final public class ColourPickerToolbar extends JPanel {
             else colour = dm.GetNextColour(colour);
             colourPalette[paletteIndex] = colour;
             repaint();
-            parent.GetParent().RefreshImagePane();
+            parent.GetParent().RefreshPanels();
         }
 
         private Color colour;
-        private ColourPickerToolbar parent;
-        private Color[] colourPalette;
+        private final ColourPickerToolbar parent;
+        private final Color[] colourPalette;
         private boolean isActive;
-        private byte paletteIndex;
+        private final byte paletteIndex;
     }
 
-    private MainFrame parent = null;
+    private final MainFrame parent;
     private ColourPickerButton activeColourButton;
-    private LinkedList<ColourPickerButton> colourPickerButtons;
+    private final LinkedList<ColourPickerButton> colourPickerButtons;
 }

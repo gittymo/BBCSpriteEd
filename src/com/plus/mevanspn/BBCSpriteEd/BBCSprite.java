@@ -12,14 +12,8 @@ final public class BBCSprite {
         this.activeFrame = null;
         this.frames = new LinkedList<>();
         this.colours = new Color[displayMode.colours.length];
-        for (int i = 0; i < this.colours.length; i++) {
-            this.colours[i] = displayMode.colours[i];
-        }
+        System.arraycopy(displayMode.colours, 0, this.colours, 0, this.colours.length);
         AddFrame();
-    }
-
-    public MainFrame GetParent() {
-        return parent;
     }
 
     public BBCSpriteFrame GetFrame(int frameIndex) {
@@ -46,10 +40,6 @@ final public class BBCSprite {
         return colours;
     }
 
-    public void SetColourAt(int index, Color newColour) {
-        if (index >= 0 && index < colours.length) colours[index] = newColour;
-    }
-
     public int GetWidth() {
         return width;
     }
@@ -66,20 +56,18 @@ final public class BBCSprite {
         return displayMode;
     }
 
-    public BBCSpriteFrame AddFrame() {
+    public void AddFrame() {
         BBCSpriteFrame bsf = new BBCSpriteFrame(this);
         frames.add(bsf);
         SetActiveFrame(bsf);
-        return bsf;
     }
 
-    public BBCSpriteFrame AddFrame(int atIndex) {
+    public void AddFrame(int atIndex) {
         if (atIndex >= 0 && atIndex < frames.size()) {
             BBCSpriteFrame bsf = new BBCSpriteFrame(this);
             frames.add(atIndex, bsf);
             SetActiveFrame(bsf);
-            return bsf;
-        } else return null;
+        }
     }
 
     public void SetFrame(int frameIndex, BBCSpriteFrame bsf) {
@@ -110,7 +98,7 @@ final public class BBCSprite {
                 BBCSpriteFrame newBsf = new BBCSpriteFrame(this);
                 final byte[] sourceData = bsf.GetData();
                 byte[] destData = newBsf.GetData();
-                for (int i = 0; i < sourceData.length; i++) destData[i] = sourceData[i];
+                System.arraycopy(sourceData, 0, destData, 0, sourceData.length);
                 if (atEnd) frames.add(newBsf);
                 else frames.add(frameIndex + 1, newBsf);
                 SetActiveFrame(newBsf);
@@ -121,7 +109,7 @@ final public class BBCSprite {
     public void SetActiveFrame(BBCSpriteFrame bsf) {
         if (activeFrame != bsf) {
             activeFrame = bsf;
-            parent.RefreshImagePane();
+            parent.RefreshPanels();
             parent.UpdateTimeline();
             if (parent.GetOnionSkinManager() != null) parent.GetOnionSkinManager().Update();
         }
@@ -137,11 +125,11 @@ final public class BBCSprite {
         }
     }
 
-    private LinkedList<BBCSpriteFrame> frames;
-    private int width, height;
-    private DisplayMode displayMode;
-    private Color[] colours;
-    private MainFrame parent;
+    private final LinkedList<BBCSpriteFrame> frames;
+    private final int width, height;
+    private final DisplayMode displayMode;
+    private final Color[] colours;
+    private final MainFrame parent;
     private BBCSpriteFrame activeFrame;
 
     enum DisplayMode {
@@ -158,10 +146,6 @@ final public class BBCSprite {
             this.pixelRatio = pixelRatio;
             this.width = width;
             this.height = height;
-        }
-
-        public Color[] GetColours() {
-            return colours;
         }
 
         private int findColourIndex(Color colour) {
@@ -185,22 +169,6 @@ final public class BBCSprite {
         public Color GetPreviousColour(Color colour) {
             int colourPos = findColourIndex(colour);
             return colourPos >= 0 ? allColours[colourPos > 0 ? colourPos - 1 : allColours.length - 1] : null;
-        }
-
-        public int GetWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public int getNumber() {
-            return number;
-        }
-
-        public float GetPixelAspectRatio() {
-            return pixelRatio;
         }
 
         final float pixelRatio;
