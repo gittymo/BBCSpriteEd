@@ -26,6 +26,9 @@ final public class MainFrame extends JFrame {
         this.mainFrameMenuBar = new MainFrameMenuBar(this);
         setJMenuBar(this.mainFrameMenuBar);
 
+        onionSkinManager = new OnionSkinManager(this);
+        onionSkinManager.start();
+
         this.scrollPane = new JScrollPane();
         this.imagePanel = new ImagePanel(this);
         this.scrollPane.setViewportView(imagePanel);
@@ -35,21 +38,18 @@ final public class MainFrame extends JFrame {
         this.colourPickerToolbar = new ColourPickerToolbar(this);
         this.drawingToolbar = new DrawingToolbar(this);
         ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
-        getContentPane().add(toolbarsContainer, BorderLayout.WEST);
+        getContentPane().add(toolbarsContainer, BorderLayout.NORTH);
 
         this.timelinePanel = new TimelinePanel(this);
         getContentPane().add(this.timelinePanel, BorderLayout.SOUTH);
     }
 
     public void LoadSprite(BBCSprite newSprite) {
-        if (onionSkinManager != null) onionSkinManager.Quit();
         sprite = newSprite;
         if (sprite != null && sprite.GetActiveFrame() != null) {
             ResizeImagePane();
             colourPickerToolbar.CreatePaletteUsingSprite(sprite);
             timelinePanel.SetSprite(sprite);
-            onionSkinManager = new OnionSkinManager(this);
-            onionSkinManager.start();
         }
     }
 

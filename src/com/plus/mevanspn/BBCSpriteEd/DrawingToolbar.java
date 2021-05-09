@@ -6,7 +6,7 @@ import java.awt.*;
 
 final public class DrawingToolbar extends JToolBar {
     public DrawingToolbar(MainFrame parent) {
-        super(JToolBar.VERTICAL);
+        super(JToolBar.HORIZONTAL);
         this.activeButton = buttonPencil;
         this.buttonPencil = new DrawingToolButton("img/pencil.png", "Draw freehand lines.", this);
         this.buttonEraser = new DrawingToolButton("img/eraser.png", "Erase pixels in a freehand fashion.", this);

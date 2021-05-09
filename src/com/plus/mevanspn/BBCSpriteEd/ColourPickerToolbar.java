@@ -9,7 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 final public class ColourPickerToolbar extends JToolBar {
     public ColourPickerToolbar(MainFrame parent) {
-        super(JToolBar.VERTICAL);
+        super(JToolBar.HORIZONTAL);
         this.parent = parent;
         this.activeColourButton = null;
         this.colourPickerButtons = new LinkedList<>();

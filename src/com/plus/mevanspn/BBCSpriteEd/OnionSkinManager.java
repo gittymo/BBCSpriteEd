@@ -1,17 +1,22 @@
 package com.plus.mevanspn.BBCSpriteEd;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.*;
 
 final public class OnionSkinManager extends Thread {
     public OnionSkinManager(MainFrame parent) {
         this.parent = parent;
         this.frameOffset = -1;
-        this.onionSkinFrame = -0;
+        this.onionSkinFrame = 0;
         this.enabled = true;
-        this.maxFrameOffset = 0;
+        this.maxFrameOffset = 5;
         this.maxWaitTime = 15;
+        this.onionSkinManagerToolbar = new OnionSkinManagerToolbar(this);
     }
 
     public BufferedImage GetOnionSkin() {
@@ -54,6 +59,47 @@ final public class OnionSkinManager extends Thread {
         return enabled;
     }
 
+    public void SetEnabled(boolean enabled) {
+        this.enabled = enabled;
+        parent.RefreshPanels();
+    }
+
+    public void SetFrameOffset(int frameOffset) {
+        if (enabled && parent.GetSprite() != null) {
+            this.onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex() + frameOffset;
+            this.frameOffset = frameOffset > 0 ? 1 : frameOffset < 0 ? -1 : 0;
+            this.wait = this.maxWaitTime;
+            if (this.onionSkinFrame < 0) this.onionSkinFrame = 0;
+            if (this.onionSkinFrame >= parent.GetSprite().GetFrameCount())
+                this.onionSkinFrame = parent.GetSprite().GetFrameCount() - 1;
+            parent.RefreshPanels();
+        }
+    }
+
+    public int GetMinimumAllowedFrameOffset() {
+        if (enabled && parent.GetSprite() != null) {
+            int currentLessMaxOffset = parent.GetSprite().GetCurrentFrameIndex() - maxFrameOffset;
+            if (currentLessMaxOffset < 0) return -(maxFrameOffset + currentLessMaxOffset);
+            else return -maxFrameOffset;
+        } else return 0;
+    }
+
+    public int GetMaximumAllowedFrameOffset() {
+        if (enabled && parent.GetSprite() != null) {
+            int currentPlusMaxOffset = parent.GetSprite().GetCurrentFrameIndex() + maxFrameOffset;
+            if (currentPlusMaxOffset > parent.GetSprite().GetFrameCount())
+                return (parent.GetSprite().GetFrameCount() - parent.GetSprite().GetCurrentFrameIndex()) - 1;
+            else return maxFrameOffset;
+        } else return 0;
+    }
+
+    public void SetMaxWaitTime(int givenWaitTime) {
+        if (enabled && parent.GetSprite() != null && givenWaitTime >= 0) {
+            maxWaitTime = givenWaitTime;
+            wait = maxWaitTime;
+        }
+    }
+
     public void UserRollForward() {
         if (enabled && parent.GetSprite() != null) {
             if (onionSkinFrame < parent.GetSprite().GetFrameCount() - 1) {
@@ -83,6 +129,7 @@ final public class OnionSkinManager extends Thread {
     public void Update() {
         if (enabled && parent.GetSprite() != null) {
             onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex();
+            onionSkinManagerToolbar.UpdateControls();
             parent.RefreshPanels();
         }
     }
@@ -91,9 +138,11 @@ final public class OnionSkinManager extends Thread {
         if (enabled && parent.GetSprite() != null && frameOffset != 0) {
             if (maxWaitTime > 0) {
                 if (wait > 0) {
+                    System.out.println("Animating");
                     if (onionSkinFrame > parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame--;
                     else if (onionSkinFrame < parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame++;
                     parent.RefreshPanels();
+                    onionSkinManagerToolbar.UpdateControls();
                 } else wait--;
             }
         }
@@ -114,12 +163,17 @@ final public class OnionSkinManager extends Thread {
         }
     }
 
+    public OnionSkinManagerToolbar GetToolbar() {
+        return onionSkinManagerToolbar;
+    }
+
     private final MainFrame parent;
     private int frameOffset, onionSkinFrame, wait = 0;
     private boolean enabled;
     private int maxFrameOffset;
     private int maxWaitTime;
     private boolean quit;
+    private OnionSkinManagerToolbar onionSkinManagerToolbar;
 
     final class OnionSkinManagerConfigTab extends JPanel implements ConfigPanel {
         public OnionSkinManagerConfigTab(OnionSkinManager onionSkinManager) {
@@ -132,8 +186,58 @@ final public class OnionSkinManager extends Thread {
     }
 
     final class OnionSkinManagerToolbar extends JToolBar {
-        public OnionSkinManagerToolbar() {
-            super(JToolBar.VERTICAL);
+        public OnionSkinManagerToolbar(OnionSkinManager onionSkinManager) {
+            super(JToolBar.HORIZONTAL);
+            this.onionSkinManager = onionSkinManager;
+            this.animationWaitTime = onionSkinManager.maxWaitTime;
+            this.onionSkinSlider = new JSlider(JSlider.HORIZONTAL);
+            this.onionSkinSlider.setAlignmentX(JSlider.CENTER_ALIGNMENT);
+            this.onionSkinSlider.setMinorTickSpacing(1);
+            this.onionSkinSlider.setPaintTicks(true);
+            this.onionSkinSlider.setPaintLabels(true);
+            this.onionSkinSlider.addChangeListener(new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    onionSkinSlider.setToolTipText("Set onion skinning offset (current " + onionSkinSlider.getValue() + " frames)");
+                    onionSkinManager.SetFrameOffset(onionSkinSlider.getValue());
+                }
+            });
+            this.onionSkinToggle = new JCheckBox();
+            this.onionSkinToggle.setToolTipText("Toggle onion skinning on/off");
+            this.onionSkinToggle.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    onionSkinManager.SetEnabled(onionSkinToggle.isSelected());
+                    onionSkinSlider.setEnabled(onionSkinToggle.isSelected());
+                    onionSkinAnimateToggle.setEnabled(onionSkinToggle.isEnabled());
+                }
+            });
+            this.onionSkinAnimateToggle = new JCheckBox();
+            this.onionSkinAnimateToggle.setToolTipText("Enable onion skin rollback.");
+            this.onionSkinAnimateToggle.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    onionSkinManager.SetMaxWaitTime(onionSkinAnimateToggle.isSelected() ? animationWaitTime : 0);
+                }
+            });
+            this.add(onionSkinSlider);
+            this.add(onionSkinToggle);
+            this.add(onionSkinAnimateToggle);
+            UpdateControls();
         }
+
+        public void UpdateControls() {
+            this.onionSkinToggle.setSelected(onionSkinManager.IsEnabled());
+            this.onionSkinSlider.setMinimum(onionSkinManager.GetMinimumAllowedFrameOffset());
+            this.onionSkinSlider.setMaximum(onionSkinManager.GetMaximumAllowedFrameOffset());
+            this.onionSkinSlider.setValue(onionSkinManager.frameOffset);
+            this.onionSkinAnimateToggle.setSelected(onionSkinManager.maxWaitTime > 0);
+        }
+
+        private OnionSkinManager onionSkinManager;
+        private JSlider onionSkinSlider;
+        private JCheckBox onionSkinToggle;
+        private JCheckBox onionSkinAnimateToggle;
+        private int animationWaitTime;
     }
 }

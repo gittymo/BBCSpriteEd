@@ -10,6 +10,7 @@ final public class AnimationMenu extends JMenu {
         addFrame.addActionListener(e -> {
             parent.GetSprite().AddFrame();
             parent.UpdateTimeline();
+            parent.GetOnionSkinManager().GetToolbar().UpdateControls();
         });
 
         JMenuItem nextFrame = new JMenuItem("Next Frame");
@@ -19,6 +20,7 @@ final public class AnimationMenu extends JMenu {
             if (currentFrameIndex < currentSprite.GetFrameCount() - 1) {
                 currentSprite.SetActiveFrame(currentSprite.GetFrame(currentFrameIndex + 1));
                 parent.UpdateTimeline();
+                parent.GetOnionSkinManager().GetToolbar().UpdateControls();
             }
         });
 
@@ -29,6 +31,7 @@ final public class AnimationMenu extends JMenu {
             if (currentFrameIndex > 0) {
                 currentSprite.SetActiveFrame(currentSprite.GetFrame(currentFrameIndex - 1));
                 parent.UpdateTimeline();
+                parent.GetOnionSkinManager().GetToolbar().UpdateControls();
             }
         });
 
