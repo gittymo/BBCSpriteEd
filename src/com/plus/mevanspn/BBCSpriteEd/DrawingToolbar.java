@@ -1,18 +1,13 @@
 package com.plus.mevanspn.BBCSpriteEd;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 
-final public class DrawingToolbar extends JPanel {
+final public class DrawingToolbar extends JToolBar {
     public DrawingToolbar(MainFrame parent) {
-        super();
+        super(JToolBar.VERTICAL);
         this.activeButton = buttonPencil;
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(4,4,4,4));
         this.buttonPencil = new DrawingToolButton("img/pencil.png", "Draw freehand lines.", this);
         this.buttonEraser = new DrawingToolButton("img/eraser.png", "Erase pixels in a freehand fashion.", this);
         this.buttonRectangle = new DrawingToolButton("img/rect.png", "Draw outline/filled rectangles.", this);

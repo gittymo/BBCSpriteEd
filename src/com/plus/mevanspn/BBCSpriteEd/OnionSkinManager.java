@@ -1,5 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
 
@@ -8,10 +9,13 @@ final public class OnionSkinManager extends Thread {
         this.parent = parent;
         this.frameOffset = -1;
         this.onionSkinFrame = -0;
+        this.enabled = true;
+        this.maxFrameOffset = 0;
+        this.maxWaitTime = 15;
     }
 
     public BufferedImage GetOnionSkin() {
-        if (parent.GetSprite() != null) {
+        if (enabled && parent.GetSprite() != null) {
             final float zoom = parent.GetZoom();
             final BBCSpriteFrame onionSkinSourceFrame = parent.GetSprite().GetFrame(onionSkinFrame);
             if (onionSkinSourceFrame != null) {
@@ -46,42 +50,52 @@ final public class OnionSkinManager extends Thread {
         } else return null;
     }
 
+    public boolean IsEnabled() {
+        return enabled;
+    }
+
     public void UserRollForward() {
-        if (parent.GetSprite() != null) {
+        if (enabled && parent.GetSprite() != null) {
             if (onionSkinFrame < parent.GetSprite().GetFrameCount() - 1) {
                 frameOffset = 1;
-                onionSkinFrame += frameOffset;
-                wait = 15;
+                onionSkinFrame += maxFrameOffset > 0 ?
+                        onionSkinFrame - parent.GetSprite().GetCurrentFrameIndex() < maxFrameOffset ?
+                                frameOffset : 0 : frameOffset;
+                wait = maxWaitTime;
                 parent.RefreshPanels();
             }
         }
     }
 
     public void UserRollBack() {
-        if (parent.GetSprite() != null) {
+        if (enabled && parent.GetSprite() != null) {
             if (onionSkinFrame > 0) {
                 frameOffset = -1;
-                onionSkinFrame += frameOffset;
-                wait = 15;
+                onionSkinFrame += maxFrameOffset > 0 ?
+                        onionSkinFrame - parent.GetSprite().GetCurrentFrameIndex() > -maxFrameOffset ?
+                                frameOffset : 0 : frameOffset;
+                wait = maxWaitTime;
                 parent.RefreshPanels();
             }
         }
     }
 
     public void Update() {
-        if (parent.GetSprite() != null) {
+        if (enabled && parent.GetSprite() != null) {
             onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex();
             parent.RefreshPanels();
         }
     }
 
     public void Animate() {
-        if (parent.GetSprite() != null && frameOffset != 0) {
-            if (wait == 0) {
-                if (onionSkinFrame > parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame--;
-                else if (onionSkinFrame < parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame++;
-                parent.RefreshPanels();
-            } else wait--;
+        if (enabled && parent.GetSprite() != null && frameOffset != 0) {
+            if (maxWaitTime > 0) {
+                if (wait > 0) {
+                    if (onionSkinFrame > parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame--;
+                    else if (onionSkinFrame < parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame++;
+                    parent.RefreshPanels();
+                } else wait--;
+            }
         }
     }
 
@@ -91,6 +105,7 @@ final public class OnionSkinManager extends Thread {
 
     @Override
     public void run() {
+        quit = false;
         while (!quit) {
             try {
                 Animate();
@@ -101,5 +116,24 @@ final public class OnionSkinManager extends Thread {
 
     private final MainFrame parent;
     private int frameOffset, onionSkinFrame, wait = 0;
-    private boolean quit = false;
+    private boolean enabled;
+    private int maxFrameOffset;
+    private int maxWaitTime;
+    private boolean quit;
+
+    final class OnionSkinManagerConfigTab extends JPanel implements ConfigPanel {
+        public OnionSkinManagerConfigTab(OnionSkinManager onionSkinManager) {
+            super();
+        }
+
+        public String GetTitle() { return "Onion Skinning"; }
+
+        private OnionSkinManager onionSkinManager;
+    }
+
+    final class OnionSkinManagerToolbar extends JToolBar {
+        public OnionSkinManagerToolbar() {
+            super(JToolBar.VERTICAL);
+        }
+    }
 }

@@ -7,13 +7,12 @@ import java.util.LinkedList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-final public class ColourPickerToolbar extends JPanel {
+final public class ColourPickerToolbar extends JToolBar {
     public ColourPickerToolbar(MainFrame parent) {
+        super(JToolBar.VERTICAL);
         this.parent = parent;
         this.activeColourButton = null;
         this.colourPickerButtons = new LinkedList<>();
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(4, 4, 4, 4));
     }
 
     MainFrame GetParent() {
