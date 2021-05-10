@@ -6,10 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ColourPickerMenuItem extends JMenuItem implements ActionListener {
-    public ColourPickerMenuItem(Color[] colours, byte colourIndex) {
+    public ColourPickerMenuItem(Color[] colours, byte colourIndex, ColourPickerButton colourPickerButton) {
         super();
         this.colours = colours;
         this.colourIndex = colourIndex;
+        this.colourPickerButton = colourPickerButton;
         addActionListener(this);
     }
 
@@ -30,7 +31,6 @@ public final class ColourPickerMenuItem extends JMenuItem implements ActionListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final ColourPickerButton colourPickerButton = (ColourPickerButton) e.getSource();
         colourPickerButton.colourPalette[colourPickerButton.paletteIndex] = this.colours[this.colourIndex];
         colourPickerButton.colour = this.colours[this.colourIndex];
         final ColourPickerToolbar parent = (ColourPickerToolbar) colourPickerButton.getParent();
@@ -39,4 +39,5 @@ public final class ColourPickerMenuItem extends JMenuItem implements ActionListe
 
     private Color[] colours;
     private byte colourIndex;
+    private ColourPickerButton colourPickerButton;
 }

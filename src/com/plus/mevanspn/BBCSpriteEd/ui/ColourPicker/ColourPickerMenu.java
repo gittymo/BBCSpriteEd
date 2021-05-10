@@ -9,7 +9,7 @@ public final class ColourPickerMenu extends JPopupMenu {
         super();
         this.colourPickerButton = colourPickerButton;
         for (int i = 0; i < BBCSprite.DisplayMode.allColours.length; i++)
-            add(new ColourPickerMenuItem(BBCSprite.DisplayMode.allColours, (byte) i));
+            add(new ColourPickerMenuItem(BBCSprite.DisplayMode.allColours, (byte) i, colourPickerButton));
     }
 
     private ColourPickerButton colourPickerButton;
