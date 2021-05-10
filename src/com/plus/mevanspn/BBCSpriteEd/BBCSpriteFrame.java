@@ -57,7 +57,7 @@ final public class BBCSpriteFrame {
     }
 
     public void DrawLine(Point leftPoint, Point rightPoint, byte colourIndex) {
-        if (data != null) {
+        if (data != null && leftPoint != null && rightPoint != null) {
             if (leftPoint.x > rightPoint.x) {
                 Point tempPoint = leftPoint;
                 leftPoint = rightPoint;

@@ -132,7 +132,7 @@ final public class BBCSprite {
     private final MainFrame parent;
     private BBCSpriteFrame activeFrame;
 
-    enum DisplayMode {
+    public enum DisplayMode {
         ModeZero(0,0.5f, new Color[] { Color.BLACK, Color.WHITE}, 640, 256),
         ModeOne(1,1, new Color[] { Color.BLACK, Color.RED, Color.YELLOW, Color.WHITE}, 320, 256),
         ModeTwo(2,2, new Color[] { Color.BLACK, Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE,
@@ -171,10 +171,10 @@ final public class BBCSprite {
             return colourPos >= 0 ? allColours[colourPos > 0 ? colourPos - 1 : allColours.length - 1] : null;
         }
 
-        final float pixelRatio;
-        final Color[] colours;
-        final int width, height;
-        final int number;
+        public final float pixelRatio;
+        public final Color[] colours;
+        public final int width, height;
+        public final int number;
         public static Color[] allColours = new Color[] { Color.BLACK, Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE,
                 Color.MAGENTA, Color.CYAN, Color.WHITE };
     }

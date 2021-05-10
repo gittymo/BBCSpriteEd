@@ -1,4 +1,7 @@
-package com.plus.mevanspn.BBCSpriteEd;
+package com.plus.mevanspn.BBCSpriteEd.ui;
+
+import com.plus.mevanspn.BBCSpriteEd.BBCSpriteFrame;
+import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -104,13 +107,13 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         if (activeImage != null) {
             final Point p = GetPixelPositionInImage(e.getX(), e.getY());
             if (p != null) {
-                if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonPencil ||
-                        parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonEraser) {
+                if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttons.get("pencil") ||
+                        parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttons.get("eraser")) {
                     activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
                     repaint();
                     parent.UpdateTimeline();
                 }
-                if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonFill) {
+                if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttons.get("floodfill")) {
                     activeImage.FloodFill(p, parent.GetActiveColourIndex(), (byte) 127, false);
                     repaint();
                     parent.UpdateTimeline();
@@ -122,7 +125,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     @Override
     public void mousePressed(MouseEvent e) {
         if (!mouseDown) mouseDown = true;
-        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonLine) {
+        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttons.get("line")) {
             lineStart = GetPixelPositionInImage(e.getX(), e.getY());
             realLineStart = new Point(e.getX(), e.getY());
             lineEnd = null;
@@ -132,9 +135,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseDown = false;
-        System.out.println("Mouse released");
-        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonLine) {
-            System.out.println("Line tool selected");
+        if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttons.get("line")) {
             lineEnd = GetPixelPositionInImage(e.getX(), e.getY());
             final BBCSpriteFrame activeImage = parent.GetActiveFrame();
             if (activeImage != null) {
@@ -154,8 +155,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     @Override
     public void mouseDragged(MouseEvent e) {
         if (mouseDown) {
-            if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonPencil ||
-                    parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonEraser) {
+            if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttons.get("pencil") ||
+                    parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttons.get("eraser")) {
                 final BBCSpriteFrame activeImage = parent.GetActiveFrame();
                 if (activeImage != null) {
                     final Point p = GetPixelPositionInImage(e.getX(), e.getY());
@@ -165,7 +166,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                         parent.UpdateTimeline();
                     }
                 }
-            } else if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonLine) {
+            } else if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttons.get("line")) {
                 realLineEnd = new Point(e.getX(), e.getY());
                 repaint();
             }

@@ -1,4 +1,7 @@
-package com.plus.mevanspn.BBCSpriteEd;
+package com.plus.mevanspn.BBCSpriteEd.ui;
+
+import com.plus.mevanspn.BBCSpriteEd.BBCSpriteFrame;
+import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -138,7 +141,6 @@ final public class OnionSkinManager extends Thread {
         if (enabled && parent.GetSprite() != null && frameOffset != 0) {
             if (maxWaitTime > 0) {
                 if (wait > 0) {
-                    System.out.println("Animating");
                     if (onionSkinFrame > parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame--;
                     else if (onionSkinFrame < parent.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame++;
                     parent.RefreshPanels();

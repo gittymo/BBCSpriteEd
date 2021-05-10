@@ -1,5 +1,9 @@
 package com.plus.mevanspn.BBCSpriteEd;
 
+import com.plus.mevanspn.BBCSpriteEd.ui.*;
+import com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker.ColourPickerToolbar;
+import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbar;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -63,7 +67,7 @@ final public class MainFrame extends JFrame {
     }
 
     public byte GetActiveColourIndex() {
-        if (drawingToolbar.GetActiveButton() == drawingToolbar.buttonEraser) return (byte) GetSprite().GetDisplayMode().colours.length;
+        if (drawingToolbar.GetActiveButton() == drawingToolbar.buttons.get("eraser")) return (byte) GetSprite().GetDisplayMode().colours.length;
         return colourPickerToolbar.GetActiveColourIndex();
     }
 
