@@ -2,6 +2,7 @@ package com.plus.mevanspn.BBCSpriteEd;
 
 import java.awt.*;
 import java.awt.image.*;
+import java.io.*;
 
 final public class BBCSpriteFrame {
     public BBCSpriteFrame(BBCSprite parent) {
@@ -9,6 +10,13 @@ final public class BBCSpriteFrame {
         final int dataLength = parent.GetWidth() * parent.GetHeight();
         this.data = new byte[dataLength];
         for (int i = 0; i < dataLength; i++) this.data[i] = (byte) parent.GetColours().length;
+    }
+
+    public BBCSpriteFrame(BBCSprite parent, DataInputStream dataInputStream) throws IOException {
+        this.parent = parent;
+        final int dataLength = parent.GetWidth() * parent.GetHeight();
+        this.data = new byte[dataLength];
+        dataInputStream.read(this.data);
     }
 
     public int GetWidth() {
@@ -129,6 +137,10 @@ final public class BBCSpriteFrame {
             }
             return render;
         } else return null;
+    }
+
+    public void WriteToStream(DataOutputStream dataOutputStream) throws IOException {
+        if (dataOutputStream != null) dataOutputStream.write(data);
     }
 
     private final byte[] data;

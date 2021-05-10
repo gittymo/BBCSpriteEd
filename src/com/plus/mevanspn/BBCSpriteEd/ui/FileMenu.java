@@ -6,6 +6,8 @@ import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 final public class FileMenu extends JMenu {
     public FileMenu(MainFrame parent) {
@@ -13,6 +15,38 @@ final public class FileMenu extends JMenu {
         this.parent = parent;
         NewFileMenu newFileMenu = new NewFileMenu(this);
         this.add(newFileMenu);
+        JMenuItem openFileMenuItem = new JMenuItem("Open...");
+        openFileMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BBCSpriteFilePicker filePicker = new BBCSpriteFilePicker();
+                int rv = filePicker.showOpenDialog(parent);
+                if (rv == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        parent.LoadSprite(new BBCSprite(filePicker.getSelectedFile().getAbsolutePath(), parent));
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+            }
+        });
+        this.add(openFileMenuItem);
+        JMenuItem saveAsFileMenuItem = new JMenuItem("Save As...");
+        saveAsFileMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BBCSpriteFilePicker filePicker = new BBCSpriteFilePicker();
+                int rv = filePicker.showSaveDialog(parent);
+                if (rv == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        parent.GetSprite().WriteToFile(filePicker.getSelectedFile().getAbsolutePath());
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+            }
+        });
+        this.add(saveAsFileMenuItem);
         this.add(new JSeparator());
         JMenuItem exitApp = new JMenuItem("Quit");
         exitApp.addActionListener(e -> parent.Quit());

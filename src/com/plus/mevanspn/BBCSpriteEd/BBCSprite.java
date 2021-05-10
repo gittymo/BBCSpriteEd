@@ -1,6 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd;
 
 import java.awt.*;
+import java.io.*;
 import java.util.LinkedList;
 
 final public class BBCSprite {
@@ -14,6 +15,25 @@ final public class BBCSprite {
         this.colours = new Color[displayMode.colours.length];
         System.arraycopy(displayMode.colours, 0, this.colours, 0, this.colours.length);
         AddFrame();
+    }
+
+    public BBCSprite(String filename, MainFrame parent) throws InvalidSpriteFileException, InvalidDisplayModeException, IOException {
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(filename));
+        if (dataInputStream != null) {
+            this.parent = parent;
+            this.width = dataInputStream.readInt();
+            this.height = dataInputStream.readInt();
+            this.displayMode = DisplayMode.GetFromNumber(dataInputStream.readInt());
+            this.colours = new Color[dataInputStream.readInt()];
+            for (int i = 0; i < this.colours.length; i++) {
+                this.colours[i] = new Color(dataInputStream.readInt());
+            }
+            int frameCount = dataInputStream.readInt();
+            this.frames = new LinkedList<>();
+            for (int i = 0; i < frameCount; i++) this.frames.add(new BBCSpriteFrame(this, dataInputStream));
+            this.activeFrame = this.frames.getFirst();
+            dataInputStream.close();
+        } else throw new InvalidSpriteFileException(filename);
     }
 
     public BBCSpriteFrame GetFrame(int frameIndex) {
@@ -125,6 +145,22 @@ final public class BBCSprite {
         }
     }
 
+    public void WriteToFile(String filename) throws IOException {
+        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(filename));
+        if (dataOutputStream != null) {
+            dataOutputStream.writeInt(width);
+            dataOutputStream.writeInt(height);
+            displayMode.WriteToStream(dataOutputStream);
+            dataOutputStream.writeInt(colours.length);
+            for (int i = 0; i < colours.length; i++) {
+                dataOutputStream.writeInt(colours[i].getRGB());
+            }
+            dataOutputStream.writeInt(frames.size());
+            for (BBCSpriteFrame frame : frames) frame.WriteToStream(dataOutputStream);
+            dataOutputStream.close();
+        }
+    }
+
     private final LinkedList<BBCSpriteFrame> frames;
     private final int width, height;
     private final DisplayMode displayMode;
@@ -169,6 +205,25 @@ final public class BBCSprite {
         public Color GetPreviousColour(Color colour) {
             int colourPos = findColourIndex(colour);
             return colourPos >= 0 ? allColours[colourPos > 0 ? colourPos - 1 : allColours.length - 1] : null;
+        }
+
+        public void WriteToStream(DataOutputStream dataOutputStream) throws IOException {
+            if (dataOutputStream != null) {
+                dataOutputStream.writeInt(number);
+            }
+        }
+
+        public static DisplayMode GetFromNumber(int modeNumber) throws InvalidDisplayModeException {
+            if (modeNumber < 0 || modeNumber > 5) throw new InvalidDisplayModeException(modeNumber);
+            DisplayMode foundMode = null;
+            for (DisplayMode displayMode : DisplayMode.values()) {
+                if (displayMode.number == modeNumber) {
+                    foundMode = displayMode;
+                    break;
+                }
+            }
+            if (foundMode == null) throw new InvalidDisplayModeException(modeNumber);
+            return foundMode;
         }
 
         public final float pixelRatio;
