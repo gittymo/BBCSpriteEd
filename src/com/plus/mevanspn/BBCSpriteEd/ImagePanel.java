@@ -132,6 +132,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseDown = false;
+        System.out.println("Mouse released");
         if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonLine) {
             lineEnd = GetPixelPositionInImage(e.getX(), e.getY());
             final BBCSpriteFrame activeImage = parent.GetActiveFrame();

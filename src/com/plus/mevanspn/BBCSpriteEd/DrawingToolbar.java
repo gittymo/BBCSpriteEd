@@ -8,11 +8,11 @@ final public class DrawingToolbar extends JToolBar {
     public DrawingToolbar(MainFrame parent) {
         super(JToolBar.HORIZONTAL);
         this.activeButton = buttonPencil;
-        this.buttonPencil = new DrawingToolButton("img/pencil.png", "Draw freehand lines.", this);
-        this.buttonEraser = new DrawingToolButton("img/eraser.png", "Erase pixels in a freehand fashion.", this);
-        this.buttonRectangle = new DrawingToolButton("img/rect.png", "Draw outline/filled rectangles.", this);
-        this.buttonLine = new DrawingToolButton("img/line.png", "Draw straight lines.", this);
-        this.buttonFill = new DrawingToolButton("img/fill.png", "Fill an enclosed space with the chosen colour.", this);
+        this.buttonPencil = new DrawingToolButton("res/img/pencil.png", "Draw freehand lines.", this);
+        this.buttonEraser = new DrawingToolButton("res/img/eraser.png", "Erase pixels in a freehand fashion.", this);
+        this.buttonRectangle = new DrawingToolButton("res/img/rect.png", "Draw outline/filled rectangles.", this);
+        this.buttonLine = new DrawingToolButton("res/img/line.png", "Draw straight lines.", this);
+        this.buttonFill = new DrawingToolButton("res/img/fill.png", "Fill an enclosed space with the chosen colour.", this);
         this.add(buttonPencil);
         this.add(buttonEraser);
         this.add(buttonFill);
