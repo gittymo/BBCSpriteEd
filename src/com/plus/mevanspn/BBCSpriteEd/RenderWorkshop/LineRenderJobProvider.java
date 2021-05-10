@@ -3,7 +3,7 @@ package com.plus.mevanspn.BBCSpriteEd.RenderWorkshop;
 import java.awt.Point;
 
 final public class LineRenderJobProvider extends AbstractRenderJobProvider {
-    public LineRenderJobProvider(RenderWorkshopManager renderWorkshopManager, Point pointA, Point pointB) throws RenderJobConfigurationException {
+    public LineRenderJobProvider(RenderWorkshopManager renderWorkshopManager, Point pointA, Point pointB, RawSampleColour colour) throws RenderJobConfigurationException {
         if (renderWorkshopManager != null && pointA != null && pointB != null) {
             this.renderWorkshopManager = renderWorkshopManager;
             int x = pointA.x < pointB.x ? pointA.x : pointB.x;
@@ -13,6 +13,7 @@ final public class LineRenderJobProvider extends AbstractRenderJobProvider {
             this.startX = (pointA.y < pointB.y ? pointA.x : pointB.x) - x;
             this.horizontalGradient = (pointA.y > pointB.y ? pointA.x - pointB.x : pointB.x - pointA.x) / (float) height;
             this.samples = renderWorkshopManager.rawImageSamples.GetSampleArea(x, y, width, height);
+            this.colour = colour;
         } else throw new RenderJobConfigurationException();
     }
 
@@ -28,4 +29,5 @@ final public class LineRenderJobProvider extends AbstractRenderJobProvider {
     private int[] samples = null;
     private int startX;
     private float horizontalGradient;
+    private RawSampleColour colour;
 }

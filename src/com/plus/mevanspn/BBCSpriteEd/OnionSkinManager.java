@@ -202,22 +202,24 @@ final public class OnionSkinManager extends Thread {
                     onionSkinManager.SetFrameOffset(onionSkinSlider.getValue());
                 }
             });
-            this.onionSkinToggle = new JCheckBox();
+            this.onionSkinToggle = new OnionSkinToolbarToggleButton("img/OnionOn.png", "img/OnionOff.png");
             this.onionSkinToggle.setToolTipText("Toggle onion skinning on/off");
             this.onionSkinToggle.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    onionSkinManager.SetEnabled(onionSkinToggle.isSelected());
-                    onionSkinSlider.setEnabled(onionSkinToggle.isSelected());
-                    onionSkinAnimateToggle.setEnabled(onionSkinToggle.isEnabled());
+                    onionSkinToggle.Toggle();
+                    onionSkinManager.SetEnabled(onionSkinToggle.GetState());
+                    onionSkinSlider.setEnabled(onionSkinToggle.GetState());
+                    onionSkinAnimateToggle.setEnabled(onionSkinToggle.GetState());
                 }
             });
-            this.onionSkinAnimateToggle = new JCheckBox();
+            this.onionSkinAnimateToggle = new OnionSkinToolbarToggleButton("img/OnionAniOn.png", "img/OnionAniOff.png");
             this.onionSkinAnimateToggle.setToolTipText("Enable onion skin rollback.");
             this.onionSkinAnimateToggle.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    onionSkinManager.SetMaxWaitTime(onionSkinAnimateToggle.isSelected() ? animationWaitTime : 0);
+                    onionSkinAnimateToggle.Toggle();
+                    onionSkinManager.SetMaxWaitTime(onionSkinAnimateToggle.GetState() ? animationWaitTime : 0);
                 }
             });
             this.add(onionSkinSlider);
@@ -227,17 +229,43 @@ final public class OnionSkinManager extends Thread {
         }
 
         public void UpdateControls() {
-            this.onionSkinToggle.setSelected(onionSkinManager.IsEnabled());
+            this.onionSkinToggle.SetState(onionSkinManager.IsEnabled());
             this.onionSkinSlider.setMinimum(onionSkinManager.GetMinimumAllowedFrameOffset());
             this.onionSkinSlider.setMaximum(onionSkinManager.GetMaximumAllowedFrameOffset());
             this.onionSkinSlider.setValue(onionSkinManager.frameOffset);
-            this.onionSkinAnimateToggle.setSelected(onionSkinManager.maxWaitTime > 0);
+            this.onionSkinAnimateToggle.SetState(onionSkinManager.maxWaitTime > 0);
         }
 
         private OnionSkinManager onionSkinManager;
         private JSlider onionSkinSlider;
-        private JCheckBox onionSkinToggle;
-        private JCheckBox onionSkinAnimateToggle;
+        private OnionSkinToolbarToggleButton onionSkinToggle;
+        private OnionSkinToolbarToggleButton onionSkinAnimateToggle;
         private int animationWaitTime;
+
+        final class OnionSkinToolbarToggleButton extends JButton {
+            public OnionSkinToolbarToggleButton(String onIconFile, String offIconFile) {
+                this.onImageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(onIconFile)));
+                this.offImageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(offIconFile)));
+                SetState(true);
+            }
+
+            public void SetState(boolean state) {
+                this.state = state;
+                if (state) setIcon(onImageIcon);
+                else setIcon(offImageIcon);
+                repaint();
+            }
+
+            public boolean GetState() {
+                return state;
+            }
+
+            public void Toggle() {
+                SetState(!this.state);
+            }
+
+            private ImageIcon onImageIcon, offImageIcon;
+            private boolean state;
+        }
     }
 }

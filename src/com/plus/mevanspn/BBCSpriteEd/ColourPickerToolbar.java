@@ -114,7 +114,7 @@ final public class ColourPickerToolbar extends JToolBar {
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == 3) {
                 ColourMenu cm = new ColourMenu(this);
-                cm.show(parent, e.getX(), e.getY());
+                cm.show(e.getComponent(), e.getX(), e.getY());
             }
         }
 

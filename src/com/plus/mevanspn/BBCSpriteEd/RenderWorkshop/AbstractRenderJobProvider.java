@@ -33,7 +33,7 @@ public abstract class AbstractRenderJobProvider extends Thread implements Render
     }
 
     public boolean MustWait() {
-        return false;
+        return true;
     }
 
     public void AddListener(RenderJobRequester renderJobRequester) {

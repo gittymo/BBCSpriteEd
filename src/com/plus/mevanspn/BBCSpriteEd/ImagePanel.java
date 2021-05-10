@@ -134,11 +134,13 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         mouseDown = false;
         System.out.println("Mouse released");
         if (parent.GetDrawingToolbar().GetActiveButton() == parent.GetDrawingToolbar().buttonLine) {
+            System.out.println("Line tool selected");
             lineEnd = GetPixelPositionInImage(e.getX(), e.getY());
             final BBCSpriteFrame activeImage = parent.GetActiveFrame();
             if (activeImage != null) {
                 activeImage.DrawLine(lineStart, lineEnd, parent.GetActiveColourIndex());
                 lineStart = lineEnd = realLineStart = null;
+                repaint();
             }
         }
     }
