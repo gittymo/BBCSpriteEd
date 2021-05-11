@@ -30,6 +30,10 @@ final public class TimelinePanel extends JScrollPane {
         }
     }
 
+    public void SetActiveFrame(int frameIndex) {
+        viewportView.SetClickPointToActiveFrame(frameIndex);
+    }
+
     public void SetSprite(BBCSprite sprite) {
         this.viewportView.SetSprite(sprite);
         Refresh();

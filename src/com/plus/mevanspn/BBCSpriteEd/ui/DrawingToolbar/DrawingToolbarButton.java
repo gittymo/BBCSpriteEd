@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
 
-public final class DrawingToolbarButton extends JButton {
+public class DrawingToolbarButton extends JButton {
     public DrawingToolbarButton(String iconFile, String tooltipText, DrawingToolbar parent) {
         super();
         try {

@@ -57,11 +57,18 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
         }
     }
 
-    void InsertFrame() {
+    void InsertFrameAfter() {
         if (clickPoint != null) {
             final int previousFrame = GetClickFrame();
             sprite.AddFrame(previousFrame + 1);
         } else sprite.AddFrame(sprite.GetCurrentFrameIndex() + 1);
+    }
+
+    void InsertFrameBefore() {
+        if (clickPoint != null) {
+            final int previousFrame = GetClickFrame();
+            sprite.AddFrame(previousFrame);
+        } else sprite.AddFrame(0);
     }
 
     void DeleteFrame() {
@@ -73,6 +80,14 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
 
     void AddFrame() {
         sprite.AddFrame();
+    }
+
+    void SetClickPointToActiveFrame(int frameIndex) {
+        if (frameIndex >= 0 && frameIndex < sprite.GetFrameCount()) {
+            final float yRatio = (float) parent.GetPreviewHeight() / (float) sprite.GetHeight();
+            final int scaledWidth = (int) (sprite.GetWidth() * yRatio * sprite.GetHorizontalPixelRatio());
+            clickPoint = new Point(SEPARATOR_WIDTH + ((scaledWidth + SEPARATOR_WIDTH) * frameIndex) + (scaledWidth / 2), SEPARATOR_WIDTH + parent.GetPreviewHeight() / 2);
+        }
     }
 
     TimelinePanelViewportViewPopup GetViewportPopup() {

@@ -52,10 +52,10 @@ final public class BBCSpriteFrame {
         if (data != null && left > 0 && top > 0 && width > 0 && height > 0) {
             if (left + width > GetWidth()) width = GetWidth() - left;
             if (top + height > GetHeight()) height = GetHeight() - top;
-            for (int y = top; y < top + height; y++) {
+            for (int y = top; y <= top + height; y++) {
                 int offset = (y * GetWidth()) + left;
-                for (int x = 0; x < width; x++) {
-                    if (filled || (!filled && (x == 0 || x == width - 1 || y == top || y == (top + height - 1)))) {
+                for (int x = 0; x <= width; x++) {
+                    if (filled || (!filled && (x == 0 || x == width || y == top || y == (top + height)))) {
                         data[offset] = colourIndex;
                     }
                     offset++;

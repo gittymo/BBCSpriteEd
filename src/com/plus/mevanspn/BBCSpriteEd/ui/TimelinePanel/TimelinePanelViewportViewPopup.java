@@ -10,20 +10,23 @@ public final class TimelinePanelViewportViewPopup extends JPopupMenu {
 
         addFrame = new JMenuItem("Add Frame");
         duplicateFrame = new JMenuItem("Duplicate Frame");
-        duplicateFrameEnd = new JMenuItem("Duplicate (At End)");
-        insertFrame = new JMenuItem("Insert Frame (after)");
+        duplicateFrameEnd = new JMenuItem("Duplicate (Put At End)");
+        insertFrameAfter = new JMenuItem("Insert Frame (after)");
+        insertFrameBefore = new JMenuItem("Insert Frame (before)");
         deleteFrame = new JMenuItem("Delete Frame");
         duplicateFrame.addActionListener(e -> parent.DuplicateFrame(false));
         duplicateFrameEnd.addActionListener(e -> parent.DuplicateFrame(true));
-        insertFrame.addActionListener(e -> parent.InsertFrame());
+        insertFrameAfter.addActionListener(e -> parent.InsertFrameAfter());
+        insertFrameBefore.addActionListener(e -> parent.InsertFrameBefore());
         deleteFrame.addActionListener(e -> parent.DeleteFrame());
         addFrame.addActionListener(e -> parent.AddFrame());
 
         this.add(addFrame);
-        this.add(insertFrame);
+        this.add(insertFrameAfter);
+        this.add(insertFrameBefore);
         this.add(deleteFrame);
         this.add(duplicateFrame);
-        this.add(duplicateFrame);
+        this.add(duplicateFrameEnd);
     }
 
     @Override
@@ -39,5 +42,5 @@ public final class TimelinePanelViewportViewPopup extends JPopupMenu {
 
     TimelinePanelViewportView parent;
     LinkedList<JMenuItem> menuItems;
-    JMenuItem addFrame, duplicateFrame, duplicateFrameEnd, insertFrame, deleteFrame;
+    JMenuItem addFrame, duplicateFrame, duplicateFrameEnd, insertFrameAfter, insertFrameBefore, deleteFrame;
 }

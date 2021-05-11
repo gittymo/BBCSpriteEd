@@ -112,6 +112,7 @@ final public class MainFrame extends JFrame {
     }
 
     public void UpdateTimeline() {
+        if (sprite != null) timelinePanel.SetActiveFrame(sprite.GetCurrentFrameIndex());
         timelinePanel.Refresh();
     }
 
