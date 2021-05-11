@@ -1,13 +1,11 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
-
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
 final public class DrawingToolbar extends JToolBar {
-    public DrawingToolbar(MainFrame parent) {
+    public DrawingToolbar() {
         super();
 
         this.buttons = new HashMap<>();
@@ -32,7 +30,7 @@ final public class DrawingToolbar extends JToolBar {
     public void SetActiveButton(DrawingToolbarButton activeButton) {
         this.activeButton = activeButton;
         for (Map.Entry<String, DrawingToolbarButton> set : this.buttons.entrySet()) {
-            set.getValue().setSelected(set.getValue() == activeButton ? true : false);
+            set.getValue().setSelected(set.getValue() == activeButton);
         }
     }
 
@@ -45,8 +43,6 @@ final public class DrawingToolbar extends JToolBar {
     }
 
     public HashMap<String, DrawingToolbarButton> buttons;
-    private JPanel buttonsContainer;
-
     private DrawingToolbarButton activeButton;
 
     public static int DRAW_RECT_OPEN = 0;

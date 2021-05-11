@@ -103,15 +103,15 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     }
                     g2.setStroke(new BasicStroke());
                 }
-                if (drawPointA != null && drawPointB != null) {
+                if (drawPointA != null && drawPointB != null && parent.GetActiveColourIndex() < parent.GetSprite().GetColours().length) {
                     g2.setColor(activeImage.GetColours()[parent.GetActiveColourIndex()]);
                     if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("line")) {
                         g2.drawLine(drawPointA.x, drawPointA.y, drawPointB.x, drawPointB.y);
                     } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("rectangle")) {
-                        final int left = drawPointA.x < drawPointB.x ? drawPointA.x : drawPointB.x;
-                        final int top = drawPointA.y < drawPointB.y ? drawPointA.y : drawPointB.y;
-                        final int right = drawPointA.x > drawPointB.x ? drawPointA.x : drawPointB.x;
-                        final int bottom = drawPointA.y > drawPointB.y ? drawPointA.y: drawPointB.y;
+                        final int left = Math.min(drawPointA.x, drawPointB.x);
+                        final int top = Math.min(drawPointA.y, drawPointB.y);
+                        final int right = Math.max(drawPointA.x, drawPointB.x);
+                        final int bottom = Math.max(drawPointA.y, drawPointB.y);
                         g2.drawRect(left, top, right - left, bottom - top);
                     }
                 }
@@ -134,7 +134,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     parent.UpdateTimeline();
                 }
                 if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("floodfill")) {
-                    activeImage.FloodFill(p, parent.GetActiveColourIndex(), (byte) 127, false);
+                    activeImage.FloodFill(p, parent.GetActiveColourIndex(), (byte) 127);
                     repaint();
                     parent.UpdateTimeline();
                 }
@@ -159,10 +159,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("line")) {
                 activeImage.DrawLine(pixelPointA, pixelPointB, parent.GetActiveColourIndex());
             } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("rectangle")) {
-                final int left = pixelPointA.x < pixelPointB.x ? pixelPointA.x : pixelPointB.x;
-                final int top = pixelPointA.y < pixelPointB.y ? pixelPointA.y : pixelPointB.y;
-                final int right = pixelPointA.x > pixelPointB.x ? pixelPointA.x : pixelPointB.x;
-                final int bottom = pixelPointA.y > pixelPointB.y ? pixelPointA.y : pixelPointB.y;
+                final int left = Math.min(pixelPointA.x, pixelPointB.x);
+                final int top = Math.min(pixelPointA.y, pixelPointB.y);
+                final int right = Math.max(pixelPointA.x, pixelPointB.x);
+                final int bottom = Math.max(pixelPointA.y, pixelPointB.y);
                 final int rectButtonState = ((DrawingToolbarMultiButton) parent.GetDrawingToolbar().GetButton("rectangle")).GetStateValue();
                 final boolean isFilled = rectButtonState == DrawingToolbar.DRAW_RECT_FILL;
                 activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, parent.GetActiveColourIndex());

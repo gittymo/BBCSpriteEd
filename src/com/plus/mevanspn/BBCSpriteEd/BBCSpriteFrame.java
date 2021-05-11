@@ -10,6 +10,7 @@ final public class BBCSpriteFrame {
         final int dataLength = parent.GetWidth() * parent.GetHeight();
         this.data = new byte[dataLength];
         for (int i = 0; i < dataLength; i++) this.data[i] = (byte) parent.GetColours().length;
+        this.renderedImage = new BufferedImage(parent.GetWidth(), parent.GetHeight(), BufferedImage.TYPE_INT_ARGB);
     }
 
     public BBCSpriteFrame(BBCSprite parent, DataInputStream dataInputStream) throws IOException {
@@ -17,6 +18,13 @@ final public class BBCSpriteFrame {
         final int dataLength = parent.GetWidth() * parent.GetHeight();
         this.data = new byte[dataLength];
         dataInputStream.read(this.data);
+        this.renderedImage = new BufferedImage(parent.GetWidth(), parent.GetHeight(), BufferedImage.TYPE_INT_ARGB);
+        int i = 0;
+        for (int y = 0; y < parent.GetHeight(); y++) {
+            for (int x = 0; x < parent.GetWidth(); x++) {
+                this.renderedImage.setRGB(x, y, this.parent.GetColours()[data[i]++].getRGB());
+            }
+        }
     }
 
     public int GetWidth() {
@@ -43,7 +51,10 @@ final public class BBCSpriteFrame {
         if (data != null) {
             if (x >= 0 && x < GetWidth() && y >= 0 && y < GetHeight()) {
                 int offset = (y * GetWidth()) + x;
-                if (data[offset] != colourIndex) data[offset] = colourIndex;
+                if (data[offset] != colourIndex) {
+                    data[offset] = colourIndex;
+                    renderedImage.setRGB(x, y, colourIndex < parent.GetColours().length ? parent.GetColours()[colourIndex].getRGB() : 0x000000FF);
+                }
             }
         }
     }
@@ -57,6 +68,7 @@ final public class BBCSpriteFrame {
                 for (int x = 0; x <= width; x++) {
                     if (filled || (!filled && (x == 0 || x == width || y == top || y == (top + height)))) {
                         data[offset] = colourIndex;
+                        renderedImage.setRGB(left + x, y, parent.GetColours()[colourIndex].getRGB());
                     }
                     offset++;
                 }
@@ -83,6 +95,7 @@ final public class BBCSpriteFrame {
                 int drawToOffset = offset + (int) Math.ceil(nextX);
                 do {
                     data[offset] = colourIndex;
+                    renderedImage.setRGB(offset % GetWidth(), leftPoint.y + y, parent.GetColours()[colourIndex].getRGB());
                     if (offset < drawToOffset) offset++;
                 } while (offset < drawToOffset);
                 y += vDir;
@@ -92,7 +105,7 @@ final public class BBCSpriteFrame {
         }
     }
 
-    public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplaceIndex, boolean border) {
+    public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplaceIndex) {
         if (p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
             final int pixelOffset = (p.y * GetWidth()) + p.x;
             if (colourToReplaceIndex == 127) colourToReplaceIndex = data[pixelOffset];
@@ -107,8 +120,9 @@ final public class BBCSpriteFrame {
                     pixelAbove = offset - GetWidth();
                     pixelBelow = offset + GetWidth();
                     data[offset] = colourToUseIndex;
-                    if (p.y > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex, false);
-                    if (p.y < GetHeight() - 1 && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex, false);
+                    renderedImage.setRGB(p.x + (offset - pixelOffset), p.y, parent.GetColours()[colourToUseIndex].getRGB());
+                    if (p.y > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex);
+                    if (p.y < GetHeight() - 1 && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex);
                     offset--;
                 }
                 offset = pixelOffset + 1;
@@ -116,32 +130,21 @@ final public class BBCSpriteFrame {
                     pixelAbove = offset - GetWidth();
                     pixelBelow = offset + GetWidth();
                     data[offset] = colourToUseIndex;
-                    if (p.y > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex, false);
-                    if (p.y < GetHeight() - 1 && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex, false);
+                    renderedImage.setRGB(p.x + (offset - pixelOffset), p.y, parent.GetColours()[colourToUseIndex].getRGB());
+                    if (p.y > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex);
+                    if (p.y < GetHeight() - 1 && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex);
                     offset++;
                 }
             } else {
-                if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplaceIndex, true);
-                if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplaceIndex, true);
+                if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplaceIndex);
+                if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplaceIndex);
             }
         }
     }
 
     public BufferedImage GetRenderedImage() {
-        if (data != null) {
-            final int width = GetWidth();
-            final int height = GetHeight();
-            final Color[] palette = GetColours();
-            BufferedImage render = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    final int offset = (y * width) + x;
-                    final int paletteIndex = data[offset];
-                    if (paletteIndex < palette.length) render.setRGB(x, y, palette[paletteIndex].getRGB());
-                }
-            }
-            return render;
-        } else return null;
+        if (data != null) return renderedImage;
+        else return null;
     }
 
     public void WriteToStream(DataOutputStream dataOutputStream) throws IOException {
@@ -150,4 +153,5 @@ final public class BBCSpriteFrame {
 
     private final byte[] data;
     private final BBCSprite parent;
+    private final BufferedImage renderedImage;
 }

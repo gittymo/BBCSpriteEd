@@ -1,9 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class DrawingToolbarMultiButton extends DrawingToolbarButton implements MouseWheelListener {
@@ -27,9 +26,7 @@ public class DrawingToolbarMultiButton extends DrawingToolbarButton implements M
     public DrawingToolbarMultiButton(DrawingToolbarMultiButtonState[] states, String tooltipText, DrawingToolbar parent) {
         super(states[0].GetIconFile(), tooltipText, parent);
         this.states = new LinkedList<>();
-        for (int i = 0; i < states.length; i++) {
-            this.states.add(states[i]);
-        }
+        Collections.addAll(this.states, states);
         this.addMouseWheelListener(this);
     }
 
@@ -51,7 +48,7 @@ public class DrawingToolbarMultiButton extends DrawingToolbarButton implements M
     }
 
     private int stateIndex = 0;
-    private LinkedList<DrawingToolbarMultiButtonState> states;
+    private final LinkedList<DrawingToolbarMultiButtonState> states;
 
 
 }

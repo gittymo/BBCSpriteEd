@@ -22,7 +22,7 @@ public final class DrawingToolbarMultiButtonState {
         return value;
     }
 
-    private ImageIcon icon;
-    private String iconFile;
-    private int value;
+    private final ImageIcon icon;
+    private final String iconFile;
+    private final int value;
 }

@@ -44,7 +44,7 @@ final public class MainFrame extends JFrame {
         getContentPane().add(this.scrollPane,BorderLayout.CENTER);
 
         this.colourPickerToolbar = new ColourPickerToolbar(this);
-        this.drawingToolbar = new DrawingToolbar(this);
+        this.drawingToolbar = new DrawingToolbar();
         ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
         getContentPane().add(toolbarsContainer, BorderLayout.NORTH);
 
@@ -126,7 +126,7 @@ final public class MainFrame extends JFrame {
 
     private BBCSprite sprite;
     private float zoom;
-    private int timelinePreviewHeight;
+    private final int timelinePreviewHeight;
 
     private ImagePanel imagePanel;
     private JScrollPane scrollPane;
