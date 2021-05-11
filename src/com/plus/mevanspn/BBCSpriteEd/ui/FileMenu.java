@@ -23,9 +23,10 @@ final public class FileMenu extends JMenu {
                 int rv = filePicker.showOpenDialog(parent);
                 if (rv == JFileChooser.APPROVE_OPTION) {
                     try {
-                        parent.LoadSprite(new BBCSprite(filePicker.getSelectedFile().getAbsolutePath(), parent));
+                        String filePath = filePicker.getSelectedFile().getAbsolutePath();
+                        parent.LoadSprite(new BBCSprite(filePath, parent));
                     } catch (Exception ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -39,9 +40,9 @@ final public class FileMenu extends JMenu {
                 int rv = filePicker.showSaveDialog(parent);
                 if (rv == JFileChooser.APPROVE_OPTION) {
                     try {
-                        parent.GetSprite().WriteToFile(filePicker.getSelectedFile().getAbsolutePath());
+                        parent.GetSprite().WriteToFile(filePicker.getSelectedFile().getAbsolutePath() + ".bsf");
                     } catch (Exception ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                     }
                 }
             }

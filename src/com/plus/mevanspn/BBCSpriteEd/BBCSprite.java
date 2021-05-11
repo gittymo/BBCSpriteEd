@@ -1,6 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.LinkedList;
 
@@ -119,6 +120,13 @@ final public class BBCSprite {
                 final byte[] sourceData = bsf.GetData();
                 byte[] destData = newBsf.GetData();
                 System.arraycopy(sourceData, 0, destData, 0, sourceData.length);
+                BufferedImage newBSFImage = newBsf.GetRenderedImage();
+                BufferedImage bsfImage = bsf.GetRenderedImage();
+                for (int y = 0; y < GetHeight(); y++) {
+                    for (int x = 0; x < GetWidth(); x++) {
+                        newBSFImage.setRGB(x, y, bsfImage.getRGB(x, y));
+                    }
+                }
                 if (atEnd) frames.add(newBsf);
                 else frames.add(frameIndex + 1, newBsf);
                 SetActiveFrame(newBsf);
@@ -132,6 +140,7 @@ final public class BBCSprite {
             parent.RefreshPanels();
             parent.UpdateTimeline();
             if (parent.GetOnionSkinManager() != null) parent.GetOnionSkinManager().Update();
+            if (parent.GetPreviewPanel() != null) parent.GetPreviewPanel().SetFrame(GetFrameIndex(bsf));
         }
     }
 

@@ -18,7 +18,6 @@ final public class MainFrame extends JFrame {
         this.timelinePreviewHeight = 32;
 
         initComponents();
-        pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoadSprite(new BBCSprite(24, 24, BBCSprite.DisplayMode.ModeOne, this));
     }
@@ -50,6 +49,11 @@ final public class MainFrame extends JFrame {
 
         this.timelinePanel = new TimelinePanel(this, this.timelinePreviewHeight);
         getContentPane().add(this.timelinePanel, BorderLayout.SOUTH);
+
+        this.previewPanel = new PreviewPanel(this);
+        getContentPane().add(this.previewPanel, BorderLayout.EAST);
+
+        this.pack();
     }
 
     public void LoadSprite(BBCSprite newSprite) {
@@ -111,6 +115,8 @@ final public class MainFrame extends JFrame {
         return sprite;
     }
 
+    public PreviewPanel GetPreviewPanel() { return previewPanel; }
+    
     public void UpdateTimeline() {
         if (sprite != null) timelinePanel.SetActiveFrame(sprite.GetCurrentFrameIndex());
         timelinePanel.Refresh();
@@ -135,6 +141,7 @@ final public class MainFrame extends JFrame {
     private TimelinePanel timelinePanel;
     private MainFrameMenuBar mainFrameMenuBar;
     private OnionSkinManager onionSkinManager;
+    private PreviewPanel previewPanel;
 
     public static Color[] maskColours = new Color[] { new Color(176, 176, 176), new Color( 176, 192, 192) };
 }

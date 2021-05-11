@@ -22,7 +22,8 @@ final public class BBCSpriteFrame {
         int i = 0;
         for (int y = 0; y < parent.GetHeight(); y++) {
             for (int x = 0; x < parent.GetWidth(); x++) {
-                this.renderedImage.setRGB(x, y, this.parent.GetColours()[data[i]++].getRGB());
+                if (data[i] < this.parent.GetColours().length) this.renderedImage.setRGB(x, y, this.parent.GetColours()[data[i]].getRGB());
+                i++;
             }
         }
     }

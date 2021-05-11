@@ -9,7 +9,7 @@ public class DrawingToolbarButton extends JButton {
         try {
             ImageIcon imageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(iconFile)));
             this.setIcon(imageIcon);
-        } catch (Exception e) { System.out.println(e.getMessage()); }
+        } catch (Exception e) { e.printStackTrace(); }
         this.setToolTipText(tooltipText);
         this.addActionListener(e -> parent.SetActiveButton((DrawingToolbarButton) e.getSource()));
         this.setSelected(false);
