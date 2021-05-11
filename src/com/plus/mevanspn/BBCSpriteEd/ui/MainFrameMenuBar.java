@@ -18,7 +18,7 @@ final public class MainFrameMenuBar extends JMenuBar {
         this.add(this.animationMenu);
     }
 
-    AnimationMenu GetAnimationMenu() {
+    public AnimationMenu GetAnimationMenu() {
         return animationMenu;
     }
 

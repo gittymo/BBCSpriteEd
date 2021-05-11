@@ -32,7 +32,7 @@ public final class ColourPickerButton extends JButton implements ActionListener,
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(34,34);
+        return new Dimension(24,24);
     }
 
     @Override

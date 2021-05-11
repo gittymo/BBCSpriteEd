@@ -1,8 +1,10 @@
 package com.plus.mevanspn.BBCSpriteEd;
 
+import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 import com.plus.mevanspn.BBCSpriteEd.ui.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker.ColourPickerToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbar;
+import com.plus.mevanspn.BBCSpriteEd.ui.TimelinePanel.TimelinePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +15,8 @@ final public class MainFrame extends JFrame {
         this.sprite = null;
         this.onionSkinManager = null;
         this.zoom = 16;
+        this.timelinePreviewHeight = 32;
+
         initComponents();
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +48,7 @@ final public class MainFrame extends JFrame {
         ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
         getContentPane().add(toolbarsContainer, BorderLayout.NORTH);
 
-        this.timelinePanel = new TimelinePanel(this);
+        this.timelinePanel = new TimelinePanel(this, this.timelinePreviewHeight);
         getContentPane().add(this.timelinePanel, BorderLayout.SOUTH);
     }
 
@@ -120,8 +124,8 @@ final public class MainFrame extends JFrame {
     }
 
     private BBCSprite sprite;
-    private OnionSkinManager onionSkinManager;
     private float zoom;
+    private int timelinePreviewHeight;
 
     private ImagePanel imagePanel;
     private JScrollPane scrollPane;
@@ -129,6 +133,7 @@ final public class MainFrame extends JFrame {
     private DrawingToolbar drawingToolbar;
     private TimelinePanel timelinePanel;
     private MainFrameMenuBar mainFrameMenuBar;
+    private OnionSkinManager onionSkinManager;
 
     public static Color[] maskColours = new Color[] { new Color(176, 176, 176), new Color( 176, 192, 192) };
 }

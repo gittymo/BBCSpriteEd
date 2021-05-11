@@ -11,17 +11,18 @@ final public class DrawingToolbar extends JToolBar {
         super();
 
         this.buttons = new HashMap<>();
-        this.buttons.put("pencil", new DrawingToolbarButton("/img/pencil.png", "Draw freehand lines.", this));
-        this.buttons.put("eraser", new DrawingToolbarButton("/img/eraser.png", "Erase pixels in a freehand fashion.", this));
-        this.buttons.put("rectangle", new DrawingToolbarButton("/img/rect.png", "Draw outline/filled rectangles.", this));
-        this.buttons.put("line", new DrawingToolbarButton("/img/line.png", "Draw straight lines.", this));
-        this.buttons.put("floodfill", new DrawingToolbarButton("/img/fill.png", "Fill an enclosed space with the chosen colour.", this));
-
-        this.buttonsContainer = new JPanel();
-        for (Map.Entry<String, DrawingToolbarButton> set : this.buttons.entrySet()) buttonsContainer.add(set.getValue());
-        this.add(buttonsContainer);
+        this.add("pencil", new DrawingToolbarButton("img/pencil.png", "Draw freehand lines.", this));
+        this.add("eraser", new DrawingToolbarButton("img/eraser.png", "Erase pixels in a freehand fashion.", this));
+        this.add("rectangle", new DrawingToolbarButton("img/rect.png", "Draw outline/filled rectangles.", this));
+        this.add("line", new DrawingToolbarButton("img/line.png", "Draw straight lines.", this));
+        this.add("floodfill", new DrawingToolbarButton("img/fill.png", "Fill an enclosed space with the chosen colour.", this));
 
         SetActiveButton(buttons.get("pencil"));
+    }
+
+    public void add(String keyValue, DrawingToolbarButton button) {
+        this.buttons.put(keyValue, button);
+        this.add(button);
     }
 
     public void SetActiveButton(DrawingToolbarButton activeButton) {

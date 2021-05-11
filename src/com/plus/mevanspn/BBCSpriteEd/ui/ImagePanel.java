@@ -2,6 +2,7 @@ package com.plus.mevanspn.BBCSpriteEd.ui;
 
 import com.plus.mevanspn.BBCSpriteEd.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 
 import javax.swing.*;
 import java.awt.*;

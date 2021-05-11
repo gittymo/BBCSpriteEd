@@ -5,16 +5,9 @@ import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
 import javax.swing.*;
 
-final public class AnimationMenu extends JMenu {
+final public class AnimationMenu extends AppMenu {
     public AnimationMenu(MainFrame parent) {
         super("Animation");
-
-        JMenuItem addFrame = new JMenuItem("Add Frame");
-        addFrame.addActionListener(e -> {
-            parent.GetSprite().AddFrame();
-            parent.UpdateTimeline();
-            parent.GetOnionSkinManager().GetToolbar().UpdateControls();
-        });
 
         JMenuItem nextFrame = new JMenuItem("Next Frame");
         nextFrame.addActionListener(e -> {
@@ -38,7 +31,6 @@ final public class AnimationMenu extends JMenu {
             }
         });
 
-        this.add(addFrame);
         this.add(new JSeparator());
         this.add(nextFrame);
         this.add(previousFrame);
