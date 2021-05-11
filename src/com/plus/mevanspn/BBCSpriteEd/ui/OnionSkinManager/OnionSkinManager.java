@@ -2,14 +2,8 @@ package com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager;
 
 import com.plus.mevanspn.BBCSpriteEd.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
-import com.plus.mevanspn.BBCSpriteEd.ui.ConfigPanel;
 
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.*;
 
 final public class OnionSkinManager extends Thread {
@@ -55,8 +49,9 @@ final public class OnionSkinManager extends Thread {
                     onionSkinImage.getRaster().setDataElements(0, 0, onionSkinImageWidth, onionSkinImageHeight, samples);
                 }
                 return onionSkinImage;
-            } return null;
-        } else return null;
+            }
+        }
+        return null;
     }
 
     public boolean IsEnabled() {
@@ -76,8 +71,21 @@ final public class OnionSkinManager extends Thread {
             if (this.onionSkinFrame < 0) this.onionSkinFrame = 0;
             if (this.onionSkinFrame >= parent.GetSprite().GetFrameCount())
                 this.onionSkinFrame = parent.GetSprite().GetFrameCount() - 1;
-            parent.RefreshPanels();
+            parent.GetImagePanel().repaint();
         }
+    }
+
+    public int GetOffset() {
+        return parent.GetSprite() != null ? onionSkinFrame - parent.GetSprite().GetCurrentFrameIndex() : 0;
+    }
+
+    public void ResetOnionSkinFrame() {
+        this.onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex() + onionSkinManagerToolbar.GetOffset();
+        if (this.onionSkinFrame > parent.GetSprite().GetFrameCount() - 1) {
+            this.onionSkinFrame = parent.GetSprite().GetFrameCount() - 1;
+        }
+        if (this.onionSkinFrame < 0) this.onionSkinFrame = 0;
+        this.onionSkinManagerToolbar.UpdateControls();
     }
 
     public int GetMinimumAllowedFrameOffset() {
@@ -151,8 +159,8 @@ final public class OnionSkinManager extends Thread {
         }
     }
 
-    public int GetFrameOffset() {
-        return frameOffset;
+    public int GetOnionSkinFrame() {
+        return onionSkinFrame;
     }
 
     public int GetMaxWaitTime() {
@@ -170,7 +178,7 @@ final public class OnionSkinManager extends Thread {
             try {
                 Animate();
                 sleep(100);
-            } catch (Exception ex) {}
+            } catch (Exception ex) { ex.printStackTrace(); }
         }
     }
 
@@ -184,7 +192,7 @@ final public class OnionSkinManager extends Thread {
     private int maxFrameOffset;
     private int maxWaitTime;
     private boolean quit;
-    private OnionSkinManagerToolbar onionSkinManagerToolbar;
+    private final OnionSkinManagerToolbar onionSkinManagerToolbar;
 
 
 }

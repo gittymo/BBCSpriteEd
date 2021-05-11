@@ -3,7 +3,6 @@ package com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -54,8 +53,16 @@ public final class OnionSkinManagerToolbar extends JToolBar {
         this.onionSkinToggle.SetState(onionSkinManager.IsEnabled());
         this.onionSkinSlider.setMinimum(onionSkinManager.GetMinimumAllowedFrameOffset());
         this.onionSkinSlider.setMaximum(onionSkinManager.GetMaximumAllowedFrameOffset());
-        this.onionSkinSlider.setValue(onionSkinManager.GetFrameOffset());
+        this.onionSkinSlider.setValue(onionSkinManager.GetOffset());
         this.onionSkinAnimateToggle.SetState(onionSkinManager.GetMaxWaitTime() > 0);
+    }
+
+    public int GetOffset() {
+        return onionSkinSlider.getValue();
+    }
+
+    public void SetOffset(int offset) {
+        onionSkinSlider.setValue(offset);
     }
 
     private OnionSkinManager onionSkinManager;

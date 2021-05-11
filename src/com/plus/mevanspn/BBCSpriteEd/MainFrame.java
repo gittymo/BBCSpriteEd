@@ -62,6 +62,8 @@ final public class MainFrame extends JFrame {
             ResizeImagePane();
             colourPickerToolbar.CreatePaletteUsingSprite(sprite);
             timelinePanel.SetSprite(sprite);
+            previewPanel.SetFrame(0);
+            onionSkinManager.ResetOnionSkinFrame();
         }
     }
 
@@ -116,7 +118,9 @@ final public class MainFrame extends JFrame {
     }
 
     public PreviewPanel GetPreviewPanel() { return previewPanel; }
-    
+
+    public ImagePanel GetImagePanel() { return imagePanel; }
+
     public void UpdateTimeline() {
         if (sprite != null) timelinePanel.SetActiveFrame(sprite.GetCurrentFrameIndex());
         timelinePanel.Refresh();
