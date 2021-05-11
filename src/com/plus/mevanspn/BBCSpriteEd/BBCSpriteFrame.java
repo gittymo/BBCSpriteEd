@@ -49,7 +49,7 @@ final public class BBCSpriteFrame {
     }
 
     public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
-        if (data != null && left > 0 && top > 0 && width > 0 && height > 0) {
+        if (data != null && left >= 0 && top >= 0 && width > 0 && height > 0) {
             if (left + width > GetWidth()) width = GetWidth() - left;
             if (top + height > GetHeight()) height = GetHeight() - top;
             for (int y = top; y <= top + height; y++) {
@@ -95,32 +95,34 @@ final public class BBCSpriteFrame {
     public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplaceIndex, boolean border) {
         if (p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
             final int pixelOffset = (p.y * GetWidth()) + p.x;
+            if (colourToReplaceIndex == 127) colourToReplaceIndex = data[pixelOffset];
+            else if (colourToReplaceIndex == colourToUseIndex || (colourToReplaceIndex != data[pixelOffset] && colourToUseIndex != data[pixelOffset])) return;
+
             final int startOfLineOffset = p.y * GetWidth();
             final int endOfLineOffset = startOfLineOffset + GetWidth();
-            final int endOfImageOffset = GetWidth() * GetHeight();
-            if (data[pixelOffset] == colourToUseIndex && !border) return;
-            if (colourToReplaceIndex == 127) colourToReplaceIndex = data[pixelOffset];
-            else if (colourToReplaceIndex != data[pixelOffset] && colourToUseIndex != data[pixelOffset]) return;
             int offset = pixelOffset;
-            final int pixelAbove = offset - GetWidth();
-            final int pixelBelow = offset + GetWidth();
-            if (colourToReplaceIndex != colourToUseIndex && !border) {
+            int pixelAbove, pixelBelow;
+            if (data[pixelOffset] == colourToReplaceIndex) {
                 while (offset >= startOfLineOffset && data[offset] == colourToReplaceIndex) {
+                    pixelAbove = offset - GetWidth();
+                    pixelBelow = offset + GetWidth();
                     data[offset] = colourToUseIndex;
-                    if (p.y > 0 && pixelAbove > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex, false);
-                    if (p.y < GetHeight() - 1 && pixelBelow < endOfImageOffset && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex, false);
+                    if (p.y > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex, false);
+                    if (p.y < GetHeight() - 1 && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex, false);
                     offset--;
                 }
                 offset = pixelOffset + 1;
                 while (offset < endOfLineOffset && data[offset] == colourToReplaceIndex) {
+                    pixelAbove = offset - GetWidth();
+                    pixelBelow = offset + GetWidth();
                     data[offset] = colourToUseIndex;
-                    if (p.y > 0 && pixelAbove > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex, false);
-                    if (p.y < GetHeight() - 1 && pixelBelow < endOfImageOffset && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex, false);
+                    if (p.y > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex, false);
+                    if (p.y < GetHeight() - 1 && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex, false);
                     offset++;
                 }
             } else {
-                if (p.y > 0 && pixelAbove > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplaceIndex, true);
-                if (p.y < GetHeight() - 1 && pixelBelow < endOfImageOffset && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplaceIndex, true);
+                if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplaceIndex, true);
+                if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplaceIndex, true);
             }
         }
     }
