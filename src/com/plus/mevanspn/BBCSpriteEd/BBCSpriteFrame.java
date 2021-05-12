@@ -116,7 +116,7 @@ final public class BBCSpriteFrame {
         return renderedImage;
     }
 
-    void SetRenderedImage(BufferedImage newRenderedImage) {
+    public void SetRenderedImage(BufferedImage newRenderedImage) {
         renderedImage = newRenderedImage;
     }
 

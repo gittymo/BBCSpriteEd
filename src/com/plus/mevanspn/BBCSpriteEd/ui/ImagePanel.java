@@ -75,6 +75,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         return parent.GetDrawingToolbar().GetButton(keyValue);
     }
 
+    public void ResetDrawPoints() {
+        drawPointA = drawPointB = new Point(0,0);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -83,13 +87,15 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         final BBCSpriteFrame activeImage = parent.GetActiveFrame();
         if (activeImage != null) {
             Rectangle r = GetImageArea();
+            final int imageOffsetX = getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate") ? drawPointB.x - drawPointA.x : 0;
+            final int imageOffsetY = getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate") ? drawPointB.y - drawPointA.y : 0;
             if (r != null) {
                 g2.drawImage(GetBackgroundImage(), r.x, r.y, r.width, r.height, null);
-                g2.drawImage(activeImage.GetRenderedImage(), r.x, r.y, r.width, r.height, null);
+                g2.drawImage(activeImage.GetRenderedImage(), r.x + imageOffsetX, r.y + imageOffsetY, r.width, r.height, null);
                 final OnionSkinManager osm = parent.GetOnionSkinManager();
                 if (osm != null && osm.IsEnabled()) {
                     BufferedImage onionSkinImage = osm.GetOnionSkin();
-                    if (onionSkinImage != null) g2.drawImage(onionSkinImage, r.x, r.y, r.width, r.height, null);
+                    if (onionSkinImage != null) g2.drawImage(onionSkinImage, r.x + imageOffsetX, r.y + imageOffsetY, r.width, r.height, null);
                 }
                 if (zoom > 4) {
                     g2.setColor(new Color(0, 0, 128, 255));
@@ -146,6 +152,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     public void mousePressed(MouseEvent e) {
         if (!mouseDown) mouseDown = true;
         drawPointA = new Point(e.getX(), e.getY());
+        drawPointB = new Point(e.getX(), e.getY());
     }
 
     @Override
@@ -166,10 +173,16 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 final int rectButtonState = ((MultiFunctionButton) parent.GetDrawingToolbar().GetButton("rectangle")).GetStateValue();
                 final boolean isFilled = rectButtonState == DrawingToolbar.DRAW_RECT_FILL;
                 activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, parent.GetActiveColourIndex());
+            } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate")) {
+                BufferedImage newFrameImage = new BufferedImage(activeImage.GetWidth(), activeImage.GetHeight(), BufferedImage.TYPE_INT_ARGB);
+                final int offsetX = (drawPointB.x - drawPointA.x) / (int) (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio());
+                final int offsetY = (drawPointB.y - drawPointA.y) / (int) parent.GetZoom();
+                newFrameImage.getGraphics().drawImage(activeImage.GetRenderedImage(), offsetX, offsetY, null);
+                activeImage.SetRenderedImage(newFrameImage);
             }
-            repaint();
+            parent.RefreshPanels();
         }
-        drawPointA = drawPointB = null;
+        ResetDrawPoints();
     }
 
     @Override

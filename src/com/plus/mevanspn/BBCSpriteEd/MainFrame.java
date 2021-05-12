@@ -43,7 +43,7 @@ final public class MainFrame extends JFrame {
         getContentPane().add(this.scrollPane,BorderLayout.CENTER);
 
         this.colourPickerToolbar = new ColourPickerToolbar(this);
-        this.drawingToolbar = new DrawingToolbar();
+        this.drawingToolbar = new DrawingToolbar(this);
         ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
         getContentPane().add(toolbarsContainer, BorderLayout.NORTH);
 
