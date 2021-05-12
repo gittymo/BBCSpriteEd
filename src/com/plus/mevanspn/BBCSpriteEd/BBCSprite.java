@@ -155,6 +155,22 @@ final public class BBCSprite {
         }
     }
 
+    public void Resize(int newWidth, int newHeight) {
+        if (newWidth < 1 || newWidth > GetDisplayMode().width) return;
+        if (newHeight < 1 || newHeight > GetDisplayMode().height) return;
+        if (newWidth == width && newHeight == height) return;
+        for (BBCSpriteFrame bbcSpriteFrame : frames) {
+            BufferedImage newRenderedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+            final int xpos = (newWidth - width) / 2;
+            final int ypos = (newHeight - height) / 2;
+            newRenderedImage.getGraphics().drawImage(bbcSpriteFrame.GetRenderedImage(), xpos, ypos, null);
+            bbcSpriteFrame.SetRenderedImage(newRenderedImage);
+        }
+        width = newWidth;
+        height = newHeight;
+        parent.RefreshPanels();
+    }
+
     public void WriteToFile(String filename) throws IOException {
         DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(filename));
         if (dataOutputStream != null) {
@@ -172,7 +188,7 @@ final public class BBCSprite {
     }
 
     private final LinkedList<BBCSpriteFrame> frames;
-    private final int width, height;
+    private int width, height;
     private final DisplayMode displayMode;
     private final Color[] colours;
     private final MainFrame parent;

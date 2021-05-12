@@ -116,6 +116,10 @@ final public class BBCSpriteFrame {
         return renderedImage;
     }
 
+    void SetRenderedImage(BufferedImage newRenderedImage) {
+        renderedImage = newRenderedImage;
+    }
+
     public void WriteToStream(DataOutputStream dataOutputStream) throws IOException {
         if (dataOutputStream != null && renderedImage != null) {
             byte[] data = new byte[renderedImage.getWidth() * renderedImage.getHeight()];
@@ -130,5 +134,5 @@ final public class BBCSpriteFrame {
     }
 
     private final BBCSprite parent;
-    private final BufferedImage renderedImage;
+    private BufferedImage renderedImage;
 }
