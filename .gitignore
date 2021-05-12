@@ -21,7 +21,6 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-/BBCSpriteEd.iml
 /.idea/artifacts/BBCSpriteEd_jar.xml
 /out/production/BBCSpriteEd/img/eraser.png
 /out/production/BBCSpriteEd/res/img/eraser.png
@@ -34,7 +33,6 @@ hs_err_pid*
 /out/production/BBCSpriteEd/img/line.png
 /out/production/BBCSpriteEd/res/img/line.png
 /out/production/BBCSpriteEd/META-INF/MANIFEST.MF
-/src/META-INF/MANIFEST.MF
 /.idea/misc.xml
 /.idea/modules.xml
 /out/production/BBCSpriteEd/img/OnionAniOff.png
