@@ -10,6 +10,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.Collections;
 import java.util.LinkedList;
 
+
 public class MultiFunctionButton extends DrawingToolbarButton implements MouseWheelListener, MouseListener {
 
     public MultiFunctionButton(String iconFile, String name, String tooltipText, DrawingToolbar parent) {
@@ -43,6 +44,7 @@ public class MultiFunctionButton extends DrawingToolbarButton implements MouseWh
 
     private void setIconToState() {
         this.setIcon(states.get(stateIndex).GetIcon());
+        GetParent().SetActiveButton(this);
     }
 
     public int GetStateValue() {

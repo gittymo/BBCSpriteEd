@@ -13,5 +13,12 @@ public class DrawingToolbarButton extends JButton {
         this.setToolTipText(tooltipText);
         this.addActionListener(e -> parent.SetActiveButton((DrawingToolbarButton) e.getSource()));
         this.setSelected(false);
+        this.parent = parent;
     }
+
+    public DrawingToolbar GetParent() {
+        return parent;
+    }
+
+    private DrawingToolbar parent;
 }
