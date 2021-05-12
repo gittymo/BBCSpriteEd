@@ -4,7 +4,7 @@ import com.plus.mevanspn.BBCSpriteEd.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbarButton;
-import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbarMultiButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton.MultiFunctionButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 
 import javax.swing.*;
@@ -163,7 +163,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 final int top = Math.min(pixelPointA.y, pixelPointB.y);
                 final int right = Math.max(pixelPointA.x, pixelPointB.x);
                 final int bottom = Math.max(pixelPointA.y, pixelPointB.y);
-                final int rectButtonState = ((DrawingToolbarMultiButton) parent.GetDrawingToolbar().GetButton("rectangle")).GetStateValue();
+                final int rectButtonState = ((MultiFunctionButton) parent.GetDrawingToolbar().GetButton("rectangle")).GetStateValue();
                 final boolean isFilled = rectButtonState == DrawingToolbar.DRAW_RECT_FILL;
                 activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, parent.GetActiveColourIndex());
             }

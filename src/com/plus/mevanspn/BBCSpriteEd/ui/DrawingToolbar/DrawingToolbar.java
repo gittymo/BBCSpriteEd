@@ -1,5 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar;
 
+import com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton.MultiFunctionButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton.MultiFunctionButtonState;
+
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +15,9 @@ final public class DrawingToolbar extends JToolBar {
         this.add("pencil", new DrawingToolbarButton("img/pencil.png", "Draw freehand lines.", this));
         this.add("eraser", new DrawingToolbarButton("img/eraser.png", "Erase pixels in a freehand fashion.", this));
         this.add("rectangle",
-                new DrawingToolbarMultiButton(new DrawingToolbarMultiButtonState[] {
-                        new DrawingToolbarMultiButtonState("img/rect.png", DRAW_RECT_OPEN),
-                        new DrawingToolbarMultiButtonState("img/fillrect.png", DRAW_RECT_FILL)
+                new MultiFunctionButton(new MultiFunctionButtonState[] {
+                        new MultiFunctionButtonState("img/rect.png", "Outlined Rectangle", DRAW_RECT_OPEN),
+                        new MultiFunctionButtonState("img/fillrect.png", "Filled Rectangle", DRAW_RECT_FILL)
                 }, "Draw outline/filled rectangles.", this));
         this.add("line", new DrawingToolbarButton("img/line.png", "Draw straight lines.", this));
         this.add("floodfill", new DrawingToolbarButton("img/fill.png", "Fill an enclosed space with the chosen colour.", this));

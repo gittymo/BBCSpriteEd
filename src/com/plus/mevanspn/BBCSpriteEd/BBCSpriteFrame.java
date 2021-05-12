@@ -75,6 +75,7 @@ final public class BBCSpriteFrame {
         if (parent != null && renderedImage != null && colourToUseIndex < parent.GetColours().length &&
                 p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
             final int colourToUse = parent.GetColours()[colourToUseIndex].getRGB();
+
             if (!started) {
                 colourToReplace = renderedImage.getRGB(p.x, p.y);
                 if (colourToReplace == colourToUseIndex) return;
