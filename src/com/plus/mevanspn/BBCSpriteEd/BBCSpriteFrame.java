@@ -7,17 +7,14 @@ import java.io.*;
 final public class BBCSpriteFrame {
     public BBCSpriteFrame(BBCSprite parent) {
         this.parent = parent;
-        final int dataLength = parent.GetWidth() * parent.GetHeight();
-        this.data = new byte[dataLength];
-        for (int i = 0; i < dataLength; i++) this.data[i] = (byte) parent.GetColours().length;
         this.renderedImage = new BufferedImage(parent.GetWidth(), parent.GetHeight(), BufferedImage.TYPE_INT_ARGB);
     }
 
     public BBCSpriteFrame(BBCSprite parent, DataInputStream dataInputStream) throws IOException {
         this.parent = parent;
         final int dataLength = parent.GetWidth() * parent.GetHeight();
-        this.data = new byte[dataLength];
-        dataInputStream.read(this.data);
+        byte[] data = new byte[dataLength];
+        dataInputStream.read(data);
         this.renderedImage = new BufferedImage(parent.GetWidth(), parent.GetHeight(), BufferedImage.TYPE_INT_ARGB);
         int i = 0;
         for (int y = 0; y < parent.GetHeight(); y++) {
@@ -44,115 +41,91 @@ final public class BBCSpriteFrame {
         return parent.GetColours();
     }
 
-    public byte[] GetData() {
-        return data;
-    }
-
     public void SetPixel(int x, int y, byte colourIndex) {
-        if (data != null) {
+        if (parent != null && renderedImage != null ) {
             if (x >= 0 && x < GetWidth() && y >= 0 && y < GetHeight()) {
-                int offset = (y * GetWidth()) + x;
-                if (data[offset] != colourIndex) {
-                    data[offset] = colourIndex;
-                    renderedImage.setRGB(x, y, colourIndex < parent.GetColours().length ? parent.GetColours()[colourIndex].getRGB() : 0x000000FF);
-                }
+                final int colourRGB =
+                        colourIndex < parent.GetColours().length ? parent.GetColours()[colourIndex].getRGB() : 0x000000FF;
+                if (renderedImage.getRGB(x, y) != colourRGB) renderedImage.setRGB(x, y, colourRGB);
             }
         }
     }
 
     public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
-        if (data != null && left >= 0 && top >= 0 && width > 0 && height > 0) {
+        if (parent != null && renderedImage != null && colourIndex < parent.GetColours().length &&
+                left >= 0 && top >= 0 && width > 0 && height > 0) {
             if (left + width > GetWidth()) width = GetWidth() - left;
             if (top + height > GetHeight()) height = GetHeight() - top;
-            for (int y = top; y <= top + height; y++) {
-                int offset = (y * GetWidth()) + left;
-                for (int x = 0; x <= width; x++) {
-                    if (filled || (!filled && (x == 0 || x == width || y == top || y == (top + height)))) {
-                        data[offset] = colourIndex;
-                        renderedImage.setRGB(left + x, y, parent.GetColours()[colourIndex].getRGB());
+            Graphics2D g2 = (Graphics2D) renderedImage.getGraphics();
+            g2.setColor(parent.GetColours()[colourIndex]);
+            if (filled) g2.fillRect(left, top, width, height);
+            else g2.drawRect(left, top, width, height);
+        }
+    }
+
+    public void DrawLine(Point pointA, Point pointB, byte colourIndex) {
+        if (parent != null && renderedImage != null && colourIndex < parent.GetColours().length && pointA != null && pointB != null) {
+            Graphics2D g2 = (Graphics2D) renderedImage.getGraphics();
+            g2.setColor(parent.GetColours()[colourIndex]);
+            g2.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
+        }
+    }
+
+    public void FloodFill(Point p, byte colourToUseIndex, int colourToReplace, boolean started) {
+        if (parent != null && renderedImage != null && colourToUseIndex < parent.GetColours().length &&
+                p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
+            final int colourToUse = parent.GetColours()[colourToUseIndex].getRGB();
+            if (!started) {
+                colourToReplace = renderedImage.getRGB(p.x, p.y);
+                if (colourToReplace == colourToUseIndex) return;
+                started = true;
+            }
+
+            if (colourToReplace == renderedImage.getRGB(p.x, p.y)) {
+                for (int x = p.x; x >= 0 && renderedImage.getRGB(x, p.y) == colourToReplace; x--) {
+                    renderedImage.setRGB(x, p.y, colourToUse);
+                    if (p.y > 0 && renderedImage.getRGB(x, p.y - 1) == colourToReplace) {
+                        FloodFill(new Point(x, p.y - 1), colourToUseIndex, colourToReplace, started);
                     }
-                    offset++;
+                    if (p.y < renderedImage.getHeight() - 1 && renderedImage.getRGB(x, p.y + 1) == colourToReplace) {
+                        FloodFill(new Point(x, p.y + 1), colourToUseIndex, colourToReplace, started);
+                    }
                 }
-            }
-        }
-    }
-
-    public void DrawLine(Point leftPoint, Point rightPoint, byte colourIndex) {
-        if (data != null && leftPoint != null && rightPoint != null) {
-            if (leftPoint.x > rightPoint.x) {
-                Point tempPoint = leftPoint;
-                leftPoint = rightPoint;
-                rightPoint = tempPoint;
-            }
-            final int vDiff = 1 + (leftPoint.y > rightPoint.y ? leftPoint.y - rightPoint.y : rightPoint.y - leftPoint.y);
-            final int hDiff = 1 + (rightPoint.x - leftPoint.x);
-            final float gradient = vDiff > 1 ? hDiff / (float) vDiff : hDiff;
-            final int vDir = leftPoint.y > rightPoint.y ? -1 : 1;
-            int y = 0, lines = 0;
-            float x = leftPoint.x;
-            do {
-                int offset = (leftPoint.y + y) * GetWidth() + (int) x;
-                float nextX = x + gradient > leftPoint.x + hDiff ? (leftPoint.x + hDiff) - x : gradient;
-                int drawToOffset = offset + (int) Math.ceil(nextX);
-                do {
-                    data[offset] = colourIndex;
-                    renderedImage.setRGB(offset % GetWidth(), leftPoint.y + y, parent.GetColours()[colourIndex].getRGB());
-                    if (offset < drawToOffset) offset++;
-                } while (offset < drawToOffset);
-                y += vDir;
-                lines++;
-                x += nextX;
-            } while (x < leftPoint.x + hDiff && lines < vDiff);
-        }
-    }
-
-    public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplaceIndex) {
-        if (p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
-            final int pixelOffset = (p.y * GetWidth()) + p.x;
-            if (colourToReplaceIndex == 127) colourToReplaceIndex = data[pixelOffset];
-            else if (colourToReplaceIndex == colourToUseIndex || (colourToReplaceIndex != data[pixelOffset] && colourToUseIndex != data[pixelOffset])) return;
-
-            final int startOfLineOffset = p.y * GetWidth();
-            final int endOfLineOffset = startOfLineOffset + GetWidth();
-            int offset = pixelOffset;
-            int pixelAbove, pixelBelow;
-            if (data[pixelOffset] == colourToReplaceIndex) {
-                while (offset >= startOfLineOffset && data[offset] == colourToReplaceIndex) {
-                    pixelAbove = offset - GetWidth();
-                    pixelBelow = offset + GetWidth();
-                    data[offset] = colourToUseIndex;
-                    renderedImage.setRGB(p.x + (offset - pixelOffset), p.y, parent.GetColours()[colourToUseIndex].getRGB());
-                    if (p.y > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex);
-                    if (p.y < GetHeight() - 1 && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex);
-                    offset--;
+                if (p.x < renderedImage.getWidth() - 1) {
+                    for (int x = p.x + 1; x < renderedImage.getWidth() && renderedImage.getRGB(x, p.y) == colourToReplace; x++) {
+                        renderedImage.setRGB(x, p.y, colourToUse);
+                        if (p.y > 0 && renderedImage.getRGB(x, p.y - 1) == colourToReplace) {
+                            FloodFill(new Point(x, p.y - 1), colourToUseIndex, colourToReplace, started);
+                        }
+                        if (p.y < renderedImage.getHeight() - 1 && renderedImage.getRGB(x, p.y + 1) == colourToReplace) {
+                            FloodFill(new Point(x, p.y + 1), colourToUseIndex, colourToReplace, started);
+                        }
+                    }
                 }
-                offset = pixelOffset + 1;
-                while (offset < endOfLineOffset && data[offset] == colourToReplaceIndex) {
-                    pixelAbove = offset - GetWidth();
-                    pixelBelow = offset + GetWidth();
-                    data[offset] = colourToUseIndex;
-                    renderedImage.setRGB(p.x + (offset - pixelOffset), p.y, parent.GetColours()[colourToUseIndex].getRGB());
-                    if (p.y > 0 && data[pixelAbove] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y - 1), colourToUseIndex, colourToReplaceIndex);
-                    if (p.y < GetHeight() - 1 && data[pixelBelow] == colourToReplaceIndex) FloodFill(new Point(p.x + (offset - pixelOffset), p.y + 1), colourToUseIndex, colourToReplaceIndex);
-                    offset++;
-                }
-            } else {
-                if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplaceIndex);
-                if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplaceIndex);
+            } else if (colourToUse == renderedImage.getRGB(p.x, p.y)){
+                if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplace, started);
+                if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplace, started);
             }
         }
     }
 
     public BufferedImage GetRenderedImage() {
-        if (data != null) return renderedImage;
-        else return null;
+        return renderedImage;
     }
 
     public void WriteToStream(DataOutputStream dataOutputStream) throws IOException {
-        if (dataOutputStream != null) dataOutputStream.write(data);
+        if (dataOutputStream != null && renderedImage != null) {
+            byte[] data = new byte[renderedImage.getWidth() * renderedImage.getHeight()];
+            int i = 0;
+            for (int y = 0; y < renderedImage.getHeight(); y++) {
+                for (int x = 0; x < renderedImage.getWidth(); x++) {
+                    data[i++] = parent.GetColourIndexForRGB(renderedImage.getRGB(x, y));
+                }
+            }
+            dataOutputStream.write(data);
+        }
     }
 
-    private final byte[] data;
     private final BBCSprite parent;
     private final BufferedImage renderedImage;
 }

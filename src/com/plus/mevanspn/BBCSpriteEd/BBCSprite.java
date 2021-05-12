@@ -61,6 +61,14 @@ final public class BBCSprite {
         return colours;
     }
 
+    public byte GetColourIndexForRGB(int rgb) {
+        byte found = (byte) colours.length;
+        for (int i = 0; i < colours.length && found == colours.length; i++) {
+            if (colours[i].getRGB() == rgb) found = (byte) i;
+        }
+        return found;
+    }
+
     public int GetWidth() {
         return width;
     }
@@ -117,16 +125,9 @@ final public class BBCSprite {
             final int frameIndex = frames.indexOf(bsf);
             if (frameIndex >= 0) {
                 BBCSpriteFrame newBsf = new BBCSpriteFrame(this);
-                final byte[] sourceData = bsf.GetData();
-                byte[] destData = newBsf.GetData();
-                System.arraycopy(sourceData, 0, destData, 0, sourceData.length);
                 BufferedImage newBSFImage = newBsf.GetRenderedImage();
                 BufferedImage bsfImage = bsf.GetRenderedImage();
-                for (int y = 0; y < GetHeight(); y++) {
-                    for (int x = 0; x < GetWidth(); x++) {
-                        newBSFImage.setRGB(x, y, bsfImage.getRGB(x, y));
-                    }
-                }
+                newBSFImage.getGraphics().drawImage(bsfImage, 0, 0, null);
                 if (atEnd) frames.add(newBsf);
                 else frames.add(frameIndex + 1, newBsf);
                 SetActiveFrame(newBsf);
