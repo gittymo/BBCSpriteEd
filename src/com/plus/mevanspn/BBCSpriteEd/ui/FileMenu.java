@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 
 final public class FileMenu extends JMenu {
     public FileMenu(MainFrame parent) {
@@ -40,7 +41,9 @@ final public class FileMenu extends JMenu {
                 int rv = filePicker.showSaveDialog(parent);
                 if (rv == JFileChooser.APPROVE_OPTION) {
                     try {
-                        parent.GetSprite().WriteToFile(filePicker.getSelectedFile().getAbsolutePath() + ".bsf");
+                        String filePath = filePicker.getSelectedFile().getAbsolutePath();
+                        if (!filePath.toLowerCase(Locale.ROOT).endsWith(".bsf")) filePath += ".bsf";
+                        parent.GetSprite().WriteToFile( filePath);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
