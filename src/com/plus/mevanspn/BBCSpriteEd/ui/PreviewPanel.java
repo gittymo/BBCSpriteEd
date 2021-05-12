@@ -3,6 +3,7 @@ package com.plus.mevanspn.BBCSpriteEd.ui;
 import com.plus.mevanspn.BBCSpriteEd.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -14,6 +15,7 @@ final public class PreviewPanel extends JPanel {
         this.zoom = 2;
         this.frameRotaterThread = new FrameRotaterThread(this);
         this.frameRotaterThread.start();
+        this.setBorder(new EmptyBorder(PADDING,PADDING,PADDING,PADDING));
     }
 
     @Override
@@ -27,8 +29,8 @@ final public class PreviewPanel extends JPanel {
 
             if (sprite != null && sprite.GetFrameCount() > 0) {
                 Graphics2D g2 = (Graphics2D) g;
-                final int displayWidth = zoomedWidth + (PADDING * 2);
-                final int displayHeight = zoomedHeight + (PADDING * 2);
+                final int displayWidth = zoomedWidth + PADDING;
+                final int displayHeight = zoomedHeight + PADDING;
                 final int displayX = (usableArea.width - displayWidth) / 2;
                 final int displayY = (usableArea.height - displayHeight) / 2;
                 g2.setColor(Color.GRAY);
@@ -36,7 +38,7 @@ final public class PreviewPanel extends JPanel {
                 g2.setColor(Color.BLACK);
                 g2.drawRect(displayX, displayY, displayWidth, displayHeight);
                 BufferedImage frameImage = sprite.GetFrame(frame).GetRenderedImage();
-                if (frameImage != null) g2.drawImage(sprite.GetFrame(frame).GetRenderedImage(), displayX + PADDING, displayY + PADDING, zoomedWidth, zoomedHeight, null);
+                if (frameImage != null) g2.drawImage(sprite.GetFrame(frame).GetRenderedImage(), displayX + (PADDING / 2), displayY + (PADDING / 2), zoomedWidth, zoomedHeight, null);
             }
         }
     }
@@ -61,9 +63,9 @@ final public class PreviewPanel extends JPanel {
             if (sprite != null) {
                 final int zoomedWidth = (int) (sprite.GetWidth() * zoom);
                 final int zoomedHeight = (int) (sprite.GetHeight() * zoom);
-                final int displayWidth = zoomedWidth + (PADDING * 2);
-                final int displayHeight = zoomedHeight + (PADDING * 2);
-                return new Dimension(displayWidth + PADDING, displayHeight + PADDING);
+                final int displayWidth = zoomedWidth + PADDING;
+                final int displayHeight = zoomedHeight + PADDING;
+                return new Dimension(displayWidth + (PADDING * 2), displayHeight + (PADDING * 2));
             } else return new Dimension(PADDING, PADDING);
         } else return new Dimension(PADDING, PADDING);
     }

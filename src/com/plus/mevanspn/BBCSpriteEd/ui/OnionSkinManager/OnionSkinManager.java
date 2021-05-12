@@ -54,7 +54,7 @@ final public class OnionSkinManager extends Thread {
                     final int halfZoom = quarterZoom * 2;
                     for (int y = 0; y < onionSkinSourceFrame.GetHeight(); y++) {
                         for (int x = 0; x < onionSkinSourceFrame.GetWidth(); x++) {
-                            if (onionSkinSourceImage.getRGB(x,y) != 0) {
+                            if ((onionSkinSourceImage.getRGB(x,y) & 0xFF) != 0) {
                                 // System.out.println(onionSkinSourceImage.getRGB(x, y) + " = x" + x + ", y = " + y);
                                 final Color pixelColour = new Color(onionSkinSourceImage.getRGB(x, y));
                                 g2.setColor(pixelColour);
