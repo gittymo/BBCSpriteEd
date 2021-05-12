@@ -27,7 +27,7 @@ final public class OnionSkinManager extends Thread {
 
                 BufferedImage onionSkinImage = new BufferedImage(onionSkinImageWidth, onionSkinImageHeight, BufferedImage.TYPE_4BYTE_ABGR);
                 Graphics2D g2 = (Graphics2D) onionSkinImage.getGraphics();
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                /*g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
                 g2.drawImage(onionSkinSourceFrame.GetRenderedImage(), 0, 0, onionSkinImageWidth, onionSkinImageHeight, null);
 
                 if (zoom > 4) {
@@ -47,8 +47,27 @@ final public class OnionSkinManager extends Thread {
                         zoomCount = (zoomCount + 1) % iZoom;
                     }
                     onionSkinImage.getRaster().setDataElements(0, 0, onionSkinImageWidth, onionSkinImageHeight, samples);
+                }*/
+                if (zoom > 4 && onionSkinFrame != parent.GetSprite().GetCurrentFrameIndex()) {
+                    final BufferedImage onionSkinSourceImage = onionSkinSourceFrame.GetRenderedImage();
+                    final int quarterZoom = (int) (parent.GetZoom() / 4);
+                    final int halfZoom = quarterZoom * 2;
+                    for (int y = 0; y < onionSkinSourceFrame.GetHeight(); y++) {
+                        for (int x = 0; x < onionSkinSourceFrame.GetWidth(); x++) {
+                            if (onionSkinSourceImage.getRGB(x,y) != 0) {
+                                // System.out.println(onionSkinSourceImage.getRGB(x, y) + " = x" + x + ", y = " + y);
+                                final Color pixelColour = new Color(onionSkinSourceImage.getRGB(x, y));
+                                g2.setColor(pixelColour);
+                                final int rectX = (int) (x * parent.GetZoom());
+                                final int rectY = (int) (y * parent.GetZoom());
+                                g2.fillRect(rectX + halfZoom - 1, rectY + (quarterZoom * 3) - 1, halfZoom, quarterZoom);
+                                g2.setColor(Color.BLACK);
+                                g2.drawRect(rectX + halfZoom - 1, rectY + (quarterZoom * 3) - 1, halfZoom, quarterZoom);
+                            }
+                        }
+                    }
+                    return onionSkinImage;
                 }
-                return onionSkinImage;
             }
         }
         return null;
