@@ -88,8 +88,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         final BBCSpriteFrame activeImage = parent.GetActiveFrame();
         if (activeImage != null) {
             Rectangle r = GetImageArea();
-            final int imageOffsetX = getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate") ? drawPointB.x - drawPointA.x : 0;
-            final int imageOffsetY = getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate") ? drawPointB.y - drawPointA.y : 0;
+            int imageOffsetX = (getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate") ? drawPointB.x - drawPointA.x : 0);
+            int imageOffsetY = getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate") ? drawPointB.y - drawPointA.y : 0;
+            imageOffsetX = (imageOffsetX / (int) (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio())) * (int) (zoom * parent.GetSprite().GetHorizontalPixelRatio());
+            imageOffsetY = (imageOffsetY / (int) parent.GetZoom()) * (int) zoom;
             if (r != null) {
                 g2.drawImage(GetBackgroundImage(), r.x, r.y, r.width, r.height, null);
                 g2.drawImage(activeImage.GetRenderedImage(), r.x + imageOffsetX, r.y + imageOffsetY, r.width, r.height, null);
