@@ -199,6 +199,16 @@ final public class BBCSprite {
         return BBCColour.GenerateIndexColourModel(colours);
     }
 
+    public void RollBack() {
+        activeFrame.RollBack();
+        parent.RefreshPanels();
+    }
+
+    public void RollForward() {
+        activeFrame.RollForward();
+        parent.RefreshPanels();
+    }
+
     private final LinkedList<BBCSpriteFrame> frames;
     private int width, height;
     private final DisplayMode displayMode;

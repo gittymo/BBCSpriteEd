@@ -2,14 +2,11 @@ package com.plus.mevanspn.BBCSpriteEd;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
-import com.plus.mevanspn.BBCSpriteEd.ui.ImagePanel;
-import com.plus.mevanspn.BBCSpriteEd.ui.MainFrameMenuBar;
+import com.plus.mevanspn.BBCSpriteEd.ui.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 import com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker.ColourPickerToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbar;
-import com.plus.mevanspn.BBCSpriteEd.ui.PreviewPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.TimelinePanel.TimelinePanel;
-import com.plus.mevanspn.BBCSpriteEd.ui.ToolbarsContainer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +46,9 @@ final public class MainFrame extends JFrame {
 
         this.colourPickerToolbar = new ColourPickerToolbar(this);
         this.drawingToolbar = new DrawingToolbar(this);
+
+        this.editToolbar = new EditToolbar(this);
+
         ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
         getContentPane().add(toolbarsContainer, BorderLayout.NORTH);
 
@@ -116,6 +116,8 @@ final public class MainFrame extends JFrame {
         return drawingToolbar;
     }
 
+    public EditToolbar GetEditToolbar() { return editToolbar; }
+
     public MainFrameMenuBar GetMenuBar() { return mainFrameMenuBar; }
 
     public BBCSprite GetSprite() {
@@ -147,6 +149,7 @@ final public class MainFrame extends JFrame {
     private JScrollPane scrollPane;
     private ColourPickerToolbar colourPickerToolbar;
     private DrawingToolbar drawingToolbar;
+    private EditToolbar editToolbar;
     private TimelinePanel timelinePanel;
     private MainFrameMenuBar mainFrameMenuBar;
     private OnionSkinManager onionSkinManager;

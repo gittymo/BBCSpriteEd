@@ -141,6 +141,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     parent.UpdateTimeline();
                 }
                 if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("floodfill")) {
+                    activeImage.RecordHistory();
                     activeImage.FloodFill(p, parent.GetActiveColourIndex(), 0, false);
                     repaint(this.getVisibleRect());
                     parent.UpdateTimeline();
@@ -175,6 +176,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 final boolean isFilled = rectButtonState == DrawingToolbar.DRAW_RECT_FILL;
                 activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, parent.GetActiveColourIndex());
             } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate")) {
+                activeImage.RecordHistory();
                 BBCImage newFrameImage = new BBCImage(activeImage.GetSprite());
                 final int offsetX = (drawPointB.x - drawPointA.x) / (int) (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio());
                 final int offsetY = (drawPointB.y - drawPointA.y) / (int) parent.GetZoom();

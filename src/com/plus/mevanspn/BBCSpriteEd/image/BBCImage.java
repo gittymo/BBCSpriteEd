@@ -27,6 +27,10 @@ final public class BBCImage extends BufferedImage {
         this.bbcSprite = bbcImage.GetSprite();
     }
 
+    public BBCImage(BBCImage originalImage) {
+        this(originalImage, originalImage.GetSprite().GetColourModel());
+    }
+
     public BBCSprite GetSprite() {
         return bbcSprite;
     }
