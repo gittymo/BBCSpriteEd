@@ -2,11 +2,11 @@ package com.plus.mevanspn.BBCSpriteEd.image;
 
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.io.*;
 import java.util.LinkedList;
+import java.util.Stack;
 
 final public class BBCSprite {
     public BBCSprite(int width, int height, DisplayMode displayMode, MainFrame parent) {
@@ -18,6 +18,8 @@ final public class BBCSprite {
         this.frames = new LinkedList<>();
         this.colours = BBCColour.GetCopy(displayMode.colours);
         AddFrame();
+        this.rollForwardHistory = new Stack<>();
+        this.rollBackHistory = new Stack<>();
         this.ResetHistory();
     }
 
@@ -37,8 +39,22 @@ final public class BBCSprite {
             for (int i = 0; i < frameCount; i++) this.frames.add(new BBCSpriteFrame(this, dataInputStream));
             this.activeFrame = this.frames.getFirst();
             dataInputStream.close();
+            this.rollForwardHistory = new Stack<>();
+            this.rollBackHistory = new Stack<>();
             this.ResetHistory();
         } else throw new InvalidSpriteFileException(filename);
+    }
+
+    private BBCSprite(BBCSprite originalSprite) {
+        this(originalSprite.width, originalSprite.height, originalSprite.displayMode, originalSprite.parent);
+        this.colours = BBCColour.GetCopy(originalSprite.colours);
+        this.frames.clear();
+        for (BBCSpriteFrame frame : originalSprite.frames) {
+            this.frames.add(new BBCSpriteFrame(frame));
+        }
+        this.activeFrame = this.GetFrame(originalSprite.GetFrameIndex(originalSprite.activeFrame));
+        this.rollBackHistory = originalSprite.rollBackHistory;
+        this.rollForwardHistory = originalSprite.rollForwardHistory;
     }
 
     public BBCSpriteFrame GetFrame(int frameIndex) {
@@ -173,7 +189,6 @@ final public class BBCSprite {
         width = newWidth;
         height = newHeight;
         parent.RefreshPanels();
-        ResetHistory();
     }
 
     public void WriteToFile(String filename) throws IOException {
@@ -203,25 +218,47 @@ final public class BBCSprite {
     }
 
     public void RollBack() {
-        activeFrame.RollBack();
-        parent.RefreshPanels();
+        if (rollBackHistory.size() > 0) {
+            rollForwardHistory.push(new BBCSprite(this));
+            this.setToSprite(rollBackHistory.pop());
+            this.parent.RefreshPanels();
+        }
     }
 
     public void RollForward() {
-        activeFrame.RollForward();
-        parent.RefreshPanels();
+        if (rollForwardHistory.size() > 0) {
+            rollBackHistory.push(new BBCSprite(this));
+            this.setToSprite(rollForwardHistory.pop());
+            this.parent.RefreshPanels();
+        }
+    }
+
+    public void RecordHistory() {
+        rollBackHistory.push(new BBCSprite(this));
+        rollForwardHistory.clear();
     }
 
     public void ResetHistory() {
-        for (BBCSpriteFrame frame : frames) frame.ResetHistory();
+        rollForwardHistory.clear();
+        rollBackHistory.clear();
+    }
+
+    private void setToSprite(BBCSprite otherSprite) {
+        this.width = otherSprite.width;
+        this.height = otherSprite.height;
+        this.colours = BBCColour.GetCopy(otherSprite.colours);
+        this.frames.clear();
+        for (BBCSpriteFrame frame : otherSprite.frames) this.frames.add(new BBCSpriteFrame(frame));
+        this.activeFrame = this.frames.get(otherSprite.GetFrameIndex(otherSprite.activeFrame));
     }
 
     private final LinkedList<BBCSpriteFrame> frames;
     private int width, height;
     private final DisplayMode displayMode;
-    private final BBCColour[] colours;
+    private BBCColour[] colours;
     private final MainFrame parent;
     private BBCSpriteFrame activeFrame;
+    private Stack<BBCSprite> rollBackHistory, rollForwardHistory;
 
     public enum DisplayMode {
         ModeZero(0,0.5f, BBCColour.TWO_COLOUR_MODE_DEFAULT, 640, 256),
@@ -238,7 +275,7 @@ final public class BBCSprite {
             this.height = height;
         }
 
-        private int findColourIndex(Color colour) {
+        public static int GetColourIndex(BBCColour colour) {
             int i = 0;
             boolean found = false;
             while (i < allColours.length && !found) {
@@ -251,13 +288,13 @@ final public class BBCSprite {
             return found ? i : -1;
         }
 
-        public Color GetNextColour(Color colour) {
-            int colourPos = findColourIndex(colour);
+        public BBCColour GetNextColour(BBCColour colour) {
+            int colourPos = GetColourIndex(colour);
             return colourPos >= 0 ? allColours[colourPos < allColours.length - 1 ? colourPos + 1 : 0] : null;
         }
 
-        public Color GetPreviousColour(Color colour) {
-            int colourPos = findColourIndex(colour);
+        public BBCColour GetPreviousColour(BBCColour colour) {
+            int colourPos = GetColourIndex(colour);
             return colourPos >= 0 ? allColours[colourPos > 0 ? colourPos - 1 : allColours.length - 1] : null;
         }
 

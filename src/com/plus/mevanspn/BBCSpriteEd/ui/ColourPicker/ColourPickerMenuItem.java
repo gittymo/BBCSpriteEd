@@ -1,12 +1,14 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
 
+import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ColourPickerMenuItem extends JMenuItem implements ActionListener {
-    public ColourPickerMenuItem(Color[] colours, byte colourIndex, ColourPickerButton colourPickerButton) {
+    public ColourPickerMenuItem(BBCColour[] colours, byte colourIndex, ColourPickerButton colourPickerButton) {
         super();
         this.colours = colours;
         this.colourIndex = colourIndex;
@@ -31,13 +33,10 @@ public final class ColourPickerMenuItem extends JMenuItem implements ActionListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        colourPickerButton.colourPalette[colourPickerButton.paletteIndex] = this.colours[this.colourIndex];
-        colourPickerButton.colour = this.colours[this.colourIndex];
-        final ColourPickerToolbar parent = (ColourPickerToolbar) colourPickerButton.getParent();
-        parent.UpdatePaletteColour();
+        colourPickerButton.UpdateColour(this.colours[this.colourIndex]);
     }
 
-    private Color[] colours;
+    private BBCColour[] colours;
     private byte colourIndex;
     private ColourPickerButton colourPickerButton;
 }

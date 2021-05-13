@@ -8,8 +8,6 @@ final public class BBCSpriteFrame {
     public BBCSpriteFrame(BBCSprite bbcSprite) {
         this.bbcSprite = bbcSprite;
         this.renderedImage = new BBCImage(bbcSprite);
-        this.rollbackHistory = new Stack<BBCImage>();
-        this.rollforwardHistory = new Stack<BBCImage>();
     }
 
     public BBCSpriteFrame(BBCSprite bbcSprite, DataInputStream dataInputStream) throws IOException {
@@ -19,8 +17,11 @@ final public class BBCSpriteFrame {
         dataInputStream.read(data);
         this.renderedImage = new BBCImage(bbcSprite);
         this.renderedImage.getRaster().setDataElements(0, 0, GetWidth(), GetHeight(), data);
-        this.rollbackHistory = new Stack<BBCImage>();
-        this.rollforwardHistory = new Stack<BBCImage>();
+    }
+
+    public BBCSpriteFrame(BBCSpriteFrame originalSpriteFrame) {
+        this(originalSpriteFrame.GetSprite());
+        this.renderedImage = new BBCImage(originalSpriteFrame.renderedImage);
     }
 
     public int GetWidth() {
@@ -52,7 +53,6 @@ final public class BBCSpriteFrame {
     public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
         if (bbcSprite != null && renderedImage != null && colourIndex < bbcSprite.GetColours().length &&
                 left >= 0 && top >= 0 && width > 0 && height > 0) {
-            RecordHistory();
             width = width + 1;
             height = height + 1;
             if (left + width > GetWidth()) width = GetWidth() - left;
@@ -66,7 +66,6 @@ final public class BBCSpriteFrame {
 
     public void DrawLine(Point pointA, Point pointB, byte colourIndex) {
         if (bbcSprite != null && renderedImage != null && colourIndex < bbcSprite.GetColours().length && pointA != null && pointB != null) {
-            RecordHistory();
             Graphics2D g2 = (Graphics2D) renderedImage.getGraphics();
             g2.setColor(bbcSprite.GetColours()[colourIndex]);
             g2.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
@@ -136,31 +135,6 @@ final public class BBCSpriteFrame {
         return bbcSprite;
     }
 
-    public void RollBack() {
-        if (rollbackHistory.size() > 0) {
-            rollforwardHistory.push(new BBCImage(renderedImage));
-            renderedImage = rollbackHistory.pop();
-        }
-    }
-
-    public void RollForward() {
-        if (rollforwardHistory.size() > 0) {
-            rollbackHistory.push(new BBCImage(renderedImage));
-            renderedImage = rollforwardHistory.pop();
-        }
-    }
-
-    public void RecordHistory() {
-        rollbackHistory.push(new BBCImage(renderedImage));
-        rollforwardHistory.clear();
-    }
-
-    public void ResetHistory() {
-        rollforwardHistory.clear();
-        rollbackHistory.clear();
-    }
-
     private final BBCSprite bbcSprite;
     private BBCImage renderedImage;
-    private Stack<BBCImage> rollbackHistory, rollforwardHistory;
 }

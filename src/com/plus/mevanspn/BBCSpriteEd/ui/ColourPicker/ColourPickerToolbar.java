@@ -1,5 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
 
+import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
@@ -23,9 +24,8 @@ final public class ColourPickerToolbar extends JToolBar {
         if (this.parent != null) {
             reset();
             if (sprite != null) {
-                Color[] spriteColours = sprite.GetColours();
-                for (int i = 0; i < spriteColours.length; i++) {
-                    addColourPickerButton(new ColourPickerButton((byte) i, spriteColours, this));
+                for (int i = 0; i < sprite.GetColours().length; i++) {
+                    addColourPickerButton(new ColourPickerButton((byte) i, sprite, this));
                 }
                 revalidate();
                 repaint();
@@ -54,12 +54,6 @@ final public class ColourPickerToolbar extends JToolBar {
             cpb.isActive = cpb == activeColourButton;
         }
         repaint();
-    }
-
-    public void UpdatePaletteColour() {
-        repaint();
-        parent.GetSprite().UpdateColourModel();
-        parent.RefreshPanels();
     }
 
     private final MainFrame parent;

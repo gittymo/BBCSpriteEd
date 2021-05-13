@@ -98,6 +98,7 @@ final public class MainFrame extends JFrame {
     public void RefreshPanels() {
         if (imagePanel != null) imagePanel.repaint();
         if (timelinePanel != null) UpdateTimeline();
+        if (colourPickerToolbar != null) colourPickerToolbar.repaint();
     }
 
     public void ResizeImagePane() {

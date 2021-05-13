@@ -143,7 +143,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     parent.UpdateTimeline();
                 }
                 if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("floodfill")) {
-                    activeImage.RecordHistory();
+                    activeImage.GetSprite().RecordHistory();
                     activeImage.FloodFill(p, parent.GetActiveColourIndex(), 0, false);
                     repaint(this.getVisibleRect());
                     parent.UpdateTimeline();
@@ -154,12 +154,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!mouseDown) {
+        if (!mouseDown && e.getButton() == 1) {
             final BBCSpriteFrame activeImage = parent.GetActiveFrame();
+            activeImage.GetSprite().RecordHistory();
             mouseDown = true;
-            if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("pencil")) {
-                activeImage.RecordHistory();
-            }
         }
 
         drawPointA = new Point(e.getX(), e.getY());
@@ -185,7 +183,6 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 final boolean isFilled = rectButtonState == DrawingToolbar.DRAW_RECT_FILL;
                 activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, parent.GetActiveColourIndex());
             } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate")) {
-                activeImage.RecordHistory();
                 BBCImage newFrameImage = new BBCImage(activeImage.GetSprite());
                 final int offsetX = (int) Math.ceil((drawPointB.x - drawPointA.x) / (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio()));
                 final int offsetY = (int) Math.ceil((drawPointB.y - drawPointA.y) / (int) parent.GetZoom());

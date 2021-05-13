@@ -56,6 +56,7 @@ final public class EditMenu extends JMenu {
                         newHeight = originalHeight;
                     }
                     if (newWidth != originalWidth || newHeight != originalHeight) {
+                        GetMainFrame().GetSprite().RecordHistory();
                         GetMainFrame().GetSprite().Resize(newWidth, newHeight);
                         Close();
                     }
