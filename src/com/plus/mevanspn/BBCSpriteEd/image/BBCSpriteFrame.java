@@ -19,6 +19,8 @@ final public class BBCSpriteFrame {
         dataInputStream.read(data);
         this.renderedImage = new BBCImage(bbcSprite);
         this.renderedImage.getRaster().setDataElements(0, 0, GetWidth(), GetHeight(), data);
+        this.rollbackHistory = new Stack<BBCImage>();
+        this.rollforwardHistory = new Stack<BBCImage>();
     }
 
     public int GetWidth() {
