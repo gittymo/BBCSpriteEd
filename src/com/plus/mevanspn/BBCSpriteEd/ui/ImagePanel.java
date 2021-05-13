@@ -96,7 +96,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 final OnionSkinManager osm = parent.GetOnionSkinManager();
                 if (osm != null && osm.IsEnabled()) {
                     BufferedImage onionSkinImage = osm.GetOnionSkin();
-                    if (onionSkinImage != null) g2.drawImage(onionSkinImage, r.x + imageOffsetX, r.y + imageOffsetY, r.width, r.height, null);
+                    if (onionSkinImage != null) g2.drawImage(onionSkinImage, r.x, r.y, r.width, r.height, null);
                 }
                 if (zoom > 4) {
                     g2.setColor(new Color(0, 0, 128, 255));
