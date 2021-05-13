@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd;
+package com.plus.mevanspn.BBCSpriteEd.image;
 
 final public class InvalidSpriteFileException extends Exception {
     public InvalidSpriteFileException(String filename) {

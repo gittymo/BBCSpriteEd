@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
 
-import com.plus.mevanspn.BBCSpriteEd.BBCSprite;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +17,11 @@ public final class ColourPickerButton extends JButton implements ActionListener,
         this.addActionListener(this);
         this.addMouseWheelListener(this);
         this.addMouseListener(this);
+    }
+
+    public void Refresh() {
+        repaint();
+        parent.UpdatePaletteColour();
     }
 
     @Override
@@ -56,8 +61,6 @@ public final class ColourPickerButton extends JButton implements ActionListener,
         if (e.getWheelRotation() > 0) colour = dm.GetPreviousColour(colour);
         else colour = dm.GetNextColour(colour);
         colourPalette[paletteIndex] = colour;
-        repaint();
-        parent.GetParent().RefreshPanels();
     }
 
     @Override

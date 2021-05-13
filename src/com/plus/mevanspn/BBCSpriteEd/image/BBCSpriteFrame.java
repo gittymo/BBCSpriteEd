@@ -1,82 +1,76 @@
-package com.plus.mevanspn.BBCSpriteEd;
+package com.plus.mevanspn.BBCSpriteEd.image;
 
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 
 final public class BBCSpriteFrame {
-    public BBCSpriteFrame(BBCSprite parent) {
-        this.parent = parent;
-        this.renderedImage = new BufferedImage(parent.GetWidth(), parent.GetHeight(), BufferedImage.TYPE_INT_ARGB);
+    public BBCSpriteFrame(BBCSprite bbcSprite) {
+        this.bbcSprite = bbcSprite;
+        this.renderedImage = new BBCImage(bbcSprite);
     }
 
-    public BBCSpriteFrame(BBCSprite parent, DataInputStream dataInputStream) throws IOException {
-        this.parent = parent;
-        final int dataLength = parent.GetWidth() * parent.GetHeight();
+    public BBCSpriteFrame(BBCSprite bbcSprite, DataInputStream dataInputStream) throws IOException {
+        this.bbcSprite = bbcSprite;
+        final int dataLength = bbcSprite.GetWidth() * bbcSprite.GetHeight();
         byte[] data = new byte[dataLength];
         dataInputStream.read(data);
-        this.renderedImage = new BufferedImage(parent.GetWidth(), parent.GetHeight(), BufferedImage.TYPE_INT_ARGB);
-        int i = 0;
-        for (int y = 0; y < parent.GetHeight(); y++) {
-            for (int x = 0; x < parent.GetWidth(); x++) {
-                if (data[i] < this.parent.GetColours().length) this.renderedImage.setRGB(x, y, this.parent.GetColours()[data[i]].getRGB());
-                i++;
-            }
-        }
+        this.renderedImage = new BBCImage(bbcSprite);
+        this.renderedImage.getRaster().setDataElements(0, 0, GetWidth(), GetHeight(), data);
     }
 
     public int GetWidth() {
-        return parent.GetWidth();
+        return bbcSprite.GetWidth();
     }
 
     public int GetHeight() {
-        return parent.GetHeight();
+        return bbcSprite.GetHeight();
     }
 
     public float GetHorizontalPixelRatio() {
-        return parent.GetHorizontalPixelRatio();
+        return bbcSprite.GetHorizontalPixelRatio();
     }
 
     public Color[] GetColours() {
-        return parent.GetColours();
+        return bbcSprite.GetColours();
     }
 
     public void SetPixel(int x, int y, byte colourIndex) {
-        if (parent != null && renderedImage != null ) {
+        if (bbcSprite != null && renderedImage != null ) {
             if (x >= 0 && x < GetWidth() && y >= 0 && y < GetHeight()) {
                 final int colourRGB =
-                        colourIndex < parent.GetColours().length ? parent.GetColours()[colourIndex].getRGB() : 0x000000FF;
+                        colourIndex < bbcSprite.GetColours().length ? bbcSprite.GetColours()[colourIndex].getRGB() : 0x000000FF;
                 if (renderedImage.getRGB(x, y) != colourRGB) renderedImage.setRGB(x, y, colourRGB);
             }
         }
     }
 
     public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
-        if (parent != null && renderedImage != null && colourIndex < parent.GetColours().length &&
+        if (bbcSprite != null && renderedImage != null && colourIndex < bbcSprite.GetColours().length &&
                 left >= 0 && top >= 0 && width > 0 && height > 0) {
             width = width + 1;
             height = height + 1;
             if (left + width > GetWidth()) width = GetWidth() - left;
             if (top + height > GetHeight()) height = GetHeight() - top;
             Graphics2D g2 = (Graphics2D) renderedImage.getGraphics();
-            g2.setColor(parent.GetColours()[colourIndex]);
+            g2.setColor(bbcSprite.GetColours()[colourIndex]);
             if (filled) g2.fillRect(left, top, width, height);
             else g2.drawRect(left, top, width, height);
         }
     }
 
     public void DrawLine(Point pointA, Point pointB, byte colourIndex) {
-        if (parent != null && renderedImage != null && colourIndex < parent.GetColours().length && pointA != null && pointB != null) {
+        if (bbcSprite != null && renderedImage != null && colourIndex < bbcSprite.GetColours().length && pointA != null && pointB != null) {
             Graphics2D g2 = (Graphics2D) renderedImage.getGraphics();
-            g2.setColor(parent.GetColours()[colourIndex]);
+            g2.setColor(bbcSprite.GetColours()[colourIndex]);
             g2.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
         }
     }
 
     public void FloodFill(Point p, byte colourToUseIndex, int colourToReplace, boolean started) {
-        if (parent != null && renderedImage != null && colourToUseIndex < parent.GetColours().length &&
+        if (bbcSprite != null && renderedImage != null && colourToUseIndex < bbcSprite.GetColours().length &&
                 p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
-            final int colourToUse = parent.GetColours()[colourToUseIndex].getRGB();
+            final int colourToUse = bbcSprite.GetColours()[colourToUseIndex].getRGB();
 
             if (!started) {
                 colourToReplace = renderedImage.getRGB(p.x, p.y);
@@ -116,23 +110,26 @@ final public class BBCSpriteFrame {
         return renderedImage;
     }
 
-    public void SetRenderedImage(BufferedImage newRenderedImage) {
+    public void UpdateColourModel() {
+        this.renderedImage = new BBCImage(this.renderedImage, BBCColour.GenerateIndexColourModel(bbcSprite.GetColours()));
+    }
+
+    public void SetRenderedImage(BBCImage newRenderedImage) {
         renderedImage = newRenderedImage;
     }
 
     public void WriteToStream(DataOutputStream dataOutputStream) throws IOException {
         if (dataOutputStream != null && renderedImage != null) {
-            byte[] data = new byte[renderedImage.getWidth() * renderedImage.getHeight()];
-            int i = 0;
-            for (int y = 0; y < renderedImage.getHeight(); y++) {
-                for (int x = 0; x < renderedImage.getWidth(); x++) {
-                    data[i++] = parent.GetColourIndexForRGB(renderedImage.getRGB(x, y));
-                }
-            }
+            byte[] data = new byte[GetWidth() * GetHeight()];
+            renderedImage.getRaster().getDataElements(0, 0, GetWidth(), GetHeight(), data);
             dataOutputStream.write(data);
         }
     }
 
-    private final BBCSprite parent;
-    private BufferedImage renderedImage;
+    public BBCSprite GetSprite() {
+        return bbcSprite;
+    }
+
+    private final BBCSprite bbcSprite;
+    private BBCImage renderedImage;
 }

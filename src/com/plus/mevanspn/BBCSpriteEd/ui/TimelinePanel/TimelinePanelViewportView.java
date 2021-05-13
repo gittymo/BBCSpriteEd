@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.TimelinePanel;
 
-import com.plus.mevanspn.BBCSpriteEd.BBCSprite;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;

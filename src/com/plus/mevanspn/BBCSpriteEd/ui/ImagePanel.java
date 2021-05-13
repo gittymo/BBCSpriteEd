@@ -1,7 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd.ui;
 
-import com.plus.mevanspn.BBCSpriteEd.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton.MultiFunctionButton;
@@ -174,7 +175,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 final boolean isFilled = rectButtonState == DrawingToolbar.DRAW_RECT_FILL;
                 activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, parent.GetActiveColourIndex());
             } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate")) {
-                BufferedImage newFrameImage = new BufferedImage(activeImage.GetWidth(), activeImage.GetHeight(), BufferedImage.TYPE_INT_ARGB);
+                BBCImage newFrameImage = new BBCImage(activeImage.GetSprite());
                 final int offsetX = (drawPointB.x - drawPointA.x) / (int) (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio());
                 final int offsetY = (drawPointB.y - drawPointA.y) / (int) parent.GetZoom();
                 newFrameImage.getGraphics().drawImage(activeImage.GetRenderedImage(), offsetX, offsetY, null);

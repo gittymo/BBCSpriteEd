@@ -1,4 +1,6 @@
-package com.plus.mevanspn.BBCSpriteEd;
+package com.plus.mevanspn.BBCSpriteEd.image;
+
+import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,8 +15,7 @@ final public class BBCSprite {
         this.parent = parent;
         this.activeFrame = null;
         this.frames = new LinkedList<>();
-        this.colours = new Color[displayMode.colours.length];
-        System.arraycopy(displayMode.colours, 0, this.colours, 0, this.colours.length);
+        this.colours = BBCColour.GetCopy(displayMode.colours);
         AddFrame();
     }
 
@@ -25,9 +26,9 @@ final public class BBCSprite {
             this.width = dataInputStream.readInt();
             this.height = dataInputStream.readInt();
             this.displayMode = DisplayMode.GetFromNumber(dataInputStream.readInt());
-            this.colours = new Color[dataInputStream.readInt()];
+            this.colours = new BBCColour[dataInputStream.readInt()];
             for (int i = 0; i < this.colours.length; i++) {
-                this.colours[i] = new Color(dataInputStream.readInt());
+                this.colours[i] = new BBCColour(dataInputStream.readInt());
             }
             int frameCount = dataInputStream.readInt();
             this.frames = new LinkedList<>();
@@ -57,7 +58,7 @@ final public class BBCSprite {
         return GetFrameIndex(activeFrame);
     }
 
-    public Color[] GetColours() {
+    public BBCColour[] GetColours() {
         return colours;
     }
 
@@ -160,7 +161,7 @@ final public class BBCSprite {
         if (newHeight < 1 || newHeight > GetDisplayMode().height) return;
         if (newWidth == width && newHeight == height) return;
         for (BBCSpriteFrame bbcSpriteFrame : frames) {
-            BufferedImage newRenderedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+            BBCImage newRenderedImage = new BBCImage(newWidth, newHeight, bbcSpriteFrame.GetSprite());
             final int xpos = (newWidth - width) / 2;
             final int ypos = (newHeight - height) / 2;
             newRenderedImage.getGraphics().drawImage(bbcSpriteFrame.GetRenderedImage(), xpos, ypos, null);
@@ -178,8 +179,8 @@ final public class BBCSprite {
             dataOutputStream.writeInt(height);
             displayMode.WriteToStream(dataOutputStream);
             dataOutputStream.writeInt(colours.length);
-            for (int i = 0; i < colours.length; i++) {
-                dataOutputStream.writeInt(colours[i].getRGB());
+            for (BBCColour colour : colours) {
+                dataOutputStream.writeInt(colour.getRGB());
             }
             dataOutputStream.writeInt(frames.size());
             for (BBCSpriteFrame frame : frames) frame.WriteToStream(dataOutputStream);
@@ -187,22 +188,27 @@ final public class BBCSprite {
         }
     }
 
+    public void UpdateColourModel() {
+        for (BBCSpriteFrame frame : frames) {
+            frame.UpdateColourModel();
+        }
+    }
+
     private final LinkedList<BBCSpriteFrame> frames;
     private int width, height;
     private final DisplayMode displayMode;
-    private final Color[] colours;
+    private final BBCColour[] colours;
     private final MainFrame parent;
     private BBCSpriteFrame activeFrame;
 
     public enum DisplayMode {
-        ModeZero(0,0.5f, new Color[] { Color.BLACK, Color.WHITE}, 640, 256),
-        ModeOne(1,1, new Color[] { Color.BLACK, Color.RED, Color.YELLOW, Color.WHITE}, 320, 256),
-        ModeTwo(2,2, new Color[] { Color.BLACK, Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE,
-                Color.MAGENTA, Color.CYAN, Color.WHITE }, 160, 256),
-        ModeFour(4,1, new Color[] { Color.BLACK, Color.WHITE}, 320 ,256),
-        ModeFive(5,2, new Color[] { Color.BLACK, Color.RED, Color.YELLOW, Color.WHITE}, 160, 256);
+        ModeZero(0,0.5f, BBCColour.TWO_COLOUR_MODE_DEFAULT, 640, 256),
+        ModeOne(1,1, BBCColour.FOUR_COLOUR_MODE_DEFAULT, 320, 256),
+        ModeTwo(2,2, BBCColour.EIGHT_COLOUR_MODE_DEFAULT, 160, 260),
+        ModeFour(4,1, BBCColour.TWO_COLOUR_MODE_DEFAULT, 320 ,256),
+        ModeFive(5,2, BBCColour.FOUR_COLOUR_MODE_DEFAULT, 160, 256);
 
-        DisplayMode(int number, float pixelRatio, Color[] colours, int width, int height) {
+        DisplayMode(int number, float pixelRatio, BBCColour[] colours, int width, int height) {
             this.number = number;
             this.colours = colours;
             this.pixelRatio = pixelRatio;
@@ -253,10 +259,9 @@ final public class BBCSprite {
         }
 
         public final float pixelRatio;
-        public final Color[] colours;
+        public final BBCColour[] colours;
         public final int width, height;
         public final int number;
-        public static Color[] allColours = new Color[] { Color.BLACK, Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE,
-                Color.MAGENTA, Color.CYAN, Color.WHITE };
+        public static BBCColour[] allColours = BBCColour.PHYSICAL_COLOURS;
     }
 }

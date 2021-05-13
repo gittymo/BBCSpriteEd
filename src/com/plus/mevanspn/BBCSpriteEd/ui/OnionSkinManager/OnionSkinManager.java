@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager;
 
-import com.plus.mevanspn.BBCSpriteEd.BBCSpriteFrame;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
 import java.awt.*;

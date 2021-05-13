@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
 
-import com.plus.mevanspn.BBCSpriteEd.BBCSprite;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
 import javax.swing.*;
 

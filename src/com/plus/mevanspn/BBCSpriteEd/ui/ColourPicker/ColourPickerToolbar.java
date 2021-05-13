@@ -1,10 +1,9 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
 
-import com.plus.mevanspn.BBCSpriteEd.BBCSprite;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.LinkedList;
 import javax.swing.*;
 
@@ -59,6 +58,7 @@ final public class ColourPickerToolbar extends JToolBar {
 
     public void UpdatePaletteColour() {
         repaint();
+        parent.GetSprite().UpdateColourModel();
         parent.RefreshPanels();
     }
 

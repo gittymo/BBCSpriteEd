@@ -1,7 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui;
 
-import com.plus.mevanspn.BBCSpriteEd.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
 import javax.swing.*;
 
