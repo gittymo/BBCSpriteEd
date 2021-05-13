@@ -17,9 +17,6 @@ final public class ZoomMenu extends JMenu {
             add(new ZoomMenuItem(zoom, this));
             zoom = zoom * 2;
         }
-        add(new JSeparator());
-        JMenuItem customZoom = new JMenuItem("Custom zoom...");
-        add(customZoom);
     }
 
     private MainFrame parent;

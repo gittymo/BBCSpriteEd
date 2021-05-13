@@ -90,8 +90,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             Rectangle r = GetImageArea();
             int imageOffsetX = (getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate") ? drawPointB.x - drawPointA.x : 0);
             int imageOffsetY = getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate") ? drawPointB.y - drawPointA.y : 0;
-            imageOffsetX = (imageOffsetX / (int) (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio())) * (int) (zoom * parent.GetSprite().GetHorizontalPixelRatio());
-            imageOffsetY = (imageOffsetY / (int) parent.GetZoom()) * (int) zoom;
+            if (zoom > 1) {
+                imageOffsetX = (imageOffsetX / (int) (zoom * parent.GetSprite().GetHorizontalPixelRatio())) * (int) (zoom * parent.GetSprite().GetHorizontalPixelRatio());
+                imageOffsetY = (imageOffsetY / (int) parent.GetZoom()) * (int) zoom;
+            }
             if (r != null) {
                 g2.drawImage(GetBackgroundImage(), r.x, r.y, r.width, r.height, null);
                 g2.drawImage(activeImage.GetRenderedImage(), r.x + imageOffsetX, r.y + imageOffsetY, r.width, r.height, null);
@@ -184,8 +186,9 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, parent.GetActiveColourIndex());
             } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate")) {
                 BBCImage newFrameImage = new BBCImage(activeImage.GetSprite());
-                final int offsetX = (int) Math.ceil((drawPointB.x - drawPointA.x) / (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio()));
-                final int offsetY = (int) Math.ceil((drawPointB.y - drawPointA.y) / (int) parent.GetZoom());
+                int zoom = parent.GetZoom() >= 1 ? (int) parent.GetZoom() : 1;
+                final int offsetX = (int) Math.ceil((drawPointB.x - drawPointA.x) / (zoom * parent.GetSprite().GetHorizontalPixelRatio()));
+                final int offsetY = (int) Math.ceil((drawPointB.y - drawPointA.y) / zoom);
                 newFrameImage.getGraphics().drawImage(activeImage.GetRenderedImage(), offsetX, offsetY, null);
                 activeImage.SetRenderedImage(newFrameImage);
             }
