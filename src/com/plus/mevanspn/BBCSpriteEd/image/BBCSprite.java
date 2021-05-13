@@ -4,6 +4,7 @@ import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
 import java.io.*;
 import java.util.LinkedList;
 
@@ -192,6 +193,10 @@ final public class BBCSprite {
         for (BBCSpriteFrame frame : frames) {
             frame.UpdateColourModel();
         }
+    }
+
+    public IndexColorModel GetColourModel() {
+        return BBCColour.GenerateIndexColourModel(colours);
     }
 
     private final LinkedList<BBCSpriteFrame> frames;

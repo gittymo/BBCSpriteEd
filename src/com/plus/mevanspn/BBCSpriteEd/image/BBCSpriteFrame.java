@@ -106,7 +106,7 @@ final public class BBCSpriteFrame {
         }
     }
 
-    public BufferedImage GetRenderedImage() {
+    public BBCImage GetRenderedImage() {
         return renderedImage;
     }
 
