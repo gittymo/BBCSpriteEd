@@ -152,7 +152,14 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!mouseDown) mouseDown = true;
+        if (!mouseDown) {
+            final BBCSpriteFrame activeImage = parent.GetActiveFrame();
+            mouseDown = true;
+            if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("pencil")) {
+                activeImage.RecordHistory();
+            }
+        }
+
         drawPointA = new Point(e.getX(), e.getY());
         drawPointB = new Point(e.getX(), e.getY());
     }

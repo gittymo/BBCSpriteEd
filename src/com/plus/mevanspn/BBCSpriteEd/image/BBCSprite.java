@@ -18,6 +18,7 @@ final public class BBCSprite {
         this.frames = new LinkedList<>();
         this.colours = BBCColour.GetCopy(displayMode.colours);
         AddFrame();
+        this.ResetHistory();
     }
 
     public BBCSprite(String filename, MainFrame parent) throws InvalidSpriteFileException, InvalidDisplayModeException, IOException {
@@ -36,6 +37,7 @@ final public class BBCSprite {
             for (int i = 0; i < frameCount; i++) this.frames.add(new BBCSpriteFrame(this, dataInputStream));
             this.activeFrame = this.frames.getFirst();
             dataInputStream.close();
+            this.ResetHistory();
         } else throw new InvalidSpriteFileException(filename);
     }
 
@@ -171,6 +173,7 @@ final public class BBCSprite {
         width = newWidth;
         height = newHeight;
         parent.RefreshPanels();
+        ResetHistory();
     }
 
     public void WriteToFile(String filename) throws IOException {
@@ -207,6 +210,10 @@ final public class BBCSprite {
     public void RollForward() {
         activeFrame.RollForward();
         parent.RefreshPanels();
+    }
+
+    public void ResetHistory() {
+        for (BBCSpriteFrame frame : frames) frame.ResetHistory();
     }
 
     private final LinkedList<BBCSpriteFrame> frames;

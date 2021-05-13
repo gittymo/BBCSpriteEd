@@ -40,7 +40,6 @@ final public class BBCSpriteFrame {
     public void SetPixel(int x, int y, byte colourIndex) {
         if (bbcSprite != null && renderedImage != null ) {
             if (x >= 0 && x < GetWidth() && y >= 0 && y < GetHeight()) {
-                RecordHistory();
                 final int colourRGB =
                         colourIndex < bbcSprite.GetColours().length ? bbcSprite.GetColours()[colourIndex].getRGB() : 0x000000FF;
                 if (renderedImage.getRGB(x, y) != colourRGB) renderedImage.setRGB(x, y, colourRGB);
@@ -152,6 +151,11 @@ final public class BBCSpriteFrame {
     public void RecordHistory() {
         rollbackHistory.push(new BBCImage(renderedImage));
         rollforwardHistory.clear();
+    }
+
+    public void ResetHistory() {
+        rollforwardHistory.clear();
+        rollbackHistory.clear();
     }
 
     private final BBCSprite bbcSprite;
