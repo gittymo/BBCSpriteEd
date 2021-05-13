@@ -178,8 +178,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("translate")) {
                 activeImage.RecordHistory();
                 BBCImage newFrameImage = new BBCImage(activeImage.GetSprite());
-                final int offsetX = (drawPointB.x - drawPointA.x) / (int) (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio());
-                final int offsetY = (drawPointB.y - drawPointA.y) / (int) parent.GetZoom();
+                final int offsetX = (int) Math.ceil((drawPointB.x - drawPointA.x) / (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio()));
+                final int offsetY = (int) Math.ceil((drawPointB.y - drawPointA.y) / (int) parent.GetZoom());
                 newFrameImage.getGraphics().drawImage(activeImage.GetRenderedImage(), offsetX, offsetY, null);
                 activeImage.SetRenderedImage(newFrameImage);
             }
