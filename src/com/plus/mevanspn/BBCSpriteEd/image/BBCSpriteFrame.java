@@ -3,7 +3,6 @@ package com.plus.mevanspn.BBCSpriteEd.image;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.Stack;
 
 final public class BBCSpriteFrame {
     public BBCSpriteFrame(BBCSprite bbcSprite) {

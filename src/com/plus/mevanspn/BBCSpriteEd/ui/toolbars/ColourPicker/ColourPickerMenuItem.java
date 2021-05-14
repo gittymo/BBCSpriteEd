@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPicker;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 
@@ -36,7 +36,7 @@ public final class ColourPickerMenuItem extends JMenuItem implements ActionListe
         colourPickerButton.UpdateColour(this.colours[this.colourIndex]);
     }
 
-    private BBCColour[] colours;
-    private byte colourIndex;
-    private ColourPickerButton colourPickerButton;
+    private final BBCColour[] colours;
+    private final byte colourIndex;
+    private final ColourPickerButton colourPickerButton;
 }

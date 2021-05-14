@@ -41,7 +41,7 @@ public abstract class AbstractRenderJobProvider extends Thread implements Render
     }
 
     public void RemoveListener(RenderJobRequester renderJobRequester) {
-        if (renderJobRequesters.contains(renderJobRequester)) renderJobRequesters.remove(renderJobRequester);
+        renderJobRequesters.remove(renderJobRequester);
     }
 
     public void RemoveAllListeners() {

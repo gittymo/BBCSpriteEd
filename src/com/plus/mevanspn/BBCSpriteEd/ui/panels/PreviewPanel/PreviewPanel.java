@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui;
+package com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel;
 
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
@@ -38,8 +38,8 @@ final public class PreviewPanel extends JPanel {
                 g2.fillRect(displayX, displayY, displayWidth, displayHeight);
                 g2.setColor(Color.BLACK);
                 g2.drawRect(displayX, displayY, displayWidth, displayHeight);
-                BufferedImage frameImage = sprite.GetFrame(frame).GetRenderedImage();
-                if (frameImage != null) g2.drawImage(sprite.GetFrame(frame).GetRenderedImage(), displayX + (PADDING / 2), displayY + (PADDING / 2), zoomedWidth, zoomedHeight, null);
+                BufferedImage frameImage = sprite.GetFrame(frame) != null ? sprite.GetFrame(frame).GetRenderedImage() : null;
+                if (frameImage != null) g2.drawImage(frameImage, displayX + (PADDING / 2), displayY + (PADDING / 2), zoomedWidth, zoomedHeight, null);
             }
         }
     }
@@ -59,10 +59,9 @@ final public class PreviewPanel extends JPanel {
     @Override
     public Dimension getPreferredSize() {
         if (parent != null) {
-            Rectangle usableArea = getBounds();
             BBCSprite sprite = parent.GetSprite();
             if (sprite != null) {
-                final int zoomedWidth = (int) (sprite.GetWidth() * zoom);
+                final int zoomedWidth = (int) (sprite.GetWidth() * sprite.GetHorizontalPixelRatio() * zoom);
                 final int zoomedHeight = (int) (sprite.GetHeight() * zoom);
                 final int displayWidth = zoomedWidth + PADDING;
                 final int displayHeight = zoomedHeight + PADDING;
@@ -71,34 +70,10 @@ final public class PreviewPanel extends JPanel {
         } else return new Dimension(PADDING, PADDING);
     }
 
-    private MainFrame parent;
-    private float zoom;
+    private final MainFrame parent;
+    private final float zoom;
     private int frame;
-    private FrameRotaterThread frameRotaterThread;
+    private final FrameRotaterThread frameRotaterThread;
 
-    private static int PADDING = 32;
-
-
-    final class FrameRotaterThread extends Thread {
-        public FrameRotaterThread(PreviewPanel parent) {
-            this.parent = parent;
-        }
-
-        public void run() {
-            while (!killed) {
-                try {
-                    sleep(1000 / fps);
-                    parent.RotateFrames();
-                } catch (Exception ex) { }
-            }
-        }
-
-        public void SetFPS(int fps) {
-            this.fps = fps;
-        }
-
-        private boolean killed = false;
-        private int fps = 10;
-        private PreviewPanel parent;
-    }
+    private static final int PADDING = 32;
 }

@@ -1,10 +1,8 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPicker;
 
-import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
-import java.awt.*;
 import java.util.LinkedList;
 import javax.swing.*;
 
@@ -14,10 +12,6 @@ final public class ColourPickerToolbar extends JToolBar {
         this.parent = parent;
         this.activeColourButton = null;
         this.colourPickerButtons = new LinkedList<>();
-    }
-
-    MainFrame GetParent() {
-        return this.parent;
     }
 
     public void CreatePaletteUsingSprite(BBCSprite sprite) {
@@ -34,16 +28,6 @@ final public class ColourPickerToolbar extends JToolBar {
         }
     }
 
-    private void addColourPickerButton(ColourPickerButton cpb) {
-        add(cpb);
-        colourPickerButtons.add(cpb);
-    }
-
-    private void reset() {
-        this.removeAll();
-        colourPickerButtons.clear();
-    }
-
     public byte GetActiveColourIndex() {
         return activeColourButton != null ? activeColourButton.paletteIndex : -1;
     }
@@ -54,6 +38,20 @@ final public class ColourPickerToolbar extends JToolBar {
             cpb.isActive = cpb == activeColourButton;
         }
         repaint();
+    }
+
+    MainFrame GetParent() {
+        return this.parent;
+    }
+
+    private void addColourPickerButton(ColourPickerButton cpb) {
+        add(cpb);
+        colourPickerButtons.add(cpb);
+    }
+
+    private void reset() {
+        this.removeAll();
+        colourPickerButtons.clear();
     }
 
     private final MainFrame parent;

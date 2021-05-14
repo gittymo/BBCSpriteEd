@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton.MultiFunctionButton;
@@ -50,13 +50,9 @@ final public class DrawingToolbar extends JToolBar {
         return buttons.get(keyValue);
     }
 
-    MainFrame GetMainFrame() {
-        return mainFrame;
-    }
-
-    public HashMap<String, DrawingToolbarButton> buttons;
+    private HashMap<String, DrawingToolbarButton> buttons;
     private DrawingToolbarButton activeButton;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public static int DRAW_RECT_OPEN = 0;
     public static int DRAW_RECT_FILL = 1;

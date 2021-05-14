@@ -1,33 +1,31 @@
 package com.plus.mevanspn.BBCSpriteEd.ui;
 
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.menus.AnimationMenu;
+import com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu.EditMenu;
+import com.plus.mevanspn.BBCSpriteEd.ui.menus.FileMenu.FileMenu;
+import com.plus.mevanspn.BBCSpriteEd.ui.menus.ZoomMenu.ZoomMenu;
 
 import javax.swing.JMenuBar;
 
 final public class MainFrameMenuBar extends JMenuBar {
     public MainFrameMenuBar(MainFrame parent) {
         super();
-        this.parent = parent;
 
-        this.fileMenu = new FileMenu(this.parent);
-        this.zoomMenu = new ZoomMenu(this.parent);
-        this.animationMenu = new AnimationMenu(this.parent);
-        this.editMenu = new EditMenu(this.parent);
+        FileMenu fileMenu = new FileMenu(parent);
+        ZoomMenu zoomMenu = new ZoomMenu(parent);
+        this.animationMenu = new AnimationMenu(parent);
+        EditMenu editMenu = new EditMenu(parent);
 
-        this.add(this.fileMenu);
-        this.add(this.zoomMenu);
+        this.add(fileMenu);
+        this.add(zoomMenu);
         this.add(this.animationMenu);
-        this.add(this.editMenu);
+        this.add(editMenu);
     }
 
     public AnimationMenu GetAnimationMenu() {
         return animationMenu;
     }
-
-    private final MainFrame parent;
-    private final FileMenu fileMenu;
-    private final ZoomMenu zoomMenu;
-    private final EditMenu editMenu;
 
     private final AnimationMenu animationMenu;
 }

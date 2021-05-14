@@ -1,26 +1,19 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.TimelinePanel;
+package com.plus.mevanspn.BBCSpriteEd.ui.panels.TimelinePanel;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
-import com.plus.mevanspn.BBCSpriteEd.ui.AnimationMenu;
+import com.plus.mevanspn.BBCSpriteEd.ui.menus.AnimationMenu;
 
 import javax.swing.*;
 import java.awt.*;
 
 final public class TimelinePanel extends JScrollPane {
-    public TimelinePanel(MainFrame parent, int previewHeight) {
+    public TimelinePanel(MainFrame mainFrame, int previewHeight) {
         super();
-        this.parent = parent;
+        this.mainFrame = mainFrame;
         this.previewHeight = (previewHeight > 32) ? (int) (Math.ceil(previewHeight / 32.0f) * previewHeight) : 64;
         initialiseComponents();
         registerTimelinePopupWithAppBar();
-    }
-
-    private void initialiseComponents() {
-        this.setPreferredSize(new Dimension(640, previewHeight + (TimelinePanelViewportView.SEPARATOR_WIDTH * 2)));
-        this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        this.viewportView = new TimelinePanelViewportView(this);
-        this.setViewportView(this.viewportView);
     }
 
     public void Refresh() {
@@ -39,21 +32,28 @@ final public class TimelinePanel extends JScrollPane {
         Refresh();
     }
 
-    public int GetPreviewHeight() {
-        return previewHeight;
+    public MainFrame GetMainFrame() {
+        return mainFrame;
     }
 
-    public MainFrame GetParent() {
-        return parent;
+    int GetPreviewHeight() {
+        return previewHeight;
     }
 
     private void registerTimelinePopupWithAppBar() {
         TimelinePanelViewportViewPopup popup = viewportView.GetViewportPopup();
-        AnimationMenu aniMenu = parent.GetMenuBar().GetAnimationMenu();
+        AnimationMenu aniMenu = mainFrame.GetMenuBar().GetAnimationMenu();
         aniMenu.RegisterModuleMenuItems(popup.GetMenuItems());
     }
 
-    private final MainFrame parent;
+    private void initialiseComponents() {
+        this.setPreferredSize(new Dimension(640, previewHeight + (TimelinePanelViewportView.SEPARATOR_WIDTH * 2)));
+        this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        this.viewportView = new TimelinePanelViewportView(this);
+        this.setViewportView(this.viewportView);
+    }
+
+    private final MainFrame mainFrame;
     private TimelinePanelViewportView viewportView;
-    private int previewHeight;
+    private final int previewHeight;
 }

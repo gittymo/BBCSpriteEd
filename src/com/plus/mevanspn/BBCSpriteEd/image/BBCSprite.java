@@ -25,24 +25,22 @@ final public class BBCSprite {
 
     public BBCSprite(String filename, MainFrame parent) throws InvalidSpriteFileException, InvalidDisplayModeException, IOException {
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(filename));
-        if (dataInputStream != null) {
-            this.parent = parent;
-            this.width = dataInputStream.readInt();
-            this.height = dataInputStream.readInt();
-            this.displayMode = DisplayMode.GetFromNumber(dataInputStream.readInt());
-            this.colours = new BBCColour[dataInputStream.readInt()];
-            for (int i = 0; i < this.colours.length; i++) {
-                this.colours[i] = new BBCColour(dataInputStream.readInt());
-            }
-            int frameCount = dataInputStream.readInt();
-            this.frames = new LinkedList<>();
-            for (int i = 0; i < frameCount; i++) this.frames.add(new BBCSpriteFrame(this, dataInputStream));
-            this.activeFrame = this.frames.getFirst();
-            dataInputStream.close();
-            this.rollForwardHistory = new Stack<>();
-            this.rollBackHistory = new Stack<>();
-            this.ResetHistory();
-        } else throw new InvalidSpriteFileException(filename);
+        this.parent = parent;
+        this.width = dataInputStream.readInt();
+        this.height = dataInputStream.readInt();
+        this.displayMode = DisplayMode.GetFromNumber(dataInputStream.readInt());
+        this.colours = new BBCColour[dataInputStream.readInt()];
+        for (int i = 0; i < this.colours.length; i++) {
+            this.colours[i] = new BBCColour(dataInputStream.readInt());
+        }
+        int frameCount = dataInputStream.readInt();
+        this.frames = new LinkedList<>();
+        for (int i = 0; i < frameCount; i++) this.frames.add(new BBCSpriteFrame(this, dataInputStream));
+        this.activeFrame = this.frames.getFirst();
+        dataInputStream.close();
+        this.rollForwardHistory = new Stack<>();
+        this.rollBackHistory = new Stack<>();
+        this.ResetHistory();
     }
 
     private BBCSprite(BBCSprite originalSprite) {
@@ -79,14 +77,6 @@ final public class BBCSprite {
 
     public BBCColour[] GetColours() {
         return colours;
-    }
-
-    public byte GetColourIndexForRGB(int rgb) {
-        byte found = (byte) colours.length;
-        for (int i = 0; i < colours.length && found == colours.length; i++) {
-            if (colours[i].getRGB() == rgb) found = (byte) i;
-        }
-        return found;
     }
 
     public int GetWidth() {
@@ -181,9 +171,9 @@ final public class BBCSprite {
         if (newWidth == width && newHeight == height) return;
         for (BBCSpriteFrame bbcSpriteFrame : frames) {
             BBCImage newRenderedImage = new BBCImage(newWidth, newHeight, bbcSpriteFrame.GetSprite());
-            final int xpos = (newWidth - width) / 2;
-            final int ypos = (newHeight - height) / 2;
-            newRenderedImage.getGraphics().drawImage(bbcSpriteFrame.GetRenderedImage(), xpos, ypos, null);
+            final int xPos = (newWidth - width) / 2;
+            final int yPos = (newHeight - height) / 2;
+            newRenderedImage.getGraphics().drawImage(bbcSpriteFrame.GetRenderedImage(), xPos, yPos, null);
             bbcSpriteFrame.SetRenderedImage(newRenderedImage);
         }
         width = newWidth;
@@ -193,18 +183,16 @@ final public class BBCSprite {
 
     public void WriteToFile(String filename) throws IOException {
         DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(filename));
-        if (dataOutputStream != null) {
-            dataOutputStream.writeInt(width);
-            dataOutputStream.writeInt(height);
-            displayMode.WriteToStream(dataOutputStream);
-            dataOutputStream.writeInt(colours.length);
-            for (BBCColour colour : colours) {
-                dataOutputStream.writeInt(colour.getRGB());
-            }
-            dataOutputStream.writeInt(frames.size());
-            for (BBCSpriteFrame frame : frames) frame.WriteToStream(dataOutputStream);
-            dataOutputStream.close();
+        dataOutputStream.writeInt(width);
+        dataOutputStream.writeInt(height);
+        displayMode.WriteToStream(dataOutputStream);
+        dataOutputStream.writeInt(colours.length);
+        for (BBCColour colour : colours) {
+            dataOutputStream.writeInt(colour.getRGB());
         }
+        dataOutputStream.writeInt(frames.size());
+        for (BBCSpriteFrame frame : frames) frame.WriteToStream(dataOutputStream);
+        dataOutputStream.close();
     }
 
     public void UpdateColourModel() {
@@ -277,15 +265,11 @@ final public class BBCSprite {
 
         public static int GetColourIndex(BBCColour colour) {
             int i = 0;
-            boolean found = false;
-            while (i < allColours.length && !found) {
-                if (colour.getRGB() == allColours[i].getRGB()) {
-                    found = true;
-                    break;
-                }
+            while (i < allColours.length) {
+                if (colour.getRGB() == allColours[i].getRGB()) break;
                 i++;
             }
-            return found ? i : -1;
+            return i < allColours.length ? i : -1;
         }
 
         public BBCColour GetNextColour(BBCColour colour) {

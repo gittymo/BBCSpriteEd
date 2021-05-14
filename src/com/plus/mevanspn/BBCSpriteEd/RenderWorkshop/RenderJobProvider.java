@@ -1,12 +1,12 @@
 package com.plus.mevanspn.BBCSpriteEd.RenderWorkshop;
 
 public interface RenderJobProvider {
-    public void AddListener(RenderJobRequester renderJobRequester);
-    public void RemoveListener(RenderJobRequester renderJobRequester);
-    public void RemoveAllListeners();
-    public void NotifyAllListeners();
-    public boolean IsDone();
-    public void KillJob();
-    public void StartJob();
-    public boolean MustWait();
+    void AddListener(RenderJobRequester renderJobRequester);
+    void RemoveListener(RenderJobRequester renderJobRequester);
+    void RemoveAllListeners();
+    void NotifyAllListeners();
+    boolean IsDone();
+    void KillJob();
+    void StartJob();
+    boolean MustWait();
 }

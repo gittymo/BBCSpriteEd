@@ -18,6 +18,10 @@ final public class OnionSkinManager extends Thread {
         this.onionSkinManagerToolbar = new OnionSkinManagerToolbar(this);
     }
 
+    public OnionSkinManagerToolbar GetToolbar() {
+        return onionSkinManagerToolbar;
+    }
+
     public BufferedImage GetOnionSkin() {
         if (enabled && parent.GetSprite() != null) {
             final float zoom = parent.GetZoom();
@@ -61,61 +65,7 @@ final public class OnionSkinManager extends Thread {
         return enabled;
     }
 
-    public void SetEnabled(boolean enabled) {
-        this.enabled = enabled;
-        parent.RefreshPanels();
-    }
-
-    public void SetFrameOffset(int frameOffset) {
-        if (enabled && parent.GetSprite() != null) {
-            this.onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex() + frameOffset;
-            this.frameOffset = frameOffset > 0 ? 1 : frameOffset < 0 ? -1 : 0;
-            this.wait = this.maxWaitTime;
-            if (this.onionSkinFrame < 0) this.onionSkinFrame = 0;
-            if (this.onionSkinFrame >= parent.GetSprite().GetFrameCount())
-                this.onionSkinFrame = parent.GetSprite().GetFrameCount() - 1;
-            parent.GetImagePanel().repaint();
-        }
-    }
-
-    public int GetOffset() {
-        return parent.GetSprite() != null ? onionSkinFrame - parent.GetSprite().GetCurrentFrameIndex() : 0;
-    }
-
-    public void ResetOnionSkinFrame() {
-        this.onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex() + onionSkinManagerToolbar.GetOffset();
-        if (this.onionSkinFrame > parent.GetSprite().GetFrameCount() - 1) {
-            this.onionSkinFrame = parent.GetSprite().GetFrameCount() - 1;
-        }
-        if (this.onionSkinFrame < 0) this.onionSkinFrame = 0;
-        this.onionSkinManagerToolbar.UpdateControls();
-    }
-
-    public int GetMinimumAllowedFrameOffset() {
-        if (enabled && parent.GetSprite() != null) {
-            int currentLessMaxOffset = parent.GetSprite().GetCurrentFrameIndex() - maxFrameOffset;
-            if (currentLessMaxOffset < 0) return -(maxFrameOffset + currentLessMaxOffset);
-            else return -maxFrameOffset;
-        } else return 0;
-    }
-
-    public int GetMaximumAllowedFrameOffset() {
-        if (enabled && parent.GetSprite() != null) {
-            int currentPlusMaxOffset = parent.GetSprite().GetCurrentFrameIndex() + maxFrameOffset;
-            if (currentPlusMaxOffset > parent.GetSprite().GetFrameCount())
-                return (parent.GetSprite().GetFrameCount() - parent.GetSprite().GetCurrentFrameIndex()) - 1;
-            else return maxFrameOffset;
-        } else return 0;
-    }
-
-    public void SetMaxWaitTime(int givenWaitTime) {
-        if (enabled && parent.GetSprite() != null && givenWaitTime >= 0) {
-            maxWaitTime = givenWaitTime;
-            wait = maxWaitTime;
-        }
-    }
-
-    public void UserRollForward() {
+    public void RollForward() {
         if (enabled && parent.GetSprite() != null) {
             if (onionSkinFrame < parent.GetSprite().GetFrameCount() - 1) {
                 frameOffset = 1;
@@ -128,7 +78,7 @@ final public class OnionSkinManager extends Thread {
         }
     }
 
-    public void UserRollBack() {
+    public void RollBack() {
         if (enabled && parent.GetSprite() != null) {
             if (onionSkinFrame > 0) {
                 frameOffset = -1;
@@ -149,7 +99,69 @@ final public class OnionSkinManager extends Thread {
         }
     }
 
-    public void Animate() {
+    public void ResetOnionSkinControls() {
+        this.onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex() + onionSkinManagerToolbar.GetOffset();
+        if (this.onionSkinFrame > parent.GetSprite().GetFrameCount() - 1) {
+            this.onionSkinFrame = parent.GetSprite().GetFrameCount() - 1;
+        }
+        if (this.onionSkinFrame < 0) this.onionSkinFrame = 0;
+        this.onionSkinManagerToolbar.UpdateControls();
+    }
+
+    public void Kill() {
+        killed = true;
+    }
+
+    void SetEnabled(boolean enabled) {
+        this.enabled = enabled;
+        parent.RefreshPanels();
+    }
+
+    void SetFrameOffset(int frameOffset) {
+        if (enabled && parent.GetSprite() != null) {
+            this.onionSkinFrame = parent.GetSprite().GetCurrentFrameIndex() + frameOffset;
+            this.frameOffset = Integer.compare(frameOffset, 0);
+            this.wait = this.maxWaitTime;
+            if (this.onionSkinFrame < 0) this.onionSkinFrame = 0;
+            if (this.onionSkinFrame >= parent.GetSprite().GetFrameCount())
+                this.onionSkinFrame = parent.GetSprite().GetFrameCount() - 1;
+            parent.GetImagePanel().repaint();
+        }
+    }
+
+    int GetFrameOffset() {
+        return parent.GetSprite() != null ? onionSkinFrame - parent.GetSprite().GetCurrentFrameIndex() : 0;
+    }
+
+    int GetMinimumAllowedFrameOffset() {
+        if (enabled && parent.GetSprite() != null) {
+            int currentLessMaxOffset = parent.GetSprite().GetCurrentFrameIndex() - maxFrameOffset;
+            if (currentLessMaxOffset < 0) return -(maxFrameOffset + currentLessMaxOffset);
+            else return -maxFrameOffset;
+        } else return 0;
+    }
+
+    int GetMaximumAllowedFrameOffset() {
+        if (enabled && parent.GetSprite() != null) {
+            int currentPlusMaxOffset = parent.GetSprite().GetCurrentFrameIndex() + maxFrameOffset;
+            if (currentPlusMaxOffset > parent.GetSprite().GetFrameCount())
+                return (parent.GetSprite().GetFrameCount() - parent.GetSprite().GetCurrentFrameIndex()) - 1;
+            else return maxFrameOffset;
+        } else return 0;
+    }
+
+    void SetMaxWaitTime(int givenWaitTime) {
+        if (enabled && parent.GetSprite() != null && givenWaitTime >= 0) {
+            maxWaitTime = givenWaitTime;
+            wait = maxWaitTime;
+        }
+    }
+
+    int GetMaxWaitTime() {
+        return maxWaitTime;
+    }
+
+    private void Animate() {
         if (enabled && parent.GetSprite() != null && frameOffset != 0) {
             if (maxWaitTime > 0) {
                 if (wait > 0) {
@@ -162,22 +174,10 @@ final public class OnionSkinManager extends Thread {
         }
     }
 
-    public int GetOnionSkinFrame() {
-        return onionSkinFrame;
-    }
-
-    public int GetMaxWaitTime() {
-        return maxWaitTime;
-    }
-
-    public void Quit() {
-        quit = true;
-    }
-
     @Override
     public void run() {
-        quit = false;
-        while (!quit) {
+        killed = false;
+        while (!killed) {
             try {
                 Animate();
                 sleep(100);
@@ -185,16 +185,12 @@ final public class OnionSkinManager extends Thread {
         }
     }
 
-    public OnionSkinManagerToolbar GetToolbar() {
-        return onionSkinManagerToolbar;
-    }
-
     private final MainFrame parent;
     private int frameOffset, onionSkinFrame, wait = 0;
     private boolean enabled;
-    private int maxFrameOffset;
+    private final int maxFrameOffset;
     private int maxWaitTime;
-    private boolean quit;
+    private boolean killed;
     private final OnionSkinManagerToolbar onionSkinManagerToolbar;
 
 

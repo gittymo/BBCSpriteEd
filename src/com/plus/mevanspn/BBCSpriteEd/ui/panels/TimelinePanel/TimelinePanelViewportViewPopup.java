@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.TimelinePanel;
+package com.plus.mevanspn.BBCSpriteEd.ui.panels.TimelinePanel;
 
 import javax.swing.*;
 import java.util.LinkedList;
@@ -29,15 +29,15 @@ public final class TimelinePanelViewportViewPopup extends JPopupMenu {
         this.add(duplicateFrameEnd);
     }
 
+    LinkedList<JMenuItem> GetMenuItems() {
+        return menuItems;
+    }
+
     @Override
     public JMenuItem add(JMenuItem menuItem) {
         super.add(menuItem);
         menuItems.add(menuItem);
         return menuItem;
-    }
-
-    public LinkedList<JMenuItem> GetMenuItems() {
-        return menuItems;
     }
 
     TimelinePanelViewportView parent;

@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui;
+package com.plus.mevanspn.BBCSpriteEd.ui.menus;
 
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
@@ -31,7 +31,6 @@ final public class AnimationMenu extends AppMenu {
             }
         });
 
-        this.add(new JSeparator());
         this.add(nextFrame);
         this.add(previousFrame);
     }

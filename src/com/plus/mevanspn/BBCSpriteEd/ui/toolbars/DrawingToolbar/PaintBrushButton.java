@@ -1,11 +1,9 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -100,28 +98,22 @@ final public class PaintBrushButton extends DrawingToolbarButton implements Mous
             int scaledWidth, scaledHeight;
             if (scaleY < scaleX) {
                 scaledWidth = (int) (brushImage.getWidth() * scaleY);
-                scaledHeight = (int) (brushImage.getHeight() * scaleY);
             } else {
                 scaledWidth =(int) (brushImage.getWidth() * scaleX);
-                scaledHeight = (int) (brushImage.getHeight() * scaleY);
             }
-            final int xpos = (24 - scaledWidth) / 2;
-            final int ypos = (24 - scaledHeight) / 2;
-            brushIconImage.getGraphics().drawImage(brushImage, xpos, ypos, scaledWidth, scaledHeight, null);
+            scaledHeight = (int) (brushImage.getHeight() * scaleY);
+            final int xPos = (24 - scaledWidth) / 2;
+            final int yPos = (24 - scaledHeight) / 2;
+            brushIconImage.getGraphics().drawImage(brushImage, xPos, yPos, scaledWidth, scaledHeight, null);
             this.setIcon(new ImageIcon(brushIconImage));
             this.brushImage = brushImage;
-            this.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    SetActiveBrush(GetBrushImage());
-                }
-            });
+            this.addActionListener(e -> SetActiveBrush(GetBrushImage()));
         }
 
         BufferedImage GetBrushImage() {
             return brushImage;
         }
 
-        private BufferedImage brushImage;
+        private final BufferedImage brushImage;
     }
 }

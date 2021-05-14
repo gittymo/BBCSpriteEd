@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager;
 
-import com.plus.mevanspn.BBCSpriteEd.ui.ConfigPanel;
+import com.plus.mevanspn.BBCSpriteEd.ui.panels.ConfigPanel;
 
 import javax.swing.*;
 

@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.TimelinePanel;
+package com.plus.mevanspn.BBCSpriteEd.ui.panels.TimelinePanel;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import javax.swing.*;
@@ -19,10 +19,6 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
         repaint();
     }
 
-    private void initialiseComponents() {
-        this.addMouseListener(this);
-    }
-
     public void SetSprite(BBCSprite sprite) {
         this.sprite = sprite;
         Refresh();
@@ -31,23 +27,6 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
     public void Refresh() {
         this.revalidate();
         this.repaint();
-    }
-
-    private int GetClickFrame() {
-        final float yRatio = (float) parent.GetPreviewHeight() / (float) sprite.GetHeight();
-        final int scaledWidth = (int) (sprite.GetWidth() * yRatio * sprite.GetHorizontalPixelRatio());
-        int frameX = SEPARATOR_WIDTH;
-        int frame = 0;
-        boolean found = false;
-        while (!found && frame < sprite.GetFrameCount() && clickPoint != null) {
-            if (clickPoint.x > frameX && clickPoint.x < frameX + scaledWidth && clickPoint.y > SEPARATOR_WIDTH &&
-                    clickPoint.y < SEPARATOR_WIDTH + parent.GetPreviewHeight()) found = true;
-            if (!found) {
-                frameX += SEPARATOR_WIDTH + scaledWidth;
-                frame++;
-            }
-        }
-        return found ? frame : -1;
     }
 
     void DuplicateFrame(boolean atEnd) {
@@ -92,6 +71,27 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
 
     TimelinePanelViewportViewPopup GetViewportPopup() {
         return timelinePanelViewportViewPopup;
+    }
+
+    private int GetClickFrame() {
+        final float yRatio = (float) parent.GetPreviewHeight() / (float) sprite.GetHeight();
+        final int scaledWidth = (int) (sprite.GetWidth() * yRatio * sprite.GetHorizontalPixelRatio());
+        int frameX = SEPARATOR_WIDTH;
+        int frame = 0;
+        boolean found = false;
+        while (!found && frame < sprite.GetFrameCount() && clickPoint != null) {
+            if (clickPoint.x > frameX && clickPoint.x < frameX + scaledWidth && clickPoint.y > SEPARATOR_WIDTH &&
+                    clickPoint.y < SEPARATOR_WIDTH + parent.GetPreviewHeight()) found = true;
+            if (!found) {
+                frameX += SEPARATOR_WIDTH + scaledWidth;
+                frame++;
+            }
+        }
+        return found ? frame : -1;
+    }
+
+    private void initialiseComponents() {
+        this.addMouseListener(this);
     }
 
     @Override
@@ -143,7 +143,7 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
             clickPoint = new Point(e.getX(), e.getY());
             final int clickedFrame = GetClickFrame();
             if (clickedFrame > -1) {
-                parent.GetParent().SetActiveFrameIndex(clickedFrame);
+                parent.GetMainFrame().SetActiveFrameIndex(clickedFrame);
             }
             clickPoint = null;
         }
@@ -162,7 +162,7 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
     public void mouseExited(MouseEvent e) { }
 
     private final TimelinePanel parent;
-    private TimelinePanelViewportViewPopup timelinePanelViewportViewPopup;
+    private final TimelinePanelViewportViewPopup timelinePanelViewportViewPopup;
     private BBCSprite sprite;
     final static int SEPARATOR_WIDTH = 24;
     private Point clickPoint;

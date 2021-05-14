@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,5 +20,5 @@ public class DrawingToolbarButton extends JButton {
         return drawingToolbar;
     }
 
-    private DrawingToolbar drawingToolbar;
+    private final DrawingToolbar drawingToolbar;
 }

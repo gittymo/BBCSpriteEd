@@ -3,11 +3,14 @@ package com.plus.mevanspn.BBCSpriteEd;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.*;
-import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.PaintBrushButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
-import com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker.ColourPickerToolbar;
-import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbar;
-import com.plus.mevanspn.BBCSpriteEd.ui.TimelinePanel.TimelinePanel;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPicker.ColourPickerToolbar;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
+import com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel.PreviewPanel;
+import com.plus.mevanspn.BBCSpriteEd.ui.panels.TimelinePanel.TimelinePanel;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.EditToolbar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +72,7 @@ final public class MainFrame extends JFrame {
             colourPickerToolbar.CreatePaletteUsingSprite(sprite);
             timelinePanel.SetSprite(sprite);
             previewPanel.SetFrame(0);
-            onionSkinManager.ResetOnionSkinFrame();
+            onionSkinManager.ResetOnionSkinControls();
             ((PaintBrushButton) drawingToolbar.GetButton("paintbrush")).Reset();
         }
     }
@@ -84,8 +87,8 @@ final public class MainFrame extends JFrame {
     }
 
     public byte GetActiveColourIndex() {
-        if (drawingToolbar.GetActiveButton() == drawingToolbar.buttons.get("eraser")) return (byte) GetSprite().GetDisplayMode().colours.length;
-        return colourPickerToolbar.GetActiveColourIndex();
+        return (drawingToolbar.GetActiveButton() == drawingToolbar.GetButton("eraser")) ?
+                (byte) GetSprite().GetDisplayMode().colours.length : colourPickerToolbar.GetActiveColourIndex();
     }
 
     public BBCSpriteFrame GetActiveFrame() {

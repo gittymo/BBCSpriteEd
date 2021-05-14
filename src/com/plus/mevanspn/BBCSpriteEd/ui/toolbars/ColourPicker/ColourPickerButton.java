@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPicker;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
@@ -19,11 +19,21 @@ public final class ColourPickerButton extends JButton implements ActionListener,
         this.addMouseListener(this);
     }
 
+    void UpdateColour(BBCColour newColour) {
+        if (BBCSprite.DisplayMode.GetColourIndex(newColour) != BBCSprite.DisplayMode.GetColourIndex(bbcSprite.GetColours()[paletteIndex])) {
+            parent.GetParent().GetSprite().RecordHistory();
+            bbcSprite.GetColours()[paletteIndex] = newColour;
+            repaint();
+            parent.GetParent().GetSprite().UpdateColourModel();
+            parent.GetParent().RefreshPanels();
+        }
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(paletteIndex < bbcSprite.GetColours().length ? bbcSprite.GetColours()[paletteIndex] : (BBCColour) Color.LIGHT_GRAY);
+        g2.setColor(paletteIndex < bbcSprite.GetColours().length ? bbcSprite.GetColours()[paletteIndex] : Color.LIGHT_GRAY);
         g2.fillRect(2, 2, getWidth() - 5, getHeight() - 5);
         g2.setColor(Color.BLACK);
         if (isActive) g2.setStroke(new BasicStroke(2.0f));
@@ -65,16 +75,6 @@ public final class ColourPickerButton extends JButton implements ActionListener,
         }
     }
 
-    void UpdateColour(BBCColour newColour) {
-        if (BBCSprite.DisplayMode.GetColourIndex(newColour) != BBCSprite.DisplayMode.GetColourIndex(bbcSprite.GetColours()[paletteIndex])) {
-            parent.GetParent().GetSprite().RecordHistory();
-            bbcSprite.GetColours()[paletteIndex] = newColour;
-            repaint();
-            parent.GetParent().GetSprite().UpdateColourModel();
-            parent.GetParent().RefreshPanels();
-        }
-    }
-
     @Override
     public void mousePressed(MouseEvent e) { }
 
@@ -90,5 +90,5 @@ public final class ColourPickerButton extends JButton implements ActionListener,
     private final ColourPickerToolbar parent;
     boolean isActive;
     final byte paletteIndex;
-    private BBCSprite bbcSprite;
+    private final BBCSprite bbcSprite;
 }

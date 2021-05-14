@@ -23,7 +23,7 @@ final public class RenderWorkshopManager extends AbstractRenderJobProvider {
         while (!killed) {
             for (AbstractRenderJobProvider abstractRenderJobProvider : jobs) {
                 if (!abstractRenderJobProvider.IsDone()) abstractRenderJobProvider.StartJob();
-                while (!abstractRenderJobProvider.IsDone()) { };
+                while (!abstractRenderJobProvider.IsDone()) { }
             }
         }
     }
@@ -38,6 +38,6 @@ final public class RenderWorkshopManager extends AbstractRenderJobProvider {
     }
 
     private LinkedList<AbstractRenderJobProvider> jobs;
-    private BufferedImage sourceImage;
+    private final BufferedImage sourceImage;
     RawImageSamples rawImageSamples;
 }

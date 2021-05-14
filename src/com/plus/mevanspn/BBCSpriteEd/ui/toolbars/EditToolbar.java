@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars;
 
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 
@@ -27,9 +27,8 @@ final public class EditToolbar extends JToolBar {
             }
         });
         add(redoButton);
-
         this.mainFrame = mainFrame;
     }
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 }

@@ -1,7 +1,6 @@
-package com.plus.mevanspn.BBCSpriteEd.ui;
+package com.plus.mevanspn.BBCSpriteEd.ui.menus;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 public class AppMenu extends JMenu {

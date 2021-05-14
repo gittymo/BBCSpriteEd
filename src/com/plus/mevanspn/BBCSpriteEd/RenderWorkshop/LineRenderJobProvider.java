@@ -25,9 +25,9 @@ final public class LineRenderJobProvider extends AbstractRenderJobProvider {
         }
     }
 
-    private RenderWorkshopManager renderWorkshopManager;
+    private final RenderWorkshopManager renderWorkshopManager;
     private int[] samples = null;
-    private int startX;
-    private float horizontalGradient;
-    private RawSampleColour colour;
+    private final int startX;
+    private final float horizontalGradient;
+    private final RawSampleColour colour;
 }

@@ -10,21 +10,22 @@ public final class OnionSkinToolbarToggleButton extends JButton {
         SetState(true);
     }
 
-    public void SetState(boolean state) {
+    void SetState(boolean state) {
         this.state = state;
         if (state) setIcon(onImageIcon);
         else setIcon(offImageIcon);
         repaint();
     }
 
-    public boolean GetState() {
+    boolean GetState() {
         return state;
     }
 
-    public void Toggle() {
+    void Toggle() {
         SetState(!this.state);
     }
 
-    private ImageIcon onImageIcon, offImageIcon;
+    private final ImageIcon onImageIcon;
+    private final ImageIcon offImageIcon;
     private boolean state;
 }

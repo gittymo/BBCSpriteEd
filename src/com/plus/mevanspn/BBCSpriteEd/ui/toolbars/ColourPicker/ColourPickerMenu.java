@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPicker;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
@@ -7,11 +7,8 @@ import javax.swing.*;
 public final class ColourPickerMenu extends JPopupMenu {
     public ColourPickerMenu(ColourPickerButton colourPickerButton) {
         super();
-        this.colourPickerButton = colourPickerButton;
         for (int i = 0; i < BBCSprite.DisplayMode.allColours.length; i++)
             add(new ColourPickerMenuItem(BBCSprite.DisplayMode.allColours, (byte) i, colourPickerButton));
     }
-
-    private ColourPickerButton colourPickerButton;
 
 }
