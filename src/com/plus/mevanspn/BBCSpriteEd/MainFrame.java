@@ -3,6 +3,7 @@ package com.plus.mevanspn.BBCSpriteEd;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.*;
+import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.PaintBrushButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 import com.plus.mevanspn.BBCSpriteEd.ui.ColourPicker.ColourPickerToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbar;
@@ -69,6 +70,7 @@ final public class MainFrame extends JFrame {
             timelinePanel.SetSprite(sprite);
             previewPanel.SetFrame(0);
             onionSkinManager.ResetOnionSkinFrame();
+            ((PaintBrushButton) drawingToolbar.GetButton("paintbrush")).Reset();
         }
     }
 
