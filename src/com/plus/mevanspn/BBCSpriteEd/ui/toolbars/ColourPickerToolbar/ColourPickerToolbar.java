@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPicker;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;

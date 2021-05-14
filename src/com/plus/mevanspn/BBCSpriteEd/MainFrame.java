@@ -6,7 +6,7 @@ import com.plus.mevanspn.BBCSpriteEd.ui.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
-import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPicker.ColourPickerToolbar;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel.PreviewPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.TimelinePanel.TimelinePanel;
