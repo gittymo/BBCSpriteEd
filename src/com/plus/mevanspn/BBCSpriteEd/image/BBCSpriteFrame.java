@@ -37,7 +37,7 @@ final public class BBCSpriteFrame {
         return bbcSprite.GetHorizontalPixelRatio();
     }
 
-    public Color[] GetColours() {
+    public BBCColour[] GetColours() {
         return bbcSprite.GetColours();
     }
 

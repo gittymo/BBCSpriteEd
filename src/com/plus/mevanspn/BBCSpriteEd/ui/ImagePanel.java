@@ -1,6 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui;
 
 import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.DrawingToolbar.DrawingToolbar;
@@ -133,7 +134,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     g2.setStroke(new BasicStroke());
                 }
                 if (drawPointA != null && drawPointB != null && parent.GetActiveColourIndex() < parent.GetSprite().GetColours().length) {
-                    g2.setColor(activeImage.GetColours()[parent.GetActiveColourIndex()]);
+                    BBCColour outlineColour = getActiveDrawingToolbarButton() != getDrawingToolbarButton("paintbrush") ?
+                            activeImage.GetColours()[parent.GetActiveColourIndex()] : new BBCColour(192, 160, 255);
                     if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("line")) {
                         g2.drawLine(drawPointA.x, drawPointA.y, drawPointB.x, drawPointB.y);
                     } else if (getActiveDrawingToolbarButton() == getDrawingToolbarButton("rectangle") ||
@@ -153,6 +155,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                             final int scaledBrushHeight = (int) (paintBrushImage.getHeight() * zoom);
                             int xOffset = overlayPoint.x - (scaledBrushWidth / 2);
                             int yOffset = overlayPoint.y - (scaledBrushHeight / 2);
+                            if (scaledBrushWidth % (int) (hZoom * 2) == 0) xOffset -= (int) (hZoom / 2);
+                            if (scaledBrushHeight % (int) (zoom * 2) == 0) yOffset -= (int) (zoom / 2);
                             g2.drawImage(paintBrushImage, xOffset, yOffset, scaledBrushWidth, scaledBrushHeight, null);
                         }
                     }
