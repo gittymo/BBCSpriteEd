@@ -52,9 +52,7 @@ final public class BBCSpriteFrame {
 
     public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
         if (bbcSprite != null && renderedImage != null && colourIndex < bbcSprite.GetColours().length &&
-                left >= 0 && top >= 0 && width > 0 && height > 0) {
-            width = width + 1;
-            height = height + 1;
+                width >= 0 && height >= 0) {
             if (left + width > GetWidth()) width = GetWidth() - left;
             if (top + height > GetHeight()) height = GetHeight() - top;
             Graphics2D g2 = (Graphics2D) renderedImage.getGraphics();

@@ -39,7 +39,6 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     }
 
     private Point GetPixelPositionInImage(int x, int y) {
-        if (!ClickIsInImageArea(x, y)) return null;
         final Rectangle r = GetImageArea();
         final BBCSpriteFrame image = parent.GetActiveFrame();
         if (r != null && image != null) {
@@ -162,14 +161,14 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             mouseDown = true;
         }
 
-        drawPointA = new Point(e.getX(), e.getY());
-        drawPointB = new Point(e.getX(), e.getY());
+        drawPointA = new Point(getGridAlignedXY(e.getX(), e.getY()));
+        drawPointB = new Point(getGridAlignedXY(e.getX(), e.getY()));
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseDown = false;
-        drawPointB = new Point(e.getX(), e.getY());
+        drawPointB = getGridAlignedXY(e.getX(), e.getY());
         final BBCSpriteFrame activeImage = parent.GetActiveFrame();
         if (activeImage != null) {
             final Point pixelPointA = GetPixelPositionInImage(drawPointA.x, drawPointA.y);
@@ -217,7 +216,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     }
                 }
             }
-            drawPointB = new Point(e.getX(), e.getY());
+            drawPointB = getGridAlignedXY(e.getX(), e.getY());
             repaint();
         }
     }
@@ -231,6 +230,22 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         if (osm != null) {
             if (e.getWheelRotation() > 0) osm.UserRollBack();
             else osm.UserRollForward();
+        }
+    }
+
+    private Point getGridAlignedXY(int x, int y) {
+        Rectangle imageArea = GetImageArea();
+        int iZoom = (int) parent.GetZoom();
+        int hZoom = (int) (parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio());
+        if (iZoom <= 1) {
+            return new Point(x < imageArea.x ? imageArea.x : x >= imageArea.x + imageArea.width ? imageArea.x + imageArea.width - 1 : x,
+                    y < imageArea.y ? imageArea.y : y >= imageArea.y + imageArea.height ? imageArea.y + imageArea.height - 1 : y);
+        }
+        else {
+            int alignedX, alignedY;
+            alignedX = (((x - imageArea.x) / iZoom) * hZoom) + (hZoom / 2);
+            alignedY = (((y - imageArea.y) / iZoom) * iZoom) + (iZoom / 2);
+            return new Point(imageArea.x + alignedX, imageArea.y + alignedY);
         }
     }
 
