@@ -22,6 +22,7 @@ final public class DrawingToolbar extends JToolBar {
                 }, "Draw outline/filled rectangles.", this));
         this.add("line", new DrawingToolbarButton("img/line.png", "Draw straight lines.", this));
         this.add("floodfill", new DrawingToolbarButton("img/fill.png", "Fill an enclosed space with the chosen colour.", this));
+        this.add("paintbrush", new PaintBrushButton(this));
         this.add("translate", new DrawingToolbarButton("img/trans.png", "Move the contents of the image.", this));
 
         SetActiveButton(buttons.get("pencil"));

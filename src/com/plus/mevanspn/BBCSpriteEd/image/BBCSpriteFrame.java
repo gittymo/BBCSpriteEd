@@ -1,6 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.image;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Stack;
 
@@ -67,6 +68,14 @@ final public class BBCSpriteFrame {
             Graphics2D g2 = (Graphics2D) renderedImage.getGraphics();
             g2.setColor(bbcSprite.GetColours()[colourIndex]);
             g2.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
+        }
+    }
+
+    public void PaintImage(BufferedImage image, Point origin) {
+        if (image != null && origin != null) {
+            final int imageX = origin.x - (image.getWidth() > 1 ? image.getWidth() / 2 : 0);
+            final int imageY = origin.y - (image.getHeight() > 1 ? image.getHeight() / 2 : 0);
+            renderedImage.getGraphics().drawImage(image, imageX, imageY, null);
         }
     }
 
