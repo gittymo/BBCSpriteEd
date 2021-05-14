@@ -39,6 +39,7 @@ final public class DrawingToolbar extends JToolBar {
             set.getValue().setSelected(set.getValue() == activeButton);
         }
         mainFrame.GetImagePanel().ResetDrawPoints();
+        mainFrame.RefreshPanels();
     }
 
     public DrawingToolbarButton GetActiveButton() {

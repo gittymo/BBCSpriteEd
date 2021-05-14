@@ -151,8 +151,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                             final float hZoom = parent.GetZoom() * parent.GetSprite().GetHorizontalPixelRatio();
                             final int scaledBrushWidth = (int) (paintBrushImage.getWidth() * hZoom);
                             final int scaledBrushHeight = (int) (paintBrushImage.getHeight() * zoom);
-                            final int xOffset = overlayPoint.x - (scaledBrushWidth / 2);
-                            final int yOffset = overlayPoint.y - (scaledBrushHeight / 2);
+                            int xOffset = overlayPoint.x - (scaledBrushWidth / 2);
+                            int yOffset = overlayPoint.y - (scaledBrushHeight / 2);
                             g2.drawImage(paintBrushImage, xOffset, yOffset, scaledBrushWidth, scaledBrushHeight, null);
                         }
                     }
@@ -299,6 +299,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             final PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
             if (keyChar == 'c' || keyChar == 'C') {
                 if (paintBrushButton.GetActiveBrush() != null) {
+                    parent.RefreshPanels();
                     paintBrushButton.SetMode(paintBrushButton.GetMode() == PaintBrushButton.CAPTURE_MODE ? PaintBrushButton.DRAWING_MODE : PaintBrushButton.CAPTURE_MODE);
                 } else paintBrushButton.SetMode(PaintBrushButton.CAPTURE_MODE);
             }

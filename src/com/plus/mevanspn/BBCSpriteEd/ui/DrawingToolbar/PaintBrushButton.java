@@ -21,8 +21,8 @@ final public class PaintBrushButton extends DrawingToolbarButton implements Mous
     }
 
     public void CreateBrush(BBCImage sourceImage, Rectangle sourceArea) {
-        if (sourceArea.width == 0) sourceArea.width = 1;
-        if (sourceArea.height == 0) sourceArea.height = 1;
+        sourceArea.width++;
+        sourceArea.height++;
         BufferedImage brushImage = new BufferedImage(sourceArea.width, sourceArea.height, sourceImage.getType(), sourceImage.GetSprite().GetColourModel());
         WritableRaster sourceImageRaster = sourceImage.getRaster();
         byte[] sourceAreaSamples = new byte[sourceArea.width * sourceArea.height];

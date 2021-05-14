@@ -58,7 +58,7 @@ final public class BBCSpriteFrame {
             if (top + height > GetHeight()) height = GetHeight() - top;
             Graphics2D g2 = (Graphics2D) renderedImage.getGraphics();
             g2.setColor(bbcSprite.GetColours()[colourIndex]);
-            if (filled) g2.fillRect(left, top, width, height);
+            if (filled) g2.fillRect(left, top, width + 1, height + 1);
             else g2.drawRect(left, top, width, height);
         }
     }
