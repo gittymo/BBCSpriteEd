@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import java.util.Stack;
 
 final public class BBCSprite {
-    public BBCSprite(int width, int height, DisplayMode displayMode, MainFrame parent) {
+    public BBCSprite(int width, int height, DisplayMode displayMode, MainFrame mainFrame) {
         this.width = width;
         this.height = height;
         this.displayMode = displayMode;
-        this.parent = parent;
+        this.mainFrame = mainFrame;
         this.activeFrame = null;
         this.frames = new LinkedList<>();
         this.colours = BBCColour.GetCopy(displayMode.colours);
@@ -23,9 +23,9 @@ final public class BBCSprite {
         this.ResetHistory();
     }
 
-    public BBCSprite(String filename, MainFrame parent) throws InvalidSpriteFileException, InvalidDisplayModeException, IOException {
+    public BBCSprite(String filename, MainFrame mainFrame) throws InvalidSpriteFileException, InvalidDisplayModeException, IOException {
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(filename));
-        this.parent = parent;
+        this.mainFrame = mainFrame;
         this.width = dataInputStream.readInt();
         this.height = dataInputStream.readInt();
         this.displayMode = DisplayMode.GetFromNumber(dataInputStream.readInt());
@@ -44,7 +44,7 @@ final public class BBCSprite {
     }
 
     private BBCSprite(BBCSprite originalSprite) {
-        this(originalSprite.width, originalSprite.height, originalSprite.displayMode, originalSprite.parent);
+        this(originalSprite.width, originalSprite.height, originalSprite.displayMode, originalSprite.mainFrame);
         this.colours = BBCColour.GetCopy(originalSprite.colours);
         this.frames.clear();
         for (BBCSpriteFrame frame : originalSprite.frames) {
@@ -148,10 +148,10 @@ final public class BBCSprite {
     public void SetActiveFrame(BBCSpriteFrame bsf) {
         if (activeFrame != bsf) {
             activeFrame = bsf;
-            parent.RefreshPanels();
-            parent.UpdateTimeline();
-            if (parent.GetOnionSkinManager() != null) parent.GetOnionSkinManager().Update();
-            if (parent.GetPreviewPanel() != null) parent.GetPreviewPanel().SetFrame(GetFrameIndex(bsf));
+            mainFrame.RefreshPanels();
+            mainFrame.UpdateTimeline();
+            if (mainFrame.GetOnionSkinManager() != null) mainFrame.GetOnionSkinManager().Update();
+            if (mainFrame.GetPreviewPanel() != null) mainFrame.GetPreviewPanel().SetFrame(GetFrameIndex(bsf));
         }
     }
 
@@ -178,7 +178,7 @@ final public class BBCSprite {
         }
         width = newWidth;
         height = newHeight;
-        parent.RefreshPanels();
+        mainFrame.RefreshPanels();
     }
 
     public void WriteToFile(String filename) throws IOException {
@@ -209,7 +209,7 @@ final public class BBCSprite {
         if (rollBackHistory.size() > 0) {
             rollForwardHistory.push(new BBCSprite(this));
             this.setToSprite(rollBackHistory.pop());
-            this.parent.RefreshPanels();
+            this.mainFrame.RefreshPanels();
         }
     }
 
@@ -217,7 +217,7 @@ final public class BBCSprite {
         if (rollForwardHistory.size() > 0) {
             rollBackHistory.push(new BBCSprite(this));
             this.setToSprite(rollForwardHistory.pop());
-            this.parent.RefreshPanels();
+            this.mainFrame.RefreshPanels();
         }
     }
 
@@ -229,6 +229,10 @@ final public class BBCSprite {
     public void ResetHistory() {
         rollForwardHistory.clear();
         rollBackHistory.clear();
+    }
+
+    public MainFrame GetMainFrame() {
+        return mainFrame;
     }
 
     private void setToSprite(BBCSprite otherSprite) {
@@ -244,7 +248,7 @@ final public class BBCSprite {
     private int width, height;
     private final DisplayMode displayMode;
     private BBCColour[] colours;
-    private final MainFrame parent;
+    private final MainFrame mainFrame;
     private BBCSpriteFrame activeFrame;
     private Stack<BBCSprite> rollBackHistory, rollForwardHistory;
 

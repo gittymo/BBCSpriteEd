@@ -127,6 +127,7 @@ final public class BBCSpriteFrame {
 
     public void SetRenderedImage(BBCImage newRenderedImage) {
         renderedImage = newRenderedImage;
+        GetSprite().GetMainFrame().RefreshPanels();
     }
 
     public void WriteToStream(DataOutputStream dataOutputStream) throws IOException {
