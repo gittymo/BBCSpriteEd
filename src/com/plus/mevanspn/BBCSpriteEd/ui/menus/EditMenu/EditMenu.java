@@ -47,7 +47,33 @@ final public class EditMenu extends JMenu {
         });
         add(flipHorizontalMenuItem);
 
-
+        JMenuItem flipVerticalMenuItem = new JMenuItem("Flip Vertically");
+        flipVerticalMenuItem.addActionListener(e -> {
+            final BBCSprite sprite = GetMainFrame().GetSprite();
+            if (sprite != null) {
+                final BBCSpriteFrame activeSpriteFrame = sprite.GetActiveFrame();
+                if (activeSpriteFrame != null && activeSpriteFrame.GetRenderedImage() != null) {
+                    final BBCImage frameImage = activeSpriteFrame.GetRenderedImage();
+                    final int imageWidth = frameImage.getWidth(), imageHeight = frameImage.getHeight();
+                    final int rasterDataSize = imageWidth * imageHeight;
+                    byte[] rasterData = new byte[rasterDataSize];
+                    frameImage.getRaster().getDataElements(0, 0, imageWidth, imageHeight, rasterData);
+                    for (int x = 0; x < imageWidth; x++) {
+                        int t = x, b = x + (imageWidth * (imageHeight - 1));
+                        while (t < b) {
+                            byte tempByte = rasterData[b];
+                            rasterData[b] = rasterData[t];
+                            rasterData[t] = tempByte;
+                            t += imageWidth;
+                            b -= imageWidth;
+                        }
+                    }
+                    frameImage.getRaster().setDataElements(0, 0, imageWidth, imageHeight, rasterData);
+                    GetMainFrame().RefreshPanels();
+                }
+            }
+        });
+        add(flipVerticalMenuItem);
     }
 
     public MainFrame GetMainFrame() {
