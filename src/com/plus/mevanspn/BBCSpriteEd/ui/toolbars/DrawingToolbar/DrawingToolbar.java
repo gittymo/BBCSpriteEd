@@ -1,8 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
-import com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton.MultiFunctionButton;
-import com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton.MultiFunctionButtonState;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButtonState;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -13,17 +13,17 @@ final public class DrawingToolbar extends JToolBar {
         super();
         this.mainFrame = mainFrame;
         this.buttons = new HashMap<>();
-        this.add("pencil", new DrawingToolbarButton("img/pencil.png", "Draw freehand lines.", this));
-        this.add("eraser", new DrawingToolbarButton("img/eraser.png", "Erase pixels in a freehand fashion.", this));
+        this.add("pencil", new DrawingToolbarButton("img/pencil.png", "Draw freehand lines (Key: D).", this, 'D'));
+        this.add("eraser", new DrawingToolbarButton("img/eraser.png", "Erase pixels in a freehand fashion (Key: E).", this, 'E'));
         this.add("rectangle",
                 new MultiFunctionButton(new MultiFunctionButtonState[] {
                         new MultiFunctionButtonState("img/rect.png", "Outlined Rectangle", DRAW_RECT_OPEN),
                         new MultiFunctionButtonState("img/fillrect.png", "Filled Rectangle", DRAW_RECT_FILL)
-                }, "Draw outline/filled rectangles.", this));
-        this.add("line", new DrawingToolbarButton("img/line.png", "Draw straight lines.", this));
-        this.add("floodfill", new DrawingToolbarButton("img/fill.png", "Fill an enclosed space with the chosen colour.", this));
+                }, "Draw outline/filled rectangles. (Key: R/Alt+R)", this, 'R'));
+        this.add("line", new DrawingToolbarButton("img/line.png", "Draw straight lines (Key: L).", this, 'L'));
+        this.add("floodfill", new DrawingToolbarButton("img/fill.png", "Fill an enclosed space with the chosen colour (Key: F).", this, 'F'));
         this.add("paintbrush", new PaintBrushButton(this));
-        this.add("translate", new DrawingToolbarButton("img/trans.png", "Move the contents of the image.", this));
+        this.add("translate", new DrawingToolbarButton("img/trans.png", "Move the contents of the image (Key: T).", this, 'T'));
 
         SetActiveButton(buttons.get("pencil"));
     }
@@ -46,8 +46,16 @@ final public class DrawingToolbar extends JToolBar {
         return activeButton;
     }
 
+    public boolean IsActiveButton(DrawingToolbarButton drawingToolbarButton) { return drawingToolbarButton == activeButton; }
+
+    public boolean IsActiveButton(String buttonKeyValue) { return IsActiveButton(buttons.get(buttonKeyValue)); }
+
     public DrawingToolbarButton GetButton(String keyValue) {
         return buttons.get(keyValue);
+    }
+
+    MainFrame GetMainFrame() {
+        return mainFrame;
     }
 
     private HashMap<String, DrawingToolbarButton> buttons;

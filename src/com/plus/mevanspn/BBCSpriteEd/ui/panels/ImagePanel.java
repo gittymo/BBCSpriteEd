@@ -1,5 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressBroadcaster;
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
@@ -7,18 +9,20 @@ import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
-import com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton.MultiFunctionButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
-final public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
+final public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, KeyPressBroadcaster {
     public ImagePanel(MainFrame parent) {
         super();
         this.parent = parent;
+        this.keyPressListenerLinkedList = new LinkedList<>();
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.addMouseWheelListener(this);
@@ -70,7 +74,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     }
 
     private DrawingToolbarButton getActiveDrawingToolbarButton() {
-        return parent.GetDrawingToolbar().GetActiveButton();
+        return parent.GetActiveDrawingToolbarButton();
     }
 
     private DrawingToolbarButton getDrawingToolbarButton(String keyValue) {
@@ -94,8 +98,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         } else return null;
     }
 
-    boolean isActiveDrawingTool(String toolName) {
-        return getActiveDrawingToolbarButton() == getDrawingToolbarButton(toolName);
+    boolean isActiveDrawingTool(String buttonKeyValue) {
+        return parent.IsActiveDrawingToolbarButton(buttonKeyValue);
     }
 
     @Override
@@ -299,29 +303,34 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void keyTyped(KeyEvent e) {
-        final char keyChar = e.getKeyChar();
-        if (isActiveDrawingTool("paintbrush")) {
-            final PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
-            if (keyChar == 'c' || keyChar == 'C') {
-                if (paintBrushButton.GetActiveBrush() != null) {
-                    parent.RefreshPanels();
-                    paintBrushButton.SetMode(paintBrushButton.GetMode() == PaintBrushButton.CAPTURE_MODE ? PaintBrushButton.DRAWING_MODE : PaintBrushButton.CAPTURE_MODE);
-                } else paintBrushButton.SetMode(PaintBrushButton.CAPTURE_MODE);
-            }
+        BroadcastKeyPress(e);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) { }
+
+    @Override
+    public void keyReleased(KeyEvent e) { }
+
+    @Override
+    public void AddKeyPressListener(KeyPressListener keyPressListener) {
+        if (!keyPressListenerLinkedList.contains(keyPressListener)) keyPressListenerLinkedList.add(keyPressListener);
+    }
+
+    @Override
+    public void RemoveKeyPressListener(KeyPressListener keyPressListener) {
+        if (keyPressListenerLinkedList.contains(keyPressListener)) keyPressListenerLinkedList.remove(keyPressListener);
+    }
+
+    @Override
+    public void BroadcastKeyPress(KeyEvent keyEvent) {
+        for (KeyPressListener keyPressListener : keyPressListenerLinkedList) {
+            keyPressListener.KeyPressed(keyEvent);
         }
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
     }
 
     private final MainFrame parent;
     private boolean mouseDown = false;
     private Point drawPointA, drawPointB, overlayPoint;
+    private LinkedList<KeyPressListener> keyPressListenerLinkedList;
 }

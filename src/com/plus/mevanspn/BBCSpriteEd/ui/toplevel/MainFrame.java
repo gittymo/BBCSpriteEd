@@ -3,6 +3,7 @@ package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerToolbar;
@@ -113,8 +114,14 @@ final public class MainFrame extends JFrame {
         return colourPickerToolbar;
     }
 
-    public DrawingToolbar GetDrawingToolbar() {
-        return drawingToolbar;
+    public DrawingToolbar GetDrawingToolbar() { return drawingToolbar; }
+
+    public boolean IsActiveDrawingToolbarButton(String buttonKeyValue) {
+        return GetDrawingToolbar().IsActiveButton(buttonKeyValue);
+    }
+
+    public DrawingToolbarButton GetActiveDrawingToolbarButton() {
+        return GetDrawingToolbar().GetActiveButton();
     }
 
     public EditToolbar GetEditToolbar() { return editToolbar; }

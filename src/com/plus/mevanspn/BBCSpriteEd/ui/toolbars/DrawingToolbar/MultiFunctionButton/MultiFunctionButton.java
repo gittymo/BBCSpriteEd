@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
@@ -12,8 +12,8 @@ import java.util.LinkedList;
 
 
 public class MultiFunctionButton extends DrawingToolbarButton implements MouseWheelListener, MouseListener {
-    public MultiFunctionButton(MultiFunctionButtonState[] states, String tooltipText, DrawingToolbar parent) {
-        super(states[0].GetIconFile(), tooltipText, parent);
+    public MultiFunctionButton(MultiFunctionButtonState[] states, String tooltipText, DrawingToolbar parent, char activateKey) {
+        super(states[0].GetIconFile(), tooltipText, parent, activateKey);
         this.states = new LinkedList<>();
         Collections.addAll(this.states, states);
         this.multiFunctionButtonMenu = new MultiFunctionButtonMenu(this);
@@ -38,7 +38,7 @@ public class MultiFunctionButton extends DrawingToolbarButton implements MouseWh
 
     private void setIconToState() {
         this.setIcon(states.get(stateIndex).GetIcon());
-        GetParent().SetActiveButton(this);
+        GetDrawingToolbar().SetActiveButton(this);
     }
 
     @Override
@@ -72,4 +72,5 @@ public class MultiFunctionButton extends DrawingToolbarButton implements MouseWh
     private int stateIndex = 0;
     private final LinkedList<MultiFunctionButtonState> states;
     private final MultiFunctionButtonMenu multiFunctionButtonMenu;
+    private char activateKey;
 }

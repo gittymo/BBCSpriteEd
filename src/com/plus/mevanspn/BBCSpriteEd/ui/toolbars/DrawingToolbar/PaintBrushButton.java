@@ -4,6 +4,7 @@ import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 
 final public class PaintBrushButton extends DrawingToolbarButton implements MouseListener {
     public PaintBrushButton(DrawingToolbar drawingToolbar) {
-        super("img/paintbrush.png","Paint using shapes and preselected areas of the image.", drawingToolbar);
+        super("img/paintbrush.png","Paint using shapes and preselected areas of the image (Key: P, C to toggle capture when tool active).", drawingToolbar, 'P');
         Reset();
         this.addMouseListener(this);
     }
@@ -88,6 +89,20 @@ final public class PaintBrushButton extends DrawingToolbarButton implements Mous
 
     @Override
     public void mouseExited(MouseEvent e) { }
+
+    @Override
+    public void KeyPressed(KeyEvent keyEvent) {
+        super.KeyPressed(keyEvent);
+        final char keyChar = keyEvent.getKeyChar();
+        if (GetDrawingToolbar().IsActiveButton(this)) {
+            if (keyChar == 'c' || keyChar == 'C') {
+                if (GetActiveBrush() != null) {
+                    GetDrawingToolbar().GetMainFrame().RefreshPanels();
+                    SetMode(GetMode() == PaintBrushButton.CAPTURE_MODE ? PaintBrushButton.DRAWING_MODE : PaintBrushButton.CAPTURE_MODE);
+                } else SetMode(PaintBrushButton.CAPTURE_MODE);
+            }
+        }
+    }
 
     final class PaintBrushButtonMenuItem extends JMenuItem {
         public PaintBrushButtonMenuItem(BufferedImage brushImage) {

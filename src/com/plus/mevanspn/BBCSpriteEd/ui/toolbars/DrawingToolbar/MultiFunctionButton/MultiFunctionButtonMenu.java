@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton;
+package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton;
 
 import javax.swing.*;
 
