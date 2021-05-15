@@ -1,13 +1,13 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
-import com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton.MultiFunctionButton;
+import com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton.MultiFunctionButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 
 import javax.swing.*;

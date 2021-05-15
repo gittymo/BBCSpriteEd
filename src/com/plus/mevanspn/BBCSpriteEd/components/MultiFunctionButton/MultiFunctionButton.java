@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton;
+package com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;

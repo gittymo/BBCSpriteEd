@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;

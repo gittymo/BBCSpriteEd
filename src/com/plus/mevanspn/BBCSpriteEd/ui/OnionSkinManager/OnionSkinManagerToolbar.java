@@ -1,5 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager;
 
+import com.plus.mevanspn.BBCSpriteEd.components.ToggleButton;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +20,7 @@ public final class OnionSkinManagerToolbar extends JToolBar {
             onionSkinSlider.setToolTipText("Set onion skinning offset (current " + onionSkinSlider.getValue() + " frames)");
             onionSkinManager.SetFrameOffset(onionSkinSlider.getValue());
         });
-        this.onionSkinToggle = new OnionSkinToolbarToggleButton("img/OnionOn.png", "img/OnionOff.png");
+        this.onionSkinToggle = new ToggleButton("img/OnionOn.png", "img/OnionOff.png");
         this.onionSkinToggle.setToolTipText("Toggle onion skinning on/off");
         this.onionSkinToggle.addActionListener(new ActionListener() {
             @Override
@@ -29,7 +31,7 @@ public final class OnionSkinManagerToolbar extends JToolBar {
                 onionSkinAnimateToggle.setEnabled(onionSkinToggle.GetState());
             }
         });
-        this.onionSkinAnimateToggle = new OnionSkinToolbarToggleButton("img/OnionAniOn.png", "img/OnionAniOff.png");
+        this.onionSkinAnimateToggle = new ToggleButton("img/OnionAniOn.png", "img/OnionAniOff.png");
         this.onionSkinAnimateToggle.setToolTipText("Toggle animation of onion skin rollback.");
         this.onionSkinAnimateToggle.addActionListener(e -> {
             onionSkinAnimateToggle.Toggle();
@@ -55,8 +57,8 @@ public final class OnionSkinManagerToolbar extends JToolBar {
 
     private final OnionSkinManager onionSkinManager;
     private final JSlider onionSkinSlider;
-    private final OnionSkinToolbarToggleButton onionSkinToggle;
-    private final OnionSkinToolbarToggleButton onionSkinAnimateToggle;
+    private final ToggleButton onionSkinToggle;
+    private final ToggleButton onionSkinAnimateToggle;
     private final int animationWaitTime;
 
 

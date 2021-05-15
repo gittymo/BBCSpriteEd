@@ -1,6 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui;
-
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 
 import javax.swing.*;
 

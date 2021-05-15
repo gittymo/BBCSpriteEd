@@ -1,7 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels.TimelinePanel;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.menus.AnimationMenu;
 
 import javax.swing.*;

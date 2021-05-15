@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.swing.*;
 

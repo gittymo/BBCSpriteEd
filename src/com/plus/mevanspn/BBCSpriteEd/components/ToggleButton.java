@@ -1,27 +1,27 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager;
+package com.plus.mevanspn.BBCSpriteEd.components;
 
 import javax.swing.*;
 import java.awt.*;
 
-public final class OnionSkinToolbarToggleButton extends JButton {
-    public OnionSkinToolbarToggleButton(String onIconFile, String offIconFile) {
+public final class ToggleButton extends JButton {
+    public ToggleButton(String onIconFile, String offIconFile) {
         this.onImageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(onIconFile)));
         this.offImageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(offIconFile)));
         SetState(true);
     }
 
-    void SetState(boolean state) {
+    public void SetState(boolean state) {
         this.state = state;
         if (state) setIcon(onImageIcon);
         else setIcon(offImageIcon);
         repaint();
     }
 
-    boolean GetState() {
+    public boolean GetState() {
         return state;
     }
 
-    void Toggle() {
+    public void Toggle() {
         SetState(!this.state);
     }
 

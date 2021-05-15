@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
 import javax.swing.JPanel;

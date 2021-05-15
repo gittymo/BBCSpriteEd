@@ -1,8 +1,7 @@
-package com.plus.mevanspn.BBCSpriteEd;
+package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
-import com.plus.mevanspn.BBCSpriteEd.ui.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
@@ -26,10 +25,6 @@ final public class MainFrame extends JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoadSprite(new BBCSprite(24, 24, BBCSprite.DisplayMode.ModeOne, this));
-    }
-
-    public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
     }
 
     private void initComponents() {

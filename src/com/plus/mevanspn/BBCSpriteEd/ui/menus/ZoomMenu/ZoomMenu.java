@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.menus.ZoomMenu;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.swing.JMenu;
 

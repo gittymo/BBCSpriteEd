@@ -1,7 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerButton.ColourPickerButton;
 
 import java.util.LinkedList;
 import javax.swing.*;
@@ -29,18 +30,18 @@ final public class ColourPickerToolbar extends JToolBar {
     }
 
     public byte GetActiveColourIndex() {
-        return activeColourButton != null ? activeColourButton.paletteIndex : -1;
+        return activeColourButton != null ? activeColourButton.GetPaletteIndex() : -1;
     }
 
     public void SetActiveColourButton(ColourPickerButton colourButton) {
         activeColourButton = colourButton;
         for (ColourPickerButton cpb : colourPickerButtons) {
-            cpb.isActive = cpb == activeColourButton;
+            cpb.setActive(cpb == activeColourButton);
         }
         repaint();
     }
 
-    MainFrame GetParent() {
+    public MainFrame GetParent() {
         return this.parent;
     }
 

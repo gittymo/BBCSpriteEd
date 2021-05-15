@@ -1,8 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
-import com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton.MultiFunctionButton;
-import com.plus.mevanspn.BBCSpriteEd.ui.MultiFunctionButton.MultiFunctionButtonState;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton.MultiFunctionButton;
+import com.plus.mevanspn.BBCSpriteEd.components.MultiFunctionButton.MultiFunctionButtonState;
 
 import javax.swing.*;
 import java.util.HashMap;

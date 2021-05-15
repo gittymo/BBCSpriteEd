@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.image;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;

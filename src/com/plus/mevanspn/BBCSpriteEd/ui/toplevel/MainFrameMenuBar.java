@@ -1,6 +1,5 @@
-package com.plus.mevanspn.BBCSpriteEd.ui;
+package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 
-import com.plus.mevanspn.BBCSpriteEd.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.menus.AnimationMenu;
 import com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu.EditMenu;
 import com.plus.mevanspn.BBCSpriteEd.ui.menus.FileMenu.FileMenu;

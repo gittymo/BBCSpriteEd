@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui;
+package com.plus.mevanspn.BBCSpriteEd.ui.menus.FileMenu;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
