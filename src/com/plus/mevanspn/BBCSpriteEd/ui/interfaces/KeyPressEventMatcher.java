@@ -32,9 +32,9 @@ final public class KeyPressEventMatcher {
 
             }
         }
-        if (altDown && !keyEvent.isAltDown()) match = false;
-        if (ctrlDown && !keyEvent.isControlDown()) match = false;
-        if (altGraphDown && !keyEvent.isAltGraphDown()) match = false;
+        if (altDown != keyEvent.isAltDown()) match = false;
+        if (ctrlDown != keyEvent.isControlDown()) match = false;
+        if (altGraphDown != keyEvent.isAltGraphDown()) match = false;
         return match;
     }
 

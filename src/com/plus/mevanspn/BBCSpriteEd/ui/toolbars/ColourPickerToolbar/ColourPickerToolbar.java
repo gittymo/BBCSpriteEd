@@ -1,6 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerButton.ColourPickerButton;
 
@@ -20,7 +21,10 @@ final public class ColourPickerToolbar extends JToolBar {
             reset();
             if (sprite != null) {
                 for (int i = 0; i < sprite.GetColours().length; i++) {
-                    addColourPickerButton(new ColourPickerButton((byte) i, sprite, this));
+                    ColourPickerButton cpb = new ColourPickerButton((byte) i, sprite, this,
+                            i < 8 ? new KeyPressEventMatcher( (char) ('1' + i)) : null );
+                    addColourPickerButton(cpb);
+                    if (i < 8) cpb.setToolTipText("Key " + (i + 1));
                 }
                 revalidate();
                 repaint();
@@ -48,6 +52,7 @@ final public class ColourPickerToolbar extends JToolBar {
     private void addColourPickerButton(ColourPickerButton cpb) {
         add(cpb);
         colourPickerButtons.add(cpb);
+        GetParent().GetImagePanel().AddKeyPressListener(cpb);
     }
 
     private void reset() {

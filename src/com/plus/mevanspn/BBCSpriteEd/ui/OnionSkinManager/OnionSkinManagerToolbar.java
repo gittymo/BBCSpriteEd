@@ -1,6 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager;
 
 import com.plus.mevanspn.BBCSpriteEd.components.ToggleButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,8 +21,8 @@ public final class OnionSkinManagerToolbar extends JToolBar {
             onionSkinSlider.setToolTipText("Set onion skinning offset (current " + onionSkinSlider.getValue() + " frames)");
             onionSkinManager.SetFrameOffset(onionSkinSlider.getValue());
         });
-        this.onionSkinToggle = new ToggleButton("img/OnionOn.png", "img/OnionOff.png");
-        this.onionSkinToggle.setToolTipText("Toggle onion skinning on/off");
+        this.onionSkinToggle = new ToggleButton("img/OnionOn.png", "img/OnionOff.png", new KeyPressEventMatcher('O'));
+        this.onionSkinToggle.setToolTipText("Toggle onion skinning on/off (Key O).");
         this.onionSkinToggle.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -31,12 +32,15 @@ public final class OnionSkinManagerToolbar extends JToolBar {
                 onionSkinAnimateToggle.setEnabled(onionSkinToggle.GetState());
             }
         });
-        this.onionSkinAnimateToggle = new ToggleButton("img/OnionAniOn.png", "img/OnionAniOff.png");
-        this.onionSkinAnimateToggle.setToolTipText("Toggle animation of onion skin rollback.");
+        onionSkinManager.GetMainFrame().GetImagePanel().AddKeyPressListener(onionSkinToggle);
+        this.onionSkinAnimateToggle = new ToggleButton("img/OnionAniOn.png", "img/OnionAniOff.png",
+                new KeyPressEventMatcher('O', false, true, false));
+        this.onionSkinAnimateToggle.setToolTipText("Toggle animation of onion skin rollback (Key: Alt-O).");
         this.onionSkinAnimateToggle.addActionListener(e -> {
             onionSkinAnimateToggle.Toggle();
             onionSkinManager.SetMaxWaitTime(onionSkinAnimateToggle.GetState() ? animationWaitTime : 0);
         });
+        onionSkinManager.GetMainFrame().GetImagePanel().AddKeyPressListener(onionSkinAnimateToggle);
         this.add(onionSkinSlider);
         this.add(onionSkinToggle);
         this.add(onionSkinAnimateToggle);

@@ -1,16 +1,18 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerButton;
 
+import com.plus.mevanspn.BBCSpriteEd.components.ToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerToolbar;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public final class ColourPickerButton extends JButton implements ActionListener, MouseWheelListener, MouseListener {
-    public ColourPickerButton(byte paletteIndex, BBCSprite bbcSprite, ColourPickerToolbar colourPickerToolbar) {
-        super();
+public final class ColourPickerButton extends ToolbarButton implements ActionListener, MouseWheelListener, MouseListener, KeyPressListener {
+    public ColourPickerButton(byte paletteIndex, BBCSprite bbcSprite, ColourPickerToolbar colourPickerToolbar, KeyPressEventMatcher keyPressEventMatcher) {
+        super(keyPressEventMatcher);
         this.colourPickerToolbar = colourPickerToolbar;
         this.paletteIndex = paletteIndex;
         this.active = false;
@@ -95,6 +97,13 @@ public final class ColourPickerButton extends JButton implements ActionListener,
 
     @Override
     public void mouseExited(MouseEvent e) { }
+
+    @Override
+    public void KeyPressed(KeyEvent keyEvent) {
+        if (GetKeyPressEventMatcher() != null && GetKeyPressEventMatcher().IsMatch(keyEvent, false)) {
+            colourPickerToolbar.SetActiveColourButton(this);
+        }
+    }
 
     private final ColourPickerToolbar colourPickerToolbar;
     boolean active;

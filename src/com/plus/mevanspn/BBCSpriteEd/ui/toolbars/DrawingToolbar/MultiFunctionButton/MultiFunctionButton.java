@@ -1,6 +1,5 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton;
 
-import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 
@@ -80,5 +79,4 @@ public class MultiFunctionButton extends DrawingToolbarButton implements MouseWh
     private int stateIndex = 0;
     private final LinkedList<MultiFunctionButtonState> states;
     private final MultiFunctionButtonMenu multiFunctionButtonMenu;
-    private char activateKey;
 }

@@ -35,14 +35,14 @@ final public class MainFrame extends JFrame {
         this.mainFrameMenuBar = new MainFrameMenuBar(this);
         setJMenuBar(this.mainFrameMenuBar);
 
-        onionSkinManager = new OnionSkinManager(this);
-        onionSkinManager.start();
-
         this.scrollPane = new JScrollPane();
         this.imagePanel = new ImagePanel(this);
         this.scrollPane.setViewportView(imagePanel);
         this.scrollPane.setPreferredSize(new Dimension(640, 480));
         getContentPane().add(this.scrollPane,BorderLayout.CENTER);
+
+        onionSkinManager = new OnionSkinManager(this);
+        onionSkinManager.start();
 
         this.colourPickerToolbar = new ColourPickerToolbar(this);
         this.drawingToolbar = new DrawingToolbar(this);
