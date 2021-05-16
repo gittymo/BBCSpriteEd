@@ -1,5 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
 
 import javax.swing.*;
@@ -7,7 +8,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class DrawingToolbarButton extends JButton implements KeyPressListener {
-    public DrawingToolbarButton(String iconFile, String tooltipText, DrawingToolbar drawingToolbar, char activateChar) {
+    public DrawingToolbarButton(String iconFile, String tooltipText, DrawingToolbar drawingToolbar, KeyPressEventMatcher keyPressEventMatcher) {
         super();
         try {
             ImageIcon imageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(iconFile)));
@@ -17,7 +18,7 @@ public class DrawingToolbarButton extends JButton implements KeyPressListener {
         this.addActionListener(e -> drawingToolbar.SetActiveButton((DrawingToolbarButton) e.getSource()));
         this.setSelected(false);
         this.drawingToolbar = drawingToolbar;
-        this.activateChar = activateChar;
+        this.keyPressEventMatcher = keyPressEventMatcher;
         this.GetDrawingToolbar().GetMainFrame().GetImagePanel().AddKeyPressListener(this);
     }
 
@@ -30,10 +31,10 @@ public class DrawingToolbarButton extends JButton implements KeyPressListener {
     }
 
     private final DrawingToolbar drawingToolbar;
-    private char activateChar;
+    private KeyPressEventMatcher keyPressEventMatcher;
 
     @Override
     public void KeyPressed(KeyEvent keyEvent) {
-        if (keyEvent.getKeyChar() == activateChar) GetDrawingToolbar().SetActiveButton(this);
+        if (keyPressEventMatcher.IsMatch(keyEvent, true)) GetDrawingToolbar().SetActiveButton(this);
     }
 }

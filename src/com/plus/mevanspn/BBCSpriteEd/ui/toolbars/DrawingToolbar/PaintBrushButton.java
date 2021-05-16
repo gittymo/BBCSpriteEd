@@ -1,6 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,9 @@ import java.util.LinkedList;
 
 final public class PaintBrushButton extends DrawingToolbarButton implements MouseListener {
     public PaintBrushButton(DrawingToolbar drawingToolbar) {
-        super("img/paintbrush.png","Paint using shapes and preselected areas of the image (Key: P, C to toggle capture when tool active).", drawingToolbar, 'P');
+        super("img/paintbrush.png",
+                "Paint using shapes and preselected areas of the image (Key: P, C to toggle capture when tool active).",
+                drawingToolbar, new KeyPressEventMatcher('P'));
         Reset();
         this.addMouseListener(this);
     }

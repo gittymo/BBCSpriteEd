@@ -1,19 +1,17 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton;
 
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.*;
 import java.util.Collections;
 import java.util.LinkedList;
 
 
 public class MultiFunctionButton extends DrawingToolbarButton implements MouseWheelListener, MouseListener {
-    public MultiFunctionButton(MultiFunctionButtonState[] states, String tooltipText, DrawingToolbar parent, char activateKey) {
-        super(states[0].GetIconFile(), tooltipText, parent, activateKey);
+    public MultiFunctionButton(MultiFunctionButtonState[] states, String tooltipText, DrawingToolbar parent) {
+        super(states[0].GetIconFile(), tooltipText, parent, states[0].GetKeyPressEventMatcher());
         this.states = new LinkedList<>();
         Collections.addAll(this.states, states);
         this.multiFunctionButtonMenu = new MultiFunctionButtonMenu(this);
@@ -68,6 +66,16 @@ public class MultiFunctionButton extends DrawingToolbarButton implements MouseWh
 
     @Override
     public void mouseExited(MouseEvent e) { }
+
+    @Override
+    public void KeyPressed(KeyEvent keyEvent) {
+        for (MultiFunctionButtonState multiFunctionButtonState : states) {
+            if (multiFunctionButtonState.GetKeyPressEventMatcher().IsMatch(keyEvent, true)) {
+                GetDrawingToolbar().SetActiveButton(this);
+                SetStateValue(states.indexOf(multiFunctionButtonState));
+            }
+        }
+    }
 
     private int stateIndex = 0;
     private final LinkedList<MultiFunctionButtonState> states;

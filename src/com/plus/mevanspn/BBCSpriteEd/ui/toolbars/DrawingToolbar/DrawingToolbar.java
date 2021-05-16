@@ -1,5 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButtonState;
@@ -13,17 +14,28 @@ final public class DrawingToolbar extends JToolBar {
         super();
         this.mainFrame = mainFrame;
         this.buttons = new HashMap<>();
-        this.add("pencil", new DrawingToolbarButton("img/pencil.png", "Draw freehand lines (Key: D).", this, 'D'));
-        this.add("eraser", new DrawingToolbarButton("img/eraser.png", "Erase pixels in a freehand fashion (Key: E).", this, 'E'));
+        this.add("pencil", new DrawingToolbarButton("img/pencil.png",
+                "Draw freehand lines (Key: D).",
+                this, new KeyPressEventMatcher('D')));
+        this.add("eraser", new DrawingToolbarButton("img/eraser.png",
+                "Erase pixels in a freehand fashion (Key: E).",
+                this, new KeyPressEventMatcher('E')));
         this.add("rectangle",
                 new MultiFunctionButton(new MultiFunctionButtonState[] {
-                        new MultiFunctionButtonState("img/rect.png", "Outlined Rectangle", DRAW_RECT_OPEN),
-                        new MultiFunctionButtonState("img/fillrect.png", "Filled Rectangle", DRAW_RECT_FILL)
-                }, "Draw outline/filled rectangles. (Key: R/Alt+R)", this, 'R'));
-        this.add("line", new DrawingToolbarButton("img/line.png", "Draw straight lines (Key: L).", this, 'L'));
-        this.add("floodfill", new DrawingToolbarButton("img/fill.png", "Fill an enclosed space with the chosen colour (Key: F).", this, 'F'));
+                        new MultiFunctionButtonState("img/rect.png", "Outlined Rectangle", DRAW_RECT_OPEN,
+                                new KeyPressEventMatcher('R')),
+                        new MultiFunctionButtonState("img/fillrect.png", "Filled Rectangle",
+                                DRAW_RECT_FILL, new KeyPressEventMatcher('R', false, true, false))
+                }, "Draw outline/filled rectangles. (Key: R/Alt+R)", this));
+        this.add("line", new DrawingToolbarButton("img/line.png",
+                "Draw straight lines (Key: L).", this, new KeyPressEventMatcher('L')));
+        this.add("floodfill", new DrawingToolbarButton("img/fill.png",
+                "Fill an enclosed space with the chosen colour (Key: F).",
+                this, new KeyPressEventMatcher('F')));
         this.add("paintbrush", new PaintBrushButton(this));
-        this.add("translate", new DrawingToolbarButton("img/trans.png", "Move the contents of the image (Key: T).", this, 'T'));
+        this.add("translate", new DrawingToolbarButton("img/trans.png",
+                "Move the contents of the image (Key: T).",
+                this, new KeyPressEventMatcher('T')));
 
         SetActiveButton(buttons.get("pencil"));
     }
