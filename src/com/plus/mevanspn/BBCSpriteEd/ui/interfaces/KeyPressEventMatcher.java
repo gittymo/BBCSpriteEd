@@ -23,7 +23,7 @@ final public class KeyPressEventMatcher {
 
     public boolean IsMatch(KeyEvent keyEvent, boolean ignoreCase) {
         boolean match = true;
-        char keyEventChar = keyEvent.getKeyChar();
+        char keyEventChar = keyEvent.isControlDown() ? (char) keyEvent.getKeyCode() : keyEvent.getKeyChar();
         if (keyEventChar != charValue)
         {
             match = false;

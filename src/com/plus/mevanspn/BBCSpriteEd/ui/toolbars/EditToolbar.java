@@ -18,6 +18,7 @@ final public class EditToolbar extends JToolBar {
             @Override
             public void KeyPressed(KeyEvent keyEvent) {
                 if (this.GetKeyPressEventMatcher().IsMatch(keyEvent, true)) {
+                    System.out.println("UNdo got key event.");
                     EditToolbar.this.mainFrame.GetSprite().RollBack();
                 }
             }

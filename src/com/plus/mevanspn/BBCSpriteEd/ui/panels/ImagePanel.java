@@ -302,12 +302,12 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        BroadcastKeyPress(e);
-    }
+    public void keyTyped(KeyEvent e) { }
 
     @Override
-    public void keyPressed(KeyEvent e) { }
+    public void keyPressed(KeyEvent e) {
+        BroadcastKeyPress(e);
+    }
 
     @Override
     public void keyReleased(KeyEvent e) { }
