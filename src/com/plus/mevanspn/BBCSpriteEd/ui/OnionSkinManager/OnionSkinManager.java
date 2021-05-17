@@ -14,7 +14,7 @@ final public class OnionSkinManager extends Thread {
         this.onionSkinFrame = 0;
         this.enabled = true;
         this.maxFrameOffset = 5;
-        this.maxWaitTime = 15;
+        this.maxWaitTime = 30;
         this.onionSkinManagerToolbar = new OnionSkinManagerToolbar(this);
     }
 
@@ -168,12 +168,14 @@ final public class OnionSkinManager extends Thread {
     private void Animate() {
         if (enabled && mainFrame.GetSprite() != null && frameOffset != 0) {
             if (maxWaitTime > 0) {
-                if (wait > 0) {
+                if (wait == 0) {
                     if (onionSkinFrame > mainFrame.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame--;
                     else if (onionSkinFrame < mainFrame.GetSprite().GetCurrentFrameIndex() + frameOffset) onionSkinFrame++;
                     mainFrame.RefreshPanels();
                     onionSkinManagerToolbar.UpdateControls();
-                } else wait--;
+                } else {
+                    wait--;
+                }
             }
         }
     }

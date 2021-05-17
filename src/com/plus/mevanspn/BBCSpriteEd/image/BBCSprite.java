@@ -235,6 +235,10 @@ final public class BBCSprite {
         return mainFrame;
     }
 
+    public LinkedList<BBCSpriteFrame> GetFrames() {
+        return frames;
+    }
+
     private void setToSprite(BBCSprite otherSprite) {
         this.width = otherSprite.width;
         this.height = otherSprite.height;
@@ -303,6 +307,10 @@ final public class BBCSprite {
             }
             if (foundMode == null) throw new InvalidDisplayModeException(modeNumber);
             return foundMode;
+        }
+
+        public int GetBitsPerPixel() {
+            return colours.length == 2 ? 1 : colours.length == 4 ? 2 : colours.length == 8 ? 4 : 0;
         }
 
         public final float pixelRatio;

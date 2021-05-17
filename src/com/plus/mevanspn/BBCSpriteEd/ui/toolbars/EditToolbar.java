@@ -29,6 +29,7 @@ final public class EditToolbar extends JToolBar {
             }
         });
         add(undoButton);
+        undoButton.setToolTipText("Undo previous operations (Key Ctrl+Z)");
         mainFrame.GetImagePanel().AddKeyPressListener(undoButton);
 
         ToolbarButton redoButton = new ToolbarButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/redo.png"))),
@@ -47,6 +48,7 @@ final public class EditToolbar extends JToolBar {
             }
         });
         add(redoButton);
+        redoButton.setToolTipText("Redo previous operations (Key Ctrl+Y)");
         mainFrame.GetImagePanel().AddKeyPressListener(redoButton);
 
         this.mainFrame = mainFrame;
