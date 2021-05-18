@@ -1,0 +1,38 @@
+Simple Compressed Sprite Format
+
+Header
+
+2 Bytes :   ID "B1" 
+1 Byte  :   Screen Mode
+1 Byte  :   Width in pixels (short)
+1 Byte  :   Height in pixels
+2 Bytes :   Frame Count
+
+(fc) Frame follow consisting of:
+    2 Bytes: Frame data size in bytes.
+
+    This is followed by any number of sub blocks defined as below.  Note that LENGTH and DATA bytes will only be present for certain block types.
+
+    1 Byte (FORMAT)   :   Block type (ty), where the value of these bits means:
+                            0   = Frame terminator block
+                            1   = Jump pixels (also used to terminate the frame, see remaining bits description for ty=0)
+                            2   = Raw data
+                            3   = Byte pattern run Length
+                            255 = Sprite terminator block
+
+                        
+    1 Byte (LENGTH)     :   (ty = 1)    :   Number of pixels to jump, less one (0-255).  
+                            (ty = 2)    :   Number of raw pixels to follow, less one (0-255).
+                            (ty = 3)    :   Number of bytes to fill with this pattern, less one (0-255).
+                            
+    n Byte(s) (DATA)    :   (ty = 2)    :   (LENGTH) x Logical colour indices representing (len) raw pixel values.  Depending on the number of colours available to the sprite's 
+                                            display mode, these raw values will be stored in a byte packed format, the number of bits would be:
+                                            2 colour mode = 1 bit per index (8 pixels per byte)
+                                            4 colour mode = 2 bits per index (4 pixels per byte)
+                                            8 colour mode = 4 bits per index (2 pixels per byte)
+                                            Where (LENGTH) does not provide sufficient samples to complete a byte's bits, the remaining bits can be ignored.       
+                            
+                            (ty = 3)    :   A byte value that contains a screen memory compatible representation of the repeated colour pattern. 
+                                            For example, in the case of a mode 1 sprite: if the run length pattern is a twice repetition of colour indexes 1 and 2, 
+                                            the byte pattern value would be stored as 0b01020102.
+

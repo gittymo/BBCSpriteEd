@@ -2,6 +2,7 @@ package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.panels.FileInfoPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
@@ -53,7 +54,9 @@ final public class MainFrame extends JFrame {
         getContentPane().add(toolbarsContainer, BorderLayout.NORTH);
 
         this.timelinePanel = new TimelinePanel(this, this.timelinePreviewHeight);
-        getContentPane().add(this.timelinePanel, BorderLayout.SOUTH);
+        this.fileInfoPanel = new FileInfoPanel(this);
+        TimelineStatusContainer timelineStatusContainer = new TimelineStatusContainer(timelinePanel, fileInfoPanel);
+        getContentPane().add(timelineStatusContainer, BorderLayout.SOUTH);
 
         this.previewPanel = new PreviewPanel(this);
         getContentPane().add(this.previewPanel, BorderLayout.EAST);
@@ -64,12 +67,15 @@ final public class MainFrame extends JFrame {
     public void LoadSprite(BBCSprite newSprite) {
         sprite = newSprite;
         if (sprite != null && sprite.GetActiveFrame() != null) {
+            if (sprite.GetFilePath() != null) setTitle("BBC Sprite Editor - By Morgan Evans.  Editing File: " + sprite.GetFilePath().getName());
+            else setTitle("BBC Sprite Editor - By Morgan Evans.  Editing New File");
             ResizeImagePane();
             colourPickerToolbar.CreatePaletteUsingSprite(sprite);
             timelinePanel.SetSprite(sprite);
             previewPanel.SetFrame(0);
             onionSkinManager.ResetOnionSkinControls();
             ((PaintBrushButton) drawingToolbar.GetButton("paintbrush")).Reset();
+            RefreshPanels();
         }
     }
 
@@ -100,6 +106,7 @@ final public class MainFrame extends JFrame {
         if (imagePanel != null) imagePanel.repaint();
         if (timelinePanel != null) UpdateTimeline();
         if (colourPickerToolbar != null) colourPickerToolbar.repaint();
+        if (fileInfoPanel != null) fileInfoPanel.Refresh();
     }
 
     public void ResizeImagePane() {
@@ -136,6 +143,8 @@ final public class MainFrame extends JFrame {
 
     public ImagePanel GetImagePanel() { return imagePanel; }
 
+    public FileInfoPanel GetFileInfoPanel() { return fileInfoPanel; }
+
     public void UpdateTimeline() {
         if (sprite != null) timelinePanel.SetActiveFrame(sprite.GetCurrentFrameIndex());
         timelinePanel.Refresh();
@@ -162,6 +171,7 @@ final public class MainFrame extends JFrame {
     private MainFrameMenuBar mainFrameMenuBar;
     private OnionSkinManager onionSkinManager;
     private PreviewPanel previewPanel;
+    private FileInfoPanel fileInfoPanel;
 
     public static Color[] maskColours = new Color[] { new Color(176, 176, 176), new Color( 176, 192, 192) };
 }

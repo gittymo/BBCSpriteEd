@@ -17,6 +17,7 @@ final public class BBCSprite {
         this.activeFrame = null;
         this.frames = new LinkedList<>();
         this.colours = BBCColour.GetCopy(displayMode.colours);
+        this.filePath = null;
         AddFrame();
         this.rollForwardHistory = new Stack<>();
         this.rollBackHistory = new Stack<>();
@@ -24,7 +25,8 @@ final public class BBCSprite {
     }
 
     public BBCSprite(String filename, MainFrame mainFrame) throws InvalidSpriteFileException, InvalidDisplayModeException, IOException {
-        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(filename));
+        this.filePath = new File(filename);
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(this.filePath));
         this.mainFrame = mainFrame;
         this.width = dataInputStream.readInt();
         this.height = dataInputStream.readInt();
@@ -259,6 +261,14 @@ final public class BBCSprite {
         return compressedData;
     }
 
+    public File GetFilePath() {
+        return filePath;
+    }
+
+    public void SetFilePath(File filePath) {
+        this.filePath = filePath;
+    }
+
     private void setToSprite(BBCSprite otherSprite) {
         this.width = otherSprite.width;
         this.height = otherSprite.height;
@@ -275,6 +285,7 @@ final public class BBCSprite {
     private final MainFrame mainFrame;
     private BBCSpriteFrame activeFrame;
     private Stack<BBCSprite> rollBackHistory, rollForwardHistory;
+    private File filePath;
 
     public enum DisplayMode {
         ModeZero(0,0.5f, BBCColour.TWO_COLOUR_MODE_DEFAULT, 640, 256),
