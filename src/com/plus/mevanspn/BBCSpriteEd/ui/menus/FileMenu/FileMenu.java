@@ -4,6 +4,9 @@ import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
 import javax.swing.*;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Locale;
 
 final public class FileMenu extends JMenu {
@@ -33,6 +36,10 @@ final public class FileMenu extends JMenu {
             if (rv == JFileChooser.APPROVE_OPTION) {
                 try {
                     String filePath = filePicker.getSelectedFile().getAbsolutePath();
+                    DataOutputStream compressedFile = new DataOutputStream(new FileOutputStream(new File(filePath + ".dat")));
+                    compressedFile.write(mainFrame.GetSprite().GetCompressedData());
+                    compressedFile.flush();
+                    compressedFile.close();
                     if (!filePath.toLowerCase(Locale.ROOT).endsWith(".bsf")) filePath += ".bsf";
                     mainFrame.GetSprite().WriteToFile( filePath);
                 } catch (Exception ex) {

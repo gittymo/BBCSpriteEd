@@ -142,6 +142,68 @@ final public class BBCSpriteFrame {
         return bbcSprite;
     }
 
+    public byte[] GetCompressedData() throws IOException {
+        BBCSprite sprite = GetSprite();
+        byte[] bytePackedData = null;
+        if (sprite != null && GetWidth() > 0 && GetHeight() > 0) {
+            final int rawDataLength = GetWidth() * GetHeight();
+            final int bpp = sprite.GetDisplayMode().GetBitsPerPixel();
+            byte[] rawData = new byte[rawDataLength];
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            GetRenderedImage().getRaster().getDataElements(0, 0, GetWidth(), GetHeight(), rawData);
+            int i = 0, n = 0;
+            while (i < rawDataLength) {
+                final byte sampleByte = rawData[i];
+                if (sampleByte == sprite.GetColours().length) {
+                    n = i;
+                    while (n < rawDataLength && n < i + 256 && rawData[n] == sampleByte) n++;
+                    byteArrayOutputStream.write(1);
+                    byteArrayOutputStream.write(n - i);
+                } else if (sampleByte < sprite.GetColours().length) {
+                    n = i;
+                    byte packedSample = getPackedByte(rawData, n, bpp);
+                    int occurances = 0;
+                    while (n < rawDataLength && occurances < 256 && getPackedByte(rawData, n, bpp) == packedSample) {
+                        n += 8 / bpp;
+                        occurances++;
+                    }
+                    if (occurances > 1) {
+                        byteArrayOutputStream.write(3);
+                        byteArrayOutputStream.write(occurances);
+                        byteArrayOutputStream.write(packedSample);
+                    } else {
+                        n = i;
+                        ByteArrayOutputStream rawPackedBOS = new ByteArrayOutputStream();
+                        while (n < rawDataLength && n < i + 256 && (n == i || rawData[n] != sampleByte)) {
+                            byte value = 0;
+                            for (int shift = 8 - bpp; shift >= 0 && n < rawDataLength && n < i + 256; shift -= bpp) {
+                                value += rawData[n++] << shift;
+                            }
+                            if (n < rawDataLength && rawData[n] == sampleByte) n--;
+                            else rawPackedBOS.write(value);
+                        }
+                        rawPackedBOS.flush();
+                        byteArrayOutputStream.write(2);
+                        byteArrayOutputStream.write(n - i);
+                        byteArrayOutputStream.write(rawPackedBOS.toByteArray());
+                        rawPackedBOS.close();
+                    }
+                }
+                i = n;
+            }
+            bytePackedData = byteArrayOutputStream.toByteArray();
+            byteArrayOutputStream.close();
+        }
+
+        return bytePackedData;
+    }
+
+    private byte getPackedByte(byte[] data, int index, int bpp) {
+        byte value = 0;
+        for (int shift = 8 - bpp; shift >= 0 && index < data.length; shift -= bpp) value += data[index++] << shift;
+        return value;
+    }
+
     private final BBCSprite bbcSprite;
     private BBCImage renderedImage;
 }

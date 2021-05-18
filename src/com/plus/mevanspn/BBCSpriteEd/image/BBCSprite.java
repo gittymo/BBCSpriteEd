@@ -239,6 +239,26 @@ final public class BBCSprite {
         return frames;
     }
 
+    public byte[] GetCompressedData() throws IOException {
+        byte[] compressedData = null;
+        if (GetWidth() > 0 && GetHeight() > 0 && frames.size() > 0) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            byteArrayOutputStream.write('B');
+            byteArrayOutputStream.write('1');
+            byteArrayOutputStream.write(GetDisplayMode().number);
+            byteArrayOutputStream.write(GetWidth());
+            byteArrayOutputStream.write(GetHeight());
+            for (BBCSpriteFrame bbcSpriteFrame : frames) {
+                byteArrayOutputStream.write(bbcSpriteFrame.GetCompressedData());
+                byteArrayOutputStream.write(bbcSpriteFrame == frames.getLast() ? 7 : 0);
+            }
+            compressedData = byteArrayOutputStream.toByteArray();
+            byteArrayOutputStream.close();
+        }
+
+        return compressedData;
+    }
+
     private void setToSprite(BBCSprite otherSprite) {
         this.width = otherSprite.width;
         this.height = otherSprite.height;
