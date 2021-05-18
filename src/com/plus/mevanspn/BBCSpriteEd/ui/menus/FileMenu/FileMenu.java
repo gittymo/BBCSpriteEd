@@ -18,6 +18,7 @@ final public class FileMenu extends JMenu {
         JMenuItem openFileMenuItem = new JMenuItem("Open...");
         openFileMenuItem.addActionListener(e -> {
             BBCSpriteFilePickerDialog filePicker = new BBCSpriteFilePickerDialog();
+            if (mainFrame.GetSprite().GetFilePath() != null) filePicker.setCurrentDirectory(mainFrame.GetSprite().GetFilePath().getParentFile());
             int rv = filePicker.showOpenDialog(mainFrame);
             if (rv == JFileChooser.APPROVE_OPTION) {
                 try {
@@ -32,6 +33,7 @@ final public class FileMenu extends JMenu {
         JMenuItem saveAsFileMenuItem = new JMenuItem("Save As...");
         saveAsFileMenuItem.addActionListener(e -> {
             BBCSpriteFilePickerDialog filePicker = new BBCSpriteFilePickerDialog();
+            if (mainFrame.GetSprite().GetFilePath() != null) filePicker.setSelectedFile(mainFrame.GetSprite().GetFilePath());
             int rv = filePicker.showSaveDialog(mainFrame);
             if (rv == JFileChooser.APPROVE_OPTION) {
                 try {
@@ -42,6 +44,7 @@ final public class FileMenu extends JMenu {
                     compressedFile.close();
                     if (!filePath.toLowerCase(Locale.ROOT).endsWith(".bsf")) filePath += ".bsf";
                     mainFrame.GetSprite().WriteToFile( filePath);
+                    mainFrame.GetSprite().SetFilePath(new File(filePath));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

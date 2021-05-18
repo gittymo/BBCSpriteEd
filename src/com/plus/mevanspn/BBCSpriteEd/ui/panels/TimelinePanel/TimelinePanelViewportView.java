@@ -62,7 +62,7 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
     }
 
     void SetClickPointToActiveFrame(int frameIndex) {
-        if (frameIndex >= 0 && frameIndex < sprite.GetFrameCount()) {
+        if (sprite != null && frameIndex >= 0 && frameIndex < sprite.GetFrameCount()) {
             final float yRatio = (float) parent.GetPreviewHeight() / (float) sprite.GetHeight();
             final int scaledWidth = (int) (sprite.GetWidth() * yRatio * sprite.GetHorizontalPixelRatio());
             clickPoint = new Point(SEPARATOR_WIDTH + ((scaledWidth + SEPARATOR_WIDTH) * frameIndex) + (scaledWidth / 2), SEPARATOR_WIDTH + parent.GetPreviewHeight() / 2);
