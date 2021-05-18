@@ -44,7 +44,7 @@ public final class OnionSkinManagerToolbar extends JToolBar {
         this.add(onionSkinSlider);
         this.add(onionSkinToggle);
         this.add(onionSkinAnimateToggle);
-        UpdateControls();
+        // UpdateControls();
     }
 
     public void UpdateControls() {

@@ -4,6 +4,7 @@ import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ public class FileInfoPanel extends JPanel {
         this.mainFrame = mainFrame;
         BoxLayout boxLayout = new BoxLayout(this, BoxLayout.X_AXIS);
         this.setLayout(boxLayout);
+        this.setBorder(new EmptyBorder(4, 4,4,4));
         this.spriteDimensions = new JLabel();
         this.spriteDisplayMode = new JLabel();
         this.spriteDataSizes = new JLabel();
@@ -38,7 +40,7 @@ public class FileInfoPanel extends JPanel {
                 int compressedSpriteSize = 0, compressedFrameSize = 0;
                 try {
                     compressedSpriteSize = bbcSprite.GetCompressedData().length;
-                    compressedFrameSize = bbcSprite.GetActiveFrame().GetCompressedData().length;
+                    compressedFrameSize = bbcSprite.GetActiveFrame().GetCompressedData().length + 1;
                 } catch (IOException ioex) { ioex.printStackTrace(); }
                 spriteDataSizes.setText("Raw/Compressed Sprite Size: " + rawSpriteSize + "/" + compressedSpriteSize + " bytes.");
                 frameDataSizes.setText("Raw/Compressed Frame Size: " + rawFrameSize + "/" + compressedFrameSize + " bytes.");

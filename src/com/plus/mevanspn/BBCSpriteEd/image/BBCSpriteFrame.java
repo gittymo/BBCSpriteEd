@@ -158,15 +158,18 @@ final public class BBCSpriteFrame {
                     n = i;
                     while (n < rawDataLength && n < i + 256 && rawData[n] == sampleByte) n++;
                     byteArrayOutputStream.write(1);
-                    byteArrayOutputStream.write(n - i);
+                    byteArrayOutputStream.write( (n - i) - 1);
                 } else if (sampleByte < sprite.GetColours().length) {
                     n = i;
-                    byte packedSample = getPackedByte(rawData, n, bpp);
+                    byte packedSample = 0;
                     int occurances = 0;
-                    while (n < rawDataLength && occurances < 256 && getPackedByte(rawData, n, bpp) == packedSample) {
-                        n += 8 / bpp;
-                        occurances++;
-                    }
+                    try {
+                        packedSample = getPackedByte(rawData, n, bpp);
+                        while (n < rawDataLength && occurances < 256 && getPackedByte(rawData, n, bpp) == packedSample) {
+                            n += 8 / bpp;
+                            occurances++;
+                        }
+                    } catch (PartByteValueException ex) { }
                     if (occurances > 1) {
                         byteArrayOutputStream.write(3);
                         byteArrayOutputStream.write(occurances);
@@ -174,9 +177,11 @@ final public class BBCSpriteFrame {
                     } else {
                         n = i;
                         ByteArrayOutputStream rawPackedBOS = new ByteArrayOutputStream();
-                        while (n < rawDataLength && n < i + 256 && (n == i || rawData[n] != sampleByte)) {
+                        while (n < rawDataLength && n < i + 256 && rawData[n] != bbcSprite.GetColours().length &&
+                                (n == i || rawData[n] != sampleByte)) {
                             byte value = 0;
                             for (int shift = 8 - bpp; shift >= 0 && n < rawDataLength && n < i + 256; shift -= bpp) {
+                                if (rawData[n] == bbcSprite.GetColours().length) break;
                                 value += rawData[n++] << shift;
                             }
                             if (n < rawDataLength && rawData[n] == sampleByte) n--;
@@ -198,9 +203,13 @@ final public class BBCSpriteFrame {
         return bytePackedData;
     }
 
-    private byte getPackedByte(byte[] data, int index, int bpp) {
+    private byte getPackedByte(byte[] data, int index, int bpp) throws PartByteValueException {
         byte value = 0;
-        for (int shift = 8 - bpp; shift >= 0 && index < data.length; shift -= bpp) value += data[index++] << shift;
+        for (int shift = 8 - bpp; shift >= 0; shift -= bpp) {
+            if (shift >=0 && index == data.length) throw new PartByteValueException(value);
+            if (data[index] == bbcSprite.GetColours().length) throw new PartByteValueException(value);
+            else value += data[index++] << shift;
+        }
         return value;
     }
 
