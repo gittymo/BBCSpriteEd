@@ -78,43 +78,57 @@ final public class BBCSpriteFrame {
         }
     }
 
-    public void FloodFill(Point p, byte colourToUseIndex, int colourToReplace, boolean started) {
+    public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplace, boolean started) {
         if (bbcSprite != null && renderedImage != null && colourToUseIndex < bbcSprite.GetColours().length &&
                 p.x >= 0 && p.x < GetWidth() && p.y >=0 && p.y < GetHeight()) {
-            final int colourToUse = bbcSprite.GetColours()[colourToUseIndex].getRGB();
+            // final int colourToUse = bbcSprite.GetColours()[colourToUseIndex].getRGB();
+
+            byte[] colourToReplaceArray = new byte[1];
+            final byte[] colourToUseArray = new byte[] { colourToUseIndex };
 
             if (!started) {
-                colourToReplace = renderedImage.getRGB(p.x, p.y);
-                if (colourToReplace == colourToUseIndex) return;
-                started = true;
+                renderedImage.getRaster().getDataElements(p.x, p.y, colourToReplaceArray);
+                if (colourToReplaceArray[0] == colourToUseIndex) return;
+                else {
+                    colourToReplace = colourToReplaceArray[0];
+                    started = true;
+                }
             }
 
-            if (colourToReplace == renderedImage.getRGB(p.x, p.y)) {
-                for (int x = p.x; x >= 0 && renderedImage.getRGB(x, p.y) == colourToReplace; x--) {
-                    renderedImage.setRGB(x, p.y, colourToUse);
-                    if (p.y > 0 && renderedImage.getRGB(x, p.y - 1) == colourToReplace) {
+            if (pixelMatchesColourToReplace(p.x, p.y, colourToReplace)) {
+                for (int x = p.x; x >= 0 && pixelMatchesColourToReplace(x, p.y, colourToReplace); x--) {
+                    renderedImage.getRaster().setDataElements(x, p.y, colourToUseArray);
+                    // renderedImage.setRGB(x, p.y, colourToUse);
+                    if (p.y > 0 && pixelMatchesColourToReplace(x, p.y - 1, colourToReplace)) {
                         FloodFill(new Point(x, p.y - 1), colourToUseIndex, colourToReplace, started);
                     }
-                    if (p.y < renderedImage.getHeight() - 1 && renderedImage.getRGB(x, p.y + 1) == colourToReplace) {
+                    if (p.y < renderedImage.getHeight() - 1 && pixelMatchesColourToReplace(x, p.y + 1, colourToReplace)) {
                         FloodFill(new Point(x, p.y + 1), colourToUseIndex, colourToReplace, started);
                     }
                 }
                 if (p.x < renderedImage.getWidth() - 1) {
-                    for (int x = p.x + 1; x < renderedImage.getWidth() && renderedImage.getRGB(x, p.y) == colourToReplace; x++) {
-                        renderedImage.setRGB(x, p.y, colourToUse);
-                        if (p.y > 0 && renderedImage.getRGB(x, p.y - 1) == colourToReplace) {
+                    for (int x = p.x + 1; x < renderedImage.getWidth() && pixelMatchesColourToReplace(x, p.y, colourToReplace); x++) {
+                        //renderedImage.setRGB(x, p.y, colourToUse);
+                        renderedImage.getRaster().setDataElements(x, p.y, colourToUseArray);
+                        if (p.y > 0 && pixelMatchesColourToReplace(x, p.y - 1, colourToReplace)) {
                             FloodFill(new Point(x, p.y - 1), colourToUseIndex, colourToReplace, started);
                         }
-                        if (p.y < renderedImage.getHeight() - 1 && renderedImage.getRGB(x, p.y + 1) == colourToReplace) {
+                        if (p.y < renderedImage.getHeight() - 1 && pixelMatchesColourToReplace(x, p.y + 1, colourToReplace)) {
                             FloodFill(new Point(x, p.y + 1), colourToUseIndex, colourToReplace, started);
                         }
                     }
                 }
-            } else if (colourToUse == renderedImage.getRGB(p.x, p.y)){
+            } else if (pixelMatchesColourToReplace(p.x, p.y, colourToUseIndex)){
                 if (p.y > 0) FloodFill(new Point(p.x , p.y - 1), colourToUseIndex, colourToReplace, started);
                 if (p.y < GetHeight() - 1) FloodFill(new Point(p.x, p.y + 1), colourToUseIndex, colourToReplace, started);
             }
         }
+    }
+
+    private boolean pixelMatchesColourToReplace(int x, int y, byte colourToReplace) {
+        byte[] pixelColourIndex = new byte[1];
+        renderedImage.getRaster().getDataElements(x, y, pixelColourIndex);
+        return pixelColourIndex[0] == colourToReplace;
     }
 
     public BBCImage GetRenderedImage() {

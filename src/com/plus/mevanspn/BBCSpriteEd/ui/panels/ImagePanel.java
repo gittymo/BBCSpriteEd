@@ -181,7 +181,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     repaint(this.getVisibleRect());
                     parent.UpdateTimeline();
                 } else if (isActiveDrawingTool("floodfill")) {
-                    activeImage.FloodFill(p, parent.GetActiveColourIndex(), 0, false);
+                    activeImage.FloodFill(p, parent.GetActiveColourIndex(), (byte) 0, false);
                     repaint(this.getVisibleRect());
                     parent.UpdateTimeline();
                 } else if (isActiveDrawingTool("paintbrush")) {
