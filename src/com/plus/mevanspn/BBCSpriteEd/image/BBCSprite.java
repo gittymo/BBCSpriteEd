@@ -252,8 +252,9 @@ final public class BBCSprite {
             byteArrayOutputStream.write(GetHeight());
             for (BBCSpriteFrame bbcSpriteFrame : frames) {
                 byteArrayOutputStream.write(bbcSpriteFrame.GetCompressedData());
-                byteArrayOutputStream.write(bbcSpriteFrame == frames.getLast() ? 7 : 0);
+                byteArrayOutputStream.write(0);
             }
+            byteArrayOutputStream.write(0);
             compressedData = byteArrayOutputStream.toByteArray();
             byteArrayOutputStream.close();
         }
