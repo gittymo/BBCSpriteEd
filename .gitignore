@@ -21,33 +21,4 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-/.idea/artifacts/BBCSpriteEd_jar.xml
-/out/production/BBCSpriteEd/img/eraser.png
-/out/production/BBCSpriteEd/res/img/eraser.png
-/out/production/BBCSpriteEd/img/fill.png
-/out/production/BBCSpriteEd/res/img/fill.png
-/res/img/fill.png
-/src/res/img/fill.png
-/out/production/BBCSpriteEd/img/fillrect.png
-/out/production/BBCSpriteEd/res/img/fillrect.png
-/out/production/BBCSpriteEd/img/line.png
-/out/production/BBCSpriteEd/res/img/line.png
-/out/production/BBCSpriteEd/META-INF/MANIFEST.MF
-/.idea/misc.xml
-/.idea/modules.xml
-/out/production/BBCSpriteEd/img/OnionAniOff.png
-/out/production/BBCSpriteEd/img/OnionAniOn.png
-/out/production/BBCSpriteEd/img/OnionOff.png
-/out/production/BBCSpriteEd/img/OnionOn.png
-/out/production/BBCSpriteEd/img/pencil.png
-/out/production/BBCSpriteEd/res/img/pencil.png
-/out/production/BBCSpriteEd/img/rect.png
-/out/production/BBCSpriteEd/res/img/rect.png
-/out/production/BBCSpriteEd/img/trans.png
-/out/production/BBCSpriteEd/res/img/trans.png
-/src/res/img/trans.png
-/out/production/BBCSpriteEd/img/transdel.png
-/out/production/BBCSpriteEd/res/img/transdel.png
-/src/res/img/transdel.png
-/.idea/uiDesigner.xml
-/.idea/vcs.xml
+out/
