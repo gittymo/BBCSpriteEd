@@ -51,3 +51,8 @@ hs_err_pid*
 /src/res/img/transdel.png
 /.idea/uiDesigner.xml
 /.idea/vcs.xml
+/out/production/BBCSpriteEd/img/undo.png
+/docs/Simple Compressed Sprite Format.txt
+/out/production/BBCSpriteEd/img/redo.png
+/out/production/BBCSpriteEd/img/paintbrush.png
+/examples/ridley.bsf
