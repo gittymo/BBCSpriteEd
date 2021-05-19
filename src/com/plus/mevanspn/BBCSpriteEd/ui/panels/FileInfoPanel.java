@@ -19,9 +19,12 @@ public class FileInfoPanel extends JPanel {
         this.spriteDisplayMode = new JLabel();
         this.spriteDataSizes = new JLabel();
         this.frameDataSizes = new JLabel();
+        this.frameCount = new JLabel();
         this.add(spriteDimensions);
         this.add(Box.createRigidArea(new Dimension(8,8)));
         this.add(spriteDisplayMode);
+        this.add(Box.createRigidArea(new Dimension(8,8)));
+        this.add(frameCount);
         this.add(Box.createRigidArea(new Dimension(8,8)));
         this.add(spriteDataSizes);
         this.add(Box.createRigidArea(new Dimension(8,8)));
@@ -35,6 +38,7 @@ public class FileInfoPanel extends JPanel {
             if (bbcSprite != null && bbcSprite.GetWidth() > 0 && bbcSprite.GetHeight() > 0 && bbcSprite.GetFrameCount() > 0) {
                 spriteDimensions.setText("Size: " + bbcSprite.GetWidth() + " x " + bbcSprite.GetHeight());
                 spriteDisplayMode.setText("Display Mode: " + bbcSprite.GetDisplayMode().number);
+                frameCount.setText("Frame " + (bbcSprite.GetCurrentFrameIndex() + 1) + " of " + bbcSprite.GetFrameCount());
                 final int rawFrameSize = (bbcSprite.GetWidth() * bbcSprite.GetHeight()) / (8 / bbcSprite.GetDisplayMode().GetBitsPerPixel());
                 final int rawSpriteSize = rawFrameSize * bbcSprite.GetFrameCount();
                 int compressedSpriteSize = 0, compressedFrameSize = 0;
@@ -49,10 +53,11 @@ public class FileInfoPanel extends JPanel {
                 spriteDimensions.setText("");
                 spriteDataSizes.setText("");
                 frameDataSizes.setText("");
+                frameCount.setText("");
             }
         }
     }
 
     private MainFrame mainFrame;
-    private JLabel spriteDimensions, spriteDisplayMode, spriteDataSizes, frameDataSizes;
+    private JLabel spriteDimensions, spriteDisplayMode, spriteDataSizes, frameDataSizes, frameCount;
 }
