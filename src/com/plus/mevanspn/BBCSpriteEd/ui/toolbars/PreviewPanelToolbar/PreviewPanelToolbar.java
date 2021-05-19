@@ -4,7 +4,10 @@ import com.plus.mevanspn.BBCSpriteEd.components.ToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel.PreviewPanel;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 final public class PreviewPanelToolbar extends JToolBar {
@@ -66,9 +69,54 @@ final public class PreviewPanelToolbar extends JToolBar {
         add(playButton);
         add(fwdButton);
 
-        JComboBox<String> zoomOptionsComboBox = new JComboBox<>(new String[] {"25%","50%","100%","200%","400%","800%"});
+        JComboBox<ZoomComboBoxChoice> zoomOptionsComboBox = new JComboBox<>(new ZoomComboBoxChoice[] {
+                new ZoomComboBoxChoice("25%",0.25f),
+                new ZoomComboBoxChoice("50%",0.5f),
+                new ZoomComboBoxChoice("100%", 1.0f),
+                new ZoomComboBoxChoice("200%", 2.0f),
+                new ZoomComboBoxChoice("400%", 4.0f),
+                new ZoomComboBoxChoice("800%", 8.0f)});
+        zoomOptionsComboBox.setSelectedIndex(2);
+        zoomOptionsComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ZoomComboBoxChoice zoomComboBoxChoice = (ZoomComboBoxChoice) zoomOptionsComboBox.getSelectedItem();
+                previewPanel.SetZoom(zoomComboBoxChoice.zoom);
+            }
+        });
         add(zoomOptionsComboBox);
+
+        JSpinner fpsSpinner = new JSpinner(new SpinnerNumberModel(previewPanel.GetFPS(), 1, 50, 1));
+        fpsSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                previewPanel.SetFPS((Integer) fpsSpinner.getValue());
+            }
+        });
+        fpsSpinner.setToolTipText("Change the playback speed (frames per second)");
+        add(fpsSpinner);
     }
 
     private PreviewPanel previewPanel;
+
+    final class ZoomComboBoxChoice {
+        public ZoomComboBoxChoice(String label, float zoom) {
+            this.label = label;
+            this.zoom = zoom;
+        }
+
+        public String GetLabel() {
+            return label;
+        }
+
+        @Override
+        public String toString() { return GetLabel(); }
+
+        public float GetZoom() {
+            return zoom;
+        }
+
+        private String label;
+        private float zoom;
+    }
 }

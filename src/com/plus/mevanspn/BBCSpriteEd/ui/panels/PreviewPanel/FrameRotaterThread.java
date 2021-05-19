@@ -3,6 +3,7 @@ package com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel;
 public final class FrameRotaterThread extends Thread {
     public FrameRotaterThread(PreviewPanel previewPanel) {
         this.previewPanel = previewPanel;
+        this.fps = previewPanel.GetFPS();
     }
 
     public void run() {
@@ -25,13 +26,11 @@ public final class FrameRotaterThread extends Thread {
 
     public void Play() { stopped = false; }
 
-    public void ToEnd() {
-
-    }
-
     public void SetFPS(int fps) {
         this.fps = fps;
     }
+
+    public int GetFPS() { return fps; }
 
     private boolean killed = false, stopped = false;
     private int fps = 10;

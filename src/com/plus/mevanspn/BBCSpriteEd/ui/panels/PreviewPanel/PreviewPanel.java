@@ -14,7 +14,8 @@ final public class PreviewPanel extends JPanel {
         super();
         this.mainFrame = mainFrame;
         this.frame = 0;
-        this.zoom = 2;
+        this.fps = 10;
+        this.zoom = 1;
         this.frameRotaterThread = new FrameRotaterThread(this);
         this.frameRotaterThread.start();
         this.previewPanelToolbar = new PreviewPanelToolbar(this);
@@ -60,7 +61,10 @@ final public class PreviewPanel extends JPanel {
     }
 
     public void SetFrame(int frame) {
-        if (frame >= 0 && mainFrame != null && mainFrame.GetSprite() != null && frame < mainFrame.GetSprite().GetFrameCount()) this.frame = frame;
+        if (frame >= 0 && mainFrame != null && mainFrame.GetSprite() != null && frame < mainFrame.GetSprite().GetFrameCount()) {
+            this.frame = frame;
+            repaint();
+        }
     }
 
     public void Stop() {
@@ -91,6 +95,17 @@ final public class PreviewPanel extends JPanel {
         repaint();
     }
 
+    public void SetFPS(int fps) {
+        if (fps > 0 && fps <= 50) {
+            frameRotaterThread.SetFPS(fps);
+            this.fps = fps;
+        }
+    }
+
+    public int GetFPS() {
+        return fps;
+    }
+
     public PreviewPanelToolbar GetToolbar() {
         return previewPanelToolbar;
     }
@@ -111,7 +126,7 @@ final public class PreviewPanel extends JPanel {
 
     private final MainFrame mainFrame;
     private float zoom;
-    private int frame;
+    private int frame, fps;
     private final FrameRotaterThread frameRotaterThread;
     private PreviewPanelToolbar previewPanelToolbar;
 
