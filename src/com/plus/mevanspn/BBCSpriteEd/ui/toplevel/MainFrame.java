@@ -40,7 +40,7 @@ final public class MainFrame extends JFrame {
         this.imagePanel = new ImagePanel(this);
         this.scrollPane.setViewportView(imagePanel);
         this.scrollPane.setPreferredSize(new Dimension(640, 480));
-        getContentPane().add(this.scrollPane,BorderLayout.CENTER);
+        // getContentPane().add(this.scrollPane,BorderLayout.CENTER);
 
         this.colourPickerToolbar = new ColourPickerToolbar(this);
         this.drawingToolbar = new DrawingToolbar(this);
@@ -50,7 +50,8 @@ final public class MainFrame extends JFrame {
         this.onionSkinManagerToolbar = new OnionSkinManagerToolbar(this);
 
         ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
-        getContentPane().add(toolbarsContainer, BorderLayout.NORTH);
+        ImagePanelContainer imagePanelContainer = new ImagePanelContainer(scrollPane, toolbarsContainer);
+        getContentPane().add(imagePanelContainer, BorderLayout.CENTER);
 
         this.timelinePanel = new TimelinePanel(this, this.timelinePreviewHeight);
         this.fileInfoPanel = new FileInfoPanel(this);

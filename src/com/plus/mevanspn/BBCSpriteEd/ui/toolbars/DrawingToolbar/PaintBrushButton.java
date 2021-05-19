@@ -58,6 +58,7 @@ final public class PaintBrushButton extends DrawingToolbarButton implements Mous
     void SetActiveBrush(BufferedImage activeBrush) {
         this.activeBrush = activeBrush;
         SetMode(PaintBrushButton.DRAWING_MODE);
+        this.drawingToolbar.SetActiveButton(this);
     }
 
     private void createNewMenuItem(BufferedImage brushImage) {
@@ -110,7 +111,17 @@ final public class PaintBrushButton extends DrawingToolbarButton implements Mous
     final class PaintBrushButtonMenuItem extends JMenuItem {
         public PaintBrushButtonMenuItem(BufferedImage brushImage) {
             super();
-            BufferedImage brushIconImage = new BufferedImage(24, 24, brushImage.getType(), (IndexColorModel) brushImage.getColorModel());
+            this.brushImage = brushImage;
+            this.addActionListener(e -> SetActiveBrush(GetBrushImage()));
+        }
+
+        @Override
+        public Dimension getPreferredSize() { return new Dimension(24, 24); }
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g;
             final float scaleX = 24 / (float) brushImage.getWidth();
             final float scaleY = 24 / (float) brushImage.getHeight();
             int scaledWidth, scaledHeight;
@@ -122,10 +133,7 @@ final public class PaintBrushButton extends DrawingToolbarButton implements Mous
             scaledHeight = (int) (brushImage.getHeight() * scaleY);
             final int xPos = (24 - scaledWidth) / 2;
             final int yPos = (24 - scaledHeight) / 2;
-            brushIconImage.getGraphics().drawImage(brushImage, xPos, yPos, scaledWidth, scaledHeight, null);
-            this.setIcon(new ImageIcon(brushIconImage));
-            this.brushImage = brushImage;
-            this.addActionListener(e -> SetActiveBrush(GetBrushImage()));
+            g2.drawImage(brushImage, xPos, yPos, scaledWidth, scaledWidth, null);
         }
 
         BufferedImage GetBrushImage() {

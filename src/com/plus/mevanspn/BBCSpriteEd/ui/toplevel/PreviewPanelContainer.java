@@ -10,7 +10,6 @@ final public class PreviewPanelContainer extends JPanel {
     public PreviewPanelContainer(PreviewPanel previewPanel) {
         super();
         setLayout(new BorderLayout());
-        setBorder(new EmptyBorder(4,4,4,4));
         add(previewPanel, BorderLayout.CENTER);
         add(previewPanel.GetToolbar(), BorderLayout.NORTH);
     }

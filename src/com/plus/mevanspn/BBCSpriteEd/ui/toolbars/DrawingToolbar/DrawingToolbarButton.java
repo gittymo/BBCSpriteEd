@@ -27,7 +27,7 @@ public class DrawingToolbarButton extends ToolbarButton {
         return drawingToolbar;
     }
 
-    private final DrawingToolbar drawingToolbar;
+    final DrawingToolbar drawingToolbar;
 
     @Override
     public void KeyPressed(KeyEvent keyEvent) {
@@ -36,7 +36,6 @@ public class DrawingToolbarButton extends ToolbarButton {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("Drawing button clicked.");
         drawingToolbar.SetActiveButton((DrawingToolbarButton) e.getSource());
     }
 }
