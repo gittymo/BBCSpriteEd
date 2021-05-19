@@ -1,5 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel;
 
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.PreviewPanelToolbar.PreviewPanelToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
@@ -9,22 +10,23 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 final public class PreviewPanel extends JPanel {
-    public PreviewPanel(MainFrame parent) {
+    public PreviewPanel(MainFrame mainFrame) {
         super();
-        this.parent = parent;
+        this.mainFrame = mainFrame;
         this.frame = 0;
         this.zoom = 2;
         this.frameRotaterThread = new FrameRotaterThread(this);
         this.frameRotaterThread.start();
+        this.previewPanelToolbar = new PreviewPanelToolbar(this);
         this.setBorder(new EmptyBorder(PADDING,PADDING,PADDING,PADDING));
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (parent != null) {
+        if (mainFrame != null) {
             Rectangle usableArea = getBounds();
-            BBCSprite sprite = parent.GetSprite();
+            BBCSprite sprite = mainFrame.GetSprite();
             final int zoomedWidth = (int) (sprite.GetWidth() * sprite.GetHorizontalPixelRatio() * zoom);
             final int zoomedHeight = (int) (sprite.GetHeight() * zoom);
 
@@ -44,22 +46,59 @@ final public class PreviewPanel extends JPanel {
         }
     }
 
+    public void Refresh() {
+        revalidate();
+        repaint();
+    }
+
     public void RotateFrames() {
-        if (parent != null && parent.GetSprite() != null && parent.GetSprite().GetFrameCount() > 0) {
-            frame = (frame + 1) % parent.GetSprite().GetFrameCount();
+        if (mainFrame != null && mainFrame.GetSprite() != null && mainFrame.GetSprite().GetFrameCount() > 0) {
+            frame = (frame + 1) % mainFrame.GetSprite().GetFrameCount();
             revalidate();
             repaint();
         }
     }
 
     public void SetFrame(int frame) {
-        if (frame >= 0 && parent != null && parent.GetSprite() != null && frame < parent.GetSprite().GetFrameCount()) this.frame = frame;
+        if (frame >= 0 && mainFrame != null && mainFrame.GetSprite() != null && frame < mainFrame.GetSprite().GetFrameCount()) this.frame = frame;
+    }
+
+    public void Stop() {
+        ToEnd();
+        frameRotaterThread.Stop();
+        RotateFrames();
+    }
+
+    public void Pause() {
+        frameRotaterThread.Pause();
+    }
+
+    public void ToStart() {
+        SetFrame(0);
+    }
+
+    public void ToEnd() {
+        SetFrame(mainFrame.GetSprite().GetFrameCount() - 1);
+    }
+
+    public void Play() {
+        frameRotaterThread.Play();
+    }
+
+    public void SetZoom(float zoom) {
+        this.zoom = zoom;
+        revalidate();
+        repaint();
+    }
+
+    public PreviewPanelToolbar GetToolbar() {
+        return previewPanelToolbar;
     }
 
     @Override
     public Dimension getPreferredSize() {
-        if (parent != null) {
-            BBCSprite sprite = parent.GetSprite();
+        if (mainFrame != null) {
+            BBCSprite sprite = mainFrame.GetSprite();
             if (sprite != null) {
                 final int zoomedWidth = (int) (sprite.GetWidth() * sprite.GetHorizontalPixelRatio() * zoom);
                 final int zoomedHeight = (int) (sprite.GetHeight() * zoom);
@@ -70,10 +109,11 @@ final public class PreviewPanel extends JPanel {
         } else return new Dimension(PADDING, PADDING);
     }
 
-    private final MainFrame parent;
-    private final float zoom;
+    private final MainFrame mainFrame;
+    private float zoom;
     private int frame;
     private final FrameRotaterThread frameRotaterThread;
+    private PreviewPanelToolbar previewPanelToolbar;
 
     private static final int PADDING = 32;
 }

@@ -16,7 +16,7 @@ final public class AnimationMenu extends AppMenu {
             if (currentFrameIndex < currentSprite.GetFrameCount() - 1) {
                 currentSprite.SetActiveFrame(currentSprite.GetFrame(currentFrameIndex + 1));
                 parent.UpdateTimeline();
-                parent.GetOnionSkinManager().GetToolbar().UpdateControls();
+                // parent.GetOnionSkinManager().GetToolbar().UpdateControls();
             }
         });
 
@@ -27,7 +27,7 @@ final public class AnimationMenu extends AppMenu {
             if (currentFrameIndex > 0) {
                 currentSprite.SetActiveFrame(currentSprite.GetFrame(currentFrameIndex - 1));
                 parent.UpdateTimeline();
-                parent.GetOnionSkinManager().GetToolbar().UpdateControls();
+                // parent.GetOnionSkinManager().GetToolbar().UpdateControls();
             }
         });
 

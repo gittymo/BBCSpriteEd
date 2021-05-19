@@ -10,6 +10,6 @@ final public class ToolbarsContainer extends JPanel {
         add(parent.GetColourPickerToolbar());
         add(parent.GetDrawingToolbar());
         add(parent.GetEditToolbar());
-        add(parent.GetOnionSkinManager().GetToolbar());
+        add(parent.GetOnionSkinManagerToolbar());
     }
 }

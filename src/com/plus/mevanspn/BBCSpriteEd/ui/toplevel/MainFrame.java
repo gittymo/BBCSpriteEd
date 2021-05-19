@@ -2,16 +2,17 @@ package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.FileInfoPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
-import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel.PreviewPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.TimelinePanel.TimelinePanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.EditToolbar;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.OnionSkinManagerToolbar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +21,6 @@ final public class MainFrame extends JFrame {
     public MainFrame() {
         super("BBC Sprite Editor - By Morgan Evans");
         this.sprite = null;
-        this.onionSkinManager = null;
         this.zoom = 16;
         this.timelinePreviewHeight = 32;
 
@@ -42,13 +42,12 @@ final public class MainFrame extends JFrame {
         this.scrollPane.setPreferredSize(new Dimension(640, 480));
         getContentPane().add(this.scrollPane,BorderLayout.CENTER);
 
-        onionSkinManager = new OnionSkinManager(this);
-        onionSkinManager.start();
-
         this.colourPickerToolbar = new ColourPickerToolbar(this);
         this.drawingToolbar = new DrawingToolbar(this);
 
         this.editToolbar = new EditToolbar(this);
+
+        this.onionSkinManagerToolbar = new OnionSkinManagerToolbar(this);
 
         ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
         getContentPane().add(toolbarsContainer, BorderLayout.NORTH);
@@ -59,7 +58,8 @@ final public class MainFrame extends JFrame {
         getContentPane().add(timelineStatusContainer, BorderLayout.SOUTH);
 
         this.previewPanel = new PreviewPanel(this);
-        getContentPane().add(this.previewPanel, BorderLayout.EAST);
+        PreviewPanelContainer previewPanelContainer = new PreviewPanelContainer(this.previewPanel);
+        getContentPane().add(previewPanelContainer, BorderLayout.EAST);
 
         this.pack();
     }
@@ -73,7 +73,6 @@ final public class MainFrame extends JFrame {
             colourPickerToolbar.CreatePaletteUsingSprite(sprite);
             timelinePanel.SetSprite(sprite);
             previewPanel.SetFrame(0);
-            onionSkinManager.ResetOnionSkinControls();
             ((PaintBrushButton) drawingToolbar.GetButton("paintbrush")).Reset();
             RefreshPanels();
         }
@@ -107,6 +106,7 @@ final public class MainFrame extends JFrame {
         if (timelinePanel != null) UpdateTimeline();
         if (colourPickerToolbar != null) colourPickerToolbar.repaint();
         if (fileInfoPanel != null) fileInfoPanel.Refresh();
+        if (previewPanel != null) previewPanel.Refresh();
     }
 
     public void ResizeImagePane() {
@@ -133,6 +133,8 @@ final public class MainFrame extends JFrame {
 
     public EditToolbar GetEditToolbar() { return editToolbar; }
 
+    public OnionSkinManagerToolbar GetOnionSkinManagerToolbar() { return onionSkinManagerToolbar; }
+
     public MainFrameMenuBar GetMenuBar() { return mainFrameMenuBar; }
 
     public BBCSprite GetSprite() {
@@ -150,8 +152,8 @@ final public class MainFrame extends JFrame {
         timelinePanel.Refresh();
     }
 
-    public OnionSkinManager GetOnionSkinManager() {
-        return onionSkinManager;
+    public void AddKeyPressListener(KeyPressListener keyPressListener) {
+        GetImagePanel().AddKeyPressListener(keyPressListener);
     }
 
     public void Quit() {
@@ -169,7 +171,7 @@ final public class MainFrame extends JFrame {
     private EditToolbar editToolbar;
     private TimelinePanel timelinePanel;
     private MainFrameMenuBar mainFrameMenuBar;
-    private OnionSkinManager onionSkinManager;
+    private OnionSkinManagerToolbar onionSkinManagerToolbar;
     private PreviewPanel previewPanel;
     private FileInfoPanel fileInfoPanel;
 

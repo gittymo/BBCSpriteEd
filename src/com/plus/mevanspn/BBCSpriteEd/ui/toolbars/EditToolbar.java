@@ -16,18 +16,18 @@ final public class EditToolbar extends JToolBar {
         ToolbarButton undoButton = new ToolbarButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/undo.png"))),
                 new KeyPressEventMatcher('Z', true, false, false)) {
             @Override
+            public void actionPerformed(ActionEvent e) {
+                EditToolbar.this.mainFrame.GetSprite().RollBack();
+            }
+
+            @Override
             public void KeyPressed(KeyEvent keyEvent) {
                 if (this.GetKeyPressEventMatcher().IsMatch(keyEvent, true)) {
                     EditToolbar.this.mainFrame.GetSprite().RollBack();
                 }
             }
         };
-        undoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EditToolbar.this.mainFrame.GetSprite().RollBack();
-            }
-        });
+
         add(undoButton);
         undoButton.setToolTipText("Undo previous operations (Key Ctrl+Z)");
         mainFrame.GetImagePanel().AddKeyPressListener(undoButton);
@@ -35,18 +35,17 @@ final public class EditToolbar extends JToolBar {
         ToolbarButton redoButton = new ToolbarButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/redo.png"))),
                 new KeyPressEventMatcher('Y',true,false,false)) {
             @Override
+            public void actionPerformed(ActionEvent e) {
+                EditToolbar.this.mainFrame.GetSprite().RollForward();
+            }
+
+            @Override
             public void KeyPressed(KeyEvent keyEvent) {
                 if (this.GetKeyPressEventMatcher().IsMatch(keyEvent, true)) {
                     EditToolbar.this.mainFrame.GetSprite().RollForward();
                 }
             }
         };
-        redoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EditToolbar.this.mainFrame.GetSprite().RollForward();
-            }
-        });
         add(redoButton);
         redoButton.setToolTipText("Redo previous operations (Key Ctrl+Y)");
         mainFrame.GetImagePanel().AddKeyPressListener(redoButton);

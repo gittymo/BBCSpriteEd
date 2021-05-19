@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public final class ToggleButton extends ToolbarButton implements KeyPressListener {
+public abstract class ToggleButton extends ToolbarButton {
     public ToggleButton(String onIconFile, String offIconFile, KeyPressEventMatcher keyPressEventMatcher) {
         super(keyPressEventMatcher);
         this.keyPressEventMatcher = keyPressEventMatcher;

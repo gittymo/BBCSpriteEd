@@ -152,7 +152,7 @@ final public class BBCSprite {
             activeFrame = bsf;
             mainFrame.RefreshPanels();
             mainFrame.UpdateTimeline();
-            if (mainFrame.GetOnionSkinManager() != null) mainFrame.GetOnionSkinManager().Update();
+            // if (mainFrame.GetOnionSkinManager() != null) mainFrame.GetOnionSkinManager().Update();
             if (mainFrame.GetPreviewPanel() != null) mainFrame.GetPreviewPanel().SetFrame(GetFrameIndex(bsf));
         }
     }

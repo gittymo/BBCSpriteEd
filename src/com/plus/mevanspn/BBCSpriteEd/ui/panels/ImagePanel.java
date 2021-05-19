@@ -10,7 +10,6 @@ import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButton;
-import com.plus.mevanspn.BBCSpriteEd.ui.OnionSkinManager.OnionSkinManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,10 +76,6 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         return parent.GetActiveDrawingToolbarButton();
     }
 
-    private DrawingToolbarButton getDrawingToolbarButton(String keyValue) {
-        return parent.GetDrawingToolbar().GetButton(keyValue);
-    }
-
     private Point getGridAlignedXY(int x, int y) {
         Rectangle imageArea = GetImageArea();
         if (imageArea != null) {
@@ -119,11 +114,11 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             if (r != null) {
                 g2.drawImage(GetBackgroundImage(), r.x, r.y, r.width, r.height, null);
                 g2.drawImage(activeImage.GetRenderedImage(), r.x + imageOffsetX, r.y + imageOffsetY, r.width, r.height, null);
-                final OnionSkinManager osm = parent.GetOnionSkinManager();
+                /*final OnionSkinManager osm = parent.GetOnionSkinManager();
                 if (osm != null && osm.IsEnabled()) {
                     BufferedImage onionSkinImage = osm.GetOnionSkin();
                     if (onionSkinImage != null) g2.drawImage(onionSkinImage, r.x, r.y, r.width, r.height, null);
-                }
+                }*/
                 if (zoom > 4) {
                     g2.setColor(new Color(0, 0, 128, 255));
                     g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
@@ -261,14 +256,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         if (mouseDown) {
             final BBCSpriteFrame activeImage = parent.GetActiveFrame();
             final Point p = GetPixelPositionInImage(e.getX(), e.getY());
-            if (p != null) {
+            if (p != null && activeImage != null) {
                 if (isActiveDrawingTool("pencil") || isActiveDrawingTool("eraser")) {
-                    if (activeImage != null) {
-                        if (p != null) {
-                            activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
-                            parent.UpdateTimeline();
-                        }
-                    }
+                    activeImage.SetPixel(p.x, p.y, parent.GetActiveColourIndex());
+                    parent.UpdateTimeline();
                 } else if (isActiveDrawingTool("paintbrush")) {
                     PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
                     if (paintBrushButton.GetMode() == PaintBrushButton.DRAWING_MODE) {
@@ -294,11 +285,11 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        final OnionSkinManager osm = parent.GetOnionSkinManager();
+       /*final OnionSkinManager osm = parent.GetOnionSkinManager();
         if (osm != null) {
             if (e.getWheelRotation() > 0) osm.RollBack();
             else osm.RollForward();
-        }
+        }*/
     }
 
     @Override
@@ -319,7 +310,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void RemoveKeyPressListener(KeyPressListener keyPressListener) {
-        if (keyPressListenerLinkedList.contains(keyPressListener)) keyPressListenerLinkedList.remove(keyPressListener);
+        keyPressListenerLinkedList.remove(keyPressListener);
     }
 
     @Override
@@ -332,5 +323,5 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     private final MainFrame parent;
     private boolean mouseDown = false;
     private Point drawPointA, drawPointB, overlayPoint;
-    private LinkedList<KeyPressListener> keyPressListenerLinkedList;
+    private final LinkedList<KeyPressListener> keyPressListenerLinkedList;
 }
