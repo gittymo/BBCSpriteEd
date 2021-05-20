@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.PreviewPanelToolbar;
 
-import com.plus.mevanspn.BBCSpriteEd.components.ToolbarButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.components.ToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel.PreviewPanel;
 
 import javax.swing.*;

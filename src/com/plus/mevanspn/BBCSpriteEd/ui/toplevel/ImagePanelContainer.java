@@ -1,8 +1,5 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 
-import com.plus.mevanspn.BBCSpriteEd.components.ToolbarButton;
-import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;
-
 import javax.swing.*;
 import java.awt.*;
 

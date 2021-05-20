@@ -1,13 +1,9 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu.RotateMenu;
 
-import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
-import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
-import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
+import com.plus.mevanspn.BBCSpriteEd.image.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu.EditMenu;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 
@@ -16,9 +12,9 @@ final public class RotateMenu extends JMenu {
         super("Rotate");
         this.editMenu = editMenu;
 
-        JMenuItem rotateFourtyFive = new JMenuItem("Rotate 45 Degrees");
-        rotateFourtyFive.addActionListener(e -> RotateFrame(45));
-        add(rotateFourtyFive);
+        JMenuItem rotateFortyFive = new JMenuItem("Rotate 45 Degrees");
+        rotateFortyFive.addActionListener(e -> RotateFrame(45));
+        add(rotateFortyFive);
 
         JMenuItem rotateNinety = new JMenuItem("Rotate 90 Degrees");
         rotateNinety.addActionListener(e -> RotateFrame(90));
@@ -46,25 +42,11 @@ final public class RotateMenu extends JMenu {
     }
 
     void RotateFrame(double degrees) {
-        if (degrees < 0) {
-            while (degrees < 0) degrees += 360;
-        } else if (degrees >= 360) {
-            while (degrees >= 360) degrees -= 360;
-        }
-        final BBCSprite sprite = editMenu.GetMainFrame().GetSprite();
-        sprite.RecordHistory();
-        if (sprite != null) {
-            BBCSpriteFrame spriteFrame = editMenu.GetMainFrame().GetActiveFrame();
-            if (spriteFrame != null) {
-                final BBCImage sourceImage = spriteFrame.GetRenderedImage();
-                BBCImage newFrameImage = new BBCImage(sprite);
-                final int originX = newFrameImage.getWidth() / 2;
-                final int originY = newFrameImage.getHeight() / 2;
-                final double rotation = Math.toRadians(degrees);
-                final AffineTransform tx = AffineTransform.getRotateInstance(rotation, originX, originY);
-                final AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-                newFrameImage.getGraphics().drawImage(op.filter(sourceImage, null), 0, 0, null);
-                spriteFrame.SetRenderedImage(newFrameImage);
+        if (editMenu != null && editMenu.GetMainFrame() != null && editMenu.GetMainFrame().GetSprite() != null) {
+            final BBCSprite sprite = editMenu.GetMainFrame().GetSprite();
+            sprite.RecordHistory();
+            if (sprite != null && sprite.GetActiveFrame() != null) {
+                sprite.GetActiveFrame().GetRenderedImage().Rotate(degrees);
             }
         }
     }
@@ -77,5 +59,5 @@ final public class RotateMenu extends JMenu {
         return editMenu;
     }
 
-    private EditMenu editMenu;
+    private final EditMenu editMenu;
 }

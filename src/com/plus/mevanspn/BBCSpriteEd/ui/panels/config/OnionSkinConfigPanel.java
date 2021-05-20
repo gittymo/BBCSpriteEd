@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels.config;
 
-import com.plus.mevanspn.BBCSpriteEd.components.NumberSpinner;
+import com.plus.mevanspn.BBCSpriteEd.ui.components.NumberSpinner;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

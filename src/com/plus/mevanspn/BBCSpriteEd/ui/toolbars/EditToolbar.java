@@ -1,13 +1,12 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars;
 
-import com.plus.mevanspn.BBCSpriteEd.components.ToolbarButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.components.ToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 final public class EditToolbar extends JToolBar {

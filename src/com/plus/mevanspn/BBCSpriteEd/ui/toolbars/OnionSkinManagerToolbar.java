@@ -1,7 +1,7 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars;
 
-import com.plus.mevanspn.BBCSpriteEd.components.NumberSpinner;
-import com.plus.mevanspn.BBCSpriteEd.components.ToggleButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.components.NumberSpinner;
+import com.plus.mevanspn.BBCSpriteEd.ui.components.ToggleButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.config.OnionSkinConfigPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;

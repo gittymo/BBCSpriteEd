@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerButton;
 
-import com.plus.mevanspn.BBCSpriteEd.components.ToolbarButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.components.ToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;

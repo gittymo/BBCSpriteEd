@@ -172,7 +172,7 @@ final public class BBCSprite {
         if (newHeight < 1 || newHeight > GetDisplayMode().height) return;
         if (newWidth == width && newHeight == height) return;
         for (BBCSpriteFrame bbcSpriteFrame : frames) {
-            BBCImage newRenderedImage = new BBCImage(newWidth, newHeight, bbcSpriteFrame.GetSprite());
+            BBCImage newRenderedImage = new BBCImage(newWidth, newHeight, bbcSpriteFrame);
             final int xPos = (newWidth - width) / 2;
             final int yPos = (newHeight - height) / 2;
             newRenderedImage.getGraphics().drawImage(bbcSpriteFrame.GetRenderedImage(), xPos, yPos, null);
