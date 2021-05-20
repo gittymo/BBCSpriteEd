@@ -7,6 +7,7 @@ import com.plus.mevanspn.BBCSpriteEd.ui.panels.FileInfoPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.config.ConfigPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.config.OnionSkinConfigPanel;
+import com.plus.mevanspn.BBCSpriteEd.ui.panels.config.OptionsDialog;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.ColourPickerToolbar.ColourPickerToolbar;
@@ -48,6 +49,9 @@ final public class MainFrame extends JFrame {
 
         this.editToolbar = new EditToolbar(this);
 
+        this.optionsDialog = new OptionsDialog(this);
+        this.optionsDialog.AddConfigPanel(new OnionSkinConfigPanel());
+
         this.onionSkinManagerToolbar = new OnionSkinManagerToolbar(this);
 
         ToolbarsContainer toolbarsContainer = new ToolbarsContainer(this);
@@ -63,8 +67,6 @@ final public class MainFrame extends JFrame {
         PreviewPanelContainer previewPanelContainer = new PreviewPanelContainer(this.previewPanel);
         getContentPane().add(previewPanelContainer, BorderLayout.EAST);
 
-        this.optionsDialog = new OptionsDialog(this);
-        this.optionsDialog.AddConfigPanel(new OnionSkinConfigPanel());
         this.pack();
     }
 

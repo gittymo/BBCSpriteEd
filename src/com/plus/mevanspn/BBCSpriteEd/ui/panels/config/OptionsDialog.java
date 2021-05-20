@@ -1,6 +1,7 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
+package com.plus.mevanspn.BBCSpriteEd.ui.panels.config;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.config.ConfigPanel;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

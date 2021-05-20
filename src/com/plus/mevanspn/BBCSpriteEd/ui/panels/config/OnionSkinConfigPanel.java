@@ -1,6 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels.config;
 
-import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.OptionsDialog;
+import com.plus.mevanspn.BBCSpriteEd.components.NumberSpinner;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -25,7 +25,7 @@ public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
         });
 
         JLabel pastFramesCountLabel = new JLabel("Past Frames");
-        pastFramesCountSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 5, 1));
+        pastFramesCountSpinner = new NumberSpinner(0, 0, 5, 1);
         pastFramesCountSpinner.addChangeListener(e -> {
             final int futureValue = (Integer) futureFramesCountSpinner.getValue();
             final int pastValue = (Integer) pastFramesCountSpinner.getValue();
@@ -35,7 +35,7 @@ public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
         });
 
         JLabel futureFramesCountLabel = new JLabel("Future Frames");
-        futureFramesCountSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 5, 1));
+        futureFramesCountSpinner = new NumberSpinner(0, 0, 5, 1);
         futureFramesCountSpinner.addChangeListener(e -> {
             final int futureValue = (Integer) futureFramesCountSpinner.getValue();
             final int pastValue = (Integer) pastFramesCountSpinner.getValue();
@@ -75,6 +75,14 @@ public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
         return (Integer) futureFramesCountSpinner.getValue();
     }
 
+    public NumberSpinner GetPastFramesCountSpinner() {
+        return pastFramesCountSpinner;
+    }
+
+    public NumberSpinner GetFutureFramesCountSpinner() {
+        return futureFramesCountSpinner;
+    }
+
     @Override
     public String GetTitle() {
         return "Onion Skinning";
@@ -105,7 +113,7 @@ public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
     }
 
     private JCheckBox enableOnionSkinningCheckbox, linkFrameCountsToggleButton;
-    private JSpinner pastFramesCountSpinner, futureFramesCountSpinner;
+    private NumberSpinner pastFramesCountSpinner, futureFramesCountSpinner;
     private boolean oldEnabledValue = true;
     private int oldPastValue = 1, oldFutureValue = 1;
 }

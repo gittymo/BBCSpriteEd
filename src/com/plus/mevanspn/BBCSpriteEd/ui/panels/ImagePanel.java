@@ -115,13 +115,13 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             }
             if (r != null) {
                 g2.drawImage(GetBackgroundImage(), r.x, r.y, r.width, r.height, null);
-                OnionSkinConfigPanel onionSkinConfigPanel = (OnionSkinConfigPanel) mainFrame.GetOptionsDialog().GetConfigPanel("onionskinning");
-                if (onionSkinConfigPanel != null && onionSkinConfigPanel.OnionSkinningEnabled()) {
+                final OnionSkinManagerToolbar onionSkinManagerToolbar = mainFrame.GetOnionSkinManagerToolbar();
+                if (onionSkinManagerToolbar != null && onionSkinManagerToolbar.OnionSkinningEnabled()) {
                     final int currentFrameIndex = mainFrame.GetSprite().GetCurrentFrameIndex();
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
                     if (currentFrameIndex > 0) {
-                        final int pastFrame = currentFrameIndex - onionSkinConfigPanel.GetPastFramesCount() < 0 ? 0 :
-                                currentFrameIndex - onionSkinConfigPanel.GetPastFramesCount();
+                        final int pastFrame = currentFrameIndex - onionSkinManagerToolbar.GetPastFramesToDisplay() < 0 ? 0 :
+                                currentFrameIndex - onionSkinManagerToolbar.GetPastFramesToDisplay();
                         for (int f = pastFrame; f < currentFrameIndex; f++) {
                             BufferedImage pastImage = mainFrame.GetSprite().GetFrame(f).GetRenderedImage().GetOnionSkinImage(true);
                             g2.drawImage(pastImage, r.x, r.y, r.width, r.height, null);
@@ -129,8 +129,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     }
                     if (currentFrameIndex < mainFrame.GetSprite().GetFrameCount() - 1) {
                         final int futureFrame =
-                                currentFrameIndex + onionSkinConfigPanel.GetFutureFramesCount() >= mainFrame.GetSprite().GetFrameCount() ?
-                                        mainFrame.GetSprite().GetFrameCount() - 1 : currentFrameIndex + onionSkinConfigPanel.GetFutureFramesCount();
+                                currentFrameIndex + onionSkinManagerToolbar.GetFutureFramesToDisplay() >= mainFrame.GetSprite().GetFrameCount() ?
+                                        mainFrame.GetSprite().GetFrameCount() - 1 : currentFrameIndex + onionSkinManagerToolbar.GetFutureFramesToDisplay();
                         for (int f = futureFrame; f > currentFrameIndex; f--) {
                             BufferedImage futureImage = mainFrame.GetSprite().GetFrame(f).GetRenderedImage().GetOnionSkinImage(false);
                             g2.drawImage(futureImage, r.x, r.y, r.width, r.height, null);
