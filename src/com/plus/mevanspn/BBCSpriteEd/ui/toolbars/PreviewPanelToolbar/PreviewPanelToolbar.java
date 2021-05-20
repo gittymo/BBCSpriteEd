@@ -4,11 +4,7 @@ import com.plus.mevanspn.BBCSpriteEd.ui.components.ToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel.PreviewPanel;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 final public class PreviewPanelToolbar extends JToolBar {
     public PreviewPanelToolbar(PreviewPanel previewPanel) {
@@ -77,27 +73,17 @@ final public class PreviewPanelToolbar extends JToolBar {
                 new ZoomComboBoxChoice("400%", 4.0f),
                 new ZoomComboBoxChoice("800%", 8.0f)});
         zoomOptionsComboBox.setSelectedIndex(2);
-        zoomOptionsComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ZoomComboBoxChoice zoomComboBoxChoice = (ZoomComboBoxChoice) zoomOptionsComboBox.getSelectedItem();
-                previewPanel.SetZoom(zoomComboBoxChoice.zoom);
-            }
+        zoomOptionsComboBox.addActionListener(e -> {
+            ZoomComboBoxChoice zoomComboBoxChoice = (ZoomComboBoxChoice) zoomOptionsComboBox.getSelectedItem();
+            if (zoomComboBoxChoice != null) previewPanel.SetZoom(zoomComboBoxChoice.zoom);
         });
         add(zoomOptionsComboBox);
 
         JSpinner fpsSpinner = new JSpinner(new SpinnerNumberModel(previewPanel.GetFPS(), 1, 50, 1));
-        fpsSpinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                previewPanel.SetFPS((Integer) fpsSpinner.getValue());
-            }
-        });
+        fpsSpinner.addChangeListener(e -> previewPanel.SetFPS((Integer) fpsSpinner.getValue()));
         fpsSpinner.setToolTipText("Change the playback speed (frames per second)");
         add(fpsSpinner);
     }
-
-    private PreviewPanel previewPanel;
 
     final class ZoomComboBoxChoice {
         public ZoomComboBoxChoice(String label, float zoom) {
@@ -116,7 +102,7 @@ final public class PreviewPanelToolbar extends JToolBar {
             return zoom;
         }
 
-        private String label;
+        private final String label;
         private float zoom;
     }
 }

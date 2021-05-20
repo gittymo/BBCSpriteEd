@@ -4,9 +4,7 @@ import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
 
 import java.awt.event.*;
-import java.util.Collections;
-import java.util.LinkedList;
-
+import java.util.*;
 
 public class MultiFunctionButton extends DrawingToolbarButton implements MouseWheelListener, MouseListener {
     public MultiFunctionButton(MultiFunctionButtonState[] states, String tooltipText, DrawingToolbar parent) {

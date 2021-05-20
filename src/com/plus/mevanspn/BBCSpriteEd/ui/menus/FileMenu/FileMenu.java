@@ -4,9 +4,7 @@ import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
 import javax.swing.*;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.Locale;
 
 final public class FileMenu extends JMenu {
@@ -38,7 +36,7 @@ final public class FileMenu extends JMenu {
             if (rv == JFileChooser.APPROVE_OPTION) {
                 try {
                     String filePath = filePicker.getSelectedFile().getAbsolutePath();
-                    DataOutputStream compressedFile = new DataOutputStream(new FileOutputStream(new File(filePath + ".dat")));
+                    DataOutputStream compressedFile = new DataOutputStream(new FileOutputStream(filePath + ".dat"));
                     compressedFile.write(mainFrame.GetSprite().GetCompressedData());
                     compressedFile.flush();
                     compressedFile.close();
@@ -53,9 +51,7 @@ final public class FileMenu extends JMenu {
         this.add(saveAsFileMenuItem);
         this.add(new JSeparator());
         JMenuItem optionsMenuItem = new JMenuItem("Options...");
-        optionsMenuItem.addActionListener(e -> {
-            mainFrame.GetOptionsDialog().setVisible(true);
-        });
+        optionsMenuItem.addActionListener(e -> mainFrame.GetOptionsDialog().setVisible(true));
         this.add(optionsMenuItem);
         this.add(new JSeparator());
         JMenuItem exitApp = new JMenuItem("Quit");

@@ -5,8 +5,7 @@ import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class DrawingToolbarButton extends ToolbarButton {
     public DrawingToolbarButton(String iconFile, String tooltipText, DrawingToolbar drawingToolbar, KeyPressEventMatcher keyPressEventMatcher) {

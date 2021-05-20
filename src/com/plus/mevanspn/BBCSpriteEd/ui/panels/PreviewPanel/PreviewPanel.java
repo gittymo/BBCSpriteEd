@@ -41,7 +41,7 @@ final public class PreviewPanel extends JPanel {
                 g2.fillRect(displayX, displayY, displayWidth, displayHeight);
                 g2.setColor(Color.BLACK);
                 g2.drawRect(displayX, displayY, displayWidth, displayHeight);
-                BufferedImage frameImage = sprite.GetFrame(frame) != null ? sprite.GetFrame(frame).GetRenderedImage() : null;
+                BufferedImage frameImage = sprite != null && sprite.GetFrame(frame) != null ? sprite.GetFrame(frame).GetRenderedImage() : null;
                 if (frameImage != null) g2.drawImage(frameImage, displayX + (PADDING / 2), displayY + (PADDING / 2), zoomedWidth, zoomedHeight, null);
             }
         }
@@ -128,7 +128,7 @@ final public class PreviewPanel extends JPanel {
     private float zoom;
     private int frame, fps;
     private final FrameRotaterThread frameRotaterThread;
-    private PreviewPanelToolbar previewPanelToolbar;
+    private final PreviewPanelToolbar previewPanelToolbar;
 
     private static final int PADDING = 32;
 }

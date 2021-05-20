@@ -3,7 +3,6 @@ package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.PreviewPanel.PreviewPanel;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 final public class PreviewPanelContainer extends JPanel {

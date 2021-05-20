@@ -33,6 +33,6 @@ public final class FrameRotaterThread extends Thread {
     public int GetFPS() { return fps; }
 
     private boolean killed = false, stopped = false;
-    private int fps = 10;
+    private int fps;
     private final PreviewPanel previewPanel;
 }

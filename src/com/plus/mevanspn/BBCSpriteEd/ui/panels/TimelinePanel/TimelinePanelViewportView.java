@@ -3,8 +3,7 @@ package com.plus.mevanspn.BBCSpriteEd.ui.panels.TimelinePanel;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 public final class TimelinePanelViewportView extends JPanel implements MouseListener {

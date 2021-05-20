@@ -1,7 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
 
-import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
-import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
+import com.plus.mevanspn.BBCSpriteEd.image.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.FileInfoPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImagePanel;

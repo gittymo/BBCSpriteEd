@@ -4,8 +4,6 @@ import com.plus.mevanspn.BBCSpriteEd.image.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu.EditMenu;
 
 import javax.swing.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 
 final public class RotateMenu extends JMenu {
     public RotateMenu(EditMenu editMenu) {
@@ -45,7 +43,7 @@ final public class RotateMenu extends JMenu {
         if (editMenu != null && editMenu.GetMainFrame() != null && editMenu.GetMainFrame().GetSprite() != null) {
             final BBCSprite sprite = editMenu.GetMainFrame().GetSprite();
             sprite.RecordHistory();
-            if (sprite != null && sprite.GetActiveFrame() != null) {
+            if (sprite.GetActiveFrame() != null && sprite.GetActiveFrame().GetRenderedImage() != null) {
                 sprite.GetActiveFrame().GetRenderedImage().Rotate(degrees);
             }
         }

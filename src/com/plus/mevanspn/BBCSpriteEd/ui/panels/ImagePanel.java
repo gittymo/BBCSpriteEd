@@ -2,15 +2,10 @@ package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressBroadcaster;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
-import com.plus.mevanspn.BBCSpriteEd.ui.panels.config.OnionSkinConfigPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.OnionSkinManagerToolbar;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
-import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
-import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
-import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
-import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbar;
-import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.DrawingToolbarButton;
-import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.PaintBrushButton;
+import com.plus.mevanspn.BBCSpriteEd.image.*;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButton;
 
 import javax.swing.*;
@@ -120,11 +115,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     final int currentFrameIndex = mainFrame.GetSprite().GetCurrentFrameIndex();
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
                     if (currentFrameIndex > 0) {
-                        final int pastFrame = currentFrameIndex - onionSkinManagerToolbar.GetPastFramesToDisplay() < 0 ? 0 :
-                                currentFrameIndex - onionSkinManagerToolbar.GetPastFramesToDisplay();
+                        final int pastFrame = Math.max(currentFrameIndex - onionSkinManagerToolbar.GetPastFramesToDisplay(), 0);
                         for (int f = pastFrame; f < currentFrameIndex; f++) {
                             BufferedImage pastImage = mainFrame.GetSprite().GetFrame(f).GetRenderedImage().GetOnionSkinImage(true);
-                            g2.drawImage(pastImage, r.x, r.y, r.width, r.height, null);
+                            if (pastImage != null) g2.drawImage(pastImage, r.x, r.y, r.width, r.height, null);
                         }
                     }
                     if (currentFrameIndex < mainFrame.GetSprite().GetFrameCount() - 1) {
@@ -133,7 +127,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                                         mainFrame.GetSprite().GetFrameCount() - 1 : currentFrameIndex + onionSkinManagerToolbar.GetFutureFramesToDisplay();
                         for (int f = futureFrame; f > currentFrameIndex; f--) {
                             BufferedImage futureImage = mainFrame.GetSprite().GetFrame(f).GetRenderedImage().GetOnionSkinImage(false);
-                            g2.drawImage(futureImage, r.x, r.y, r.width, r.height, null);
+                            if (futureImage != null) g2.drawImage(futureImage, r.x, r.y, r.width, r.height, null);
                         }
                     }
                     g2.setComposite(AlphaComposite.SrcOver);

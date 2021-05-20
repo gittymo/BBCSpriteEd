@@ -7,6 +7,4 @@ public final class ZoomMenuItem extends JMenuItem {
         super((zoom * 100) + "%");
         addActionListener(e -> zoomMenu.GetMainFrame().SetZoom(zoom));
     }
-
-    ZoomMenu zoomMenu;
 }

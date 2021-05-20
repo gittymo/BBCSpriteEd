@@ -4,8 +4,6 @@ import com.plus.mevanspn.BBCSpriteEd.ui.components.NumberSpinner;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
@@ -13,19 +11,21 @@ public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
         super();
         setBorder(new EmptyBorder(4,4,4,4));
         setLayout(new GridLayout(1,5));
+
         JLabel enableOnionSkinningLabel = new JLabel("Enable Onion Skinning");
         enableOnionSkinningCheckbox = new JCheckBox();
-        enableOnionSkinningCheckbox.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                pastFramesCountSpinner.setEnabled(enableOnionSkinningCheckbox.isSelected());
-                futureFramesCountSpinner.setEnabled(enableOnionSkinningCheckbox.isSelected());
-                linkFrameCountsToggleButton.setEnabled(enableOnionSkinningCheckbox.isSelected());
-            }
-        });
-
         JLabel pastFramesCountLabel = new JLabel("Past Frames");
         pastFramesCountSpinner = new NumberSpinner(0, 0, 5, 1);
+        JLabel futureFramesCountLabel = new JLabel("Future Frames");
+        futureFramesCountSpinner = new NumberSpinner(0, 0, 5, 1);
+        linkFrameCountsToggleButton = new JCheckBox();
+
+        enableOnionSkinningCheckbox.addChangeListener(e -> {
+            pastFramesCountSpinner.setEnabled(enableOnionSkinningCheckbox.isSelected());
+            futureFramesCountSpinner.setEnabled(enableOnionSkinningCheckbox.isSelected());
+            linkFrameCountsToggleButton.setEnabled(enableOnionSkinningCheckbox.isSelected());
+        });
+
         pastFramesCountSpinner.addChangeListener(e -> {
             final int futureValue = (Integer) futureFramesCountSpinner.getValue();
             final int pastValue = (Integer) pastFramesCountSpinner.getValue();
@@ -34,8 +34,6 @@ public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
             }
         });
 
-        JLabel futureFramesCountLabel = new JLabel("Future Frames");
-        futureFramesCountSpinner = new NumberSpinner(0, 0, 5, 1);
         futureFramesCountSpinner.addChangeListener(e -> {
             final int futureValue = (Integer) futureFramesCountSpinner.getValue();
             final int pastValue = (Integer) pastFramesCountSpinner.getValue();
@@ -44,7 +42,6 @@ public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
             }
         });
 
-        linkFrameCountsToggleButton = new JCheckBox();
         linkFrameCountsToggleButton.addActionListener( e -> {
             final int futureValue = (Integer) futureFramesCountSpinner.getValue();
             final int pastValue = (Integer) pastFramesCountSpinner.getValue();
@@ -112,8 +109,8 @@ public class OnionSkinConfigPanel extends JPanel implements ConfigPanel {
         RestoreOriginalValues();
     }
 
-    private JCheckBox enableOnionSkinningCheckbox, linkFrameCountsToggleButton;
-    private NumberSpinner pastFramesCountSpinner, futureFramesCountSpinner;
+    private final JCheckBox enableOnionSkinningCheckbox, linkFrameCountsToggleButton;
+    private final NumberSpinner pastFramesCountSpinner, futureFramesCountSpinner;
     private boolean oldEnabledValue = true;
     private int oldPastValue = 1, oldFutureValue = 1;
 }

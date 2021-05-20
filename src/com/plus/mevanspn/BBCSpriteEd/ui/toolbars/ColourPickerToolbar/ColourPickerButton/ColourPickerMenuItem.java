@@ -4,8 +4,7 @@ import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public final class ColourPickerMenuItem extends JMenuItem implements ActionListener {
     public ColourPickerMenuItem(BBCColour[] colours, byte colourIndex, ColourPickerButton colourPickerButton) {

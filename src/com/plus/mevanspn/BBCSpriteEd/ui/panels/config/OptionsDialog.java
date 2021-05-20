@@ -1,15 +1,12 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels.config;
 
-import com.plus.mevanspn.BBCSpriteEd.ui.panels.config.ConfigPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.event.*;
+import java.util.*;
 
 public class OptionsDialog extends JDialog implements ComponentListener {
     public OptionsDialog(MainFrame mainFrame) {
@@ -19,23 +16,21 @@ public class OptionsDialog extends JDialog implements ComponentListener {
         this.setLayout(new BorderLayout());
         this.optionsTabManager = new OptionsTabManager();
 
-        this.buttonOK = new JButton("OK");
-        this.buttonOK.addActionListener(e -> {
-            setVisible(false);
-        });
-        this.buttonCancel = new JButton("Cancel");
-        this.buttonCancel.addActionListener(e -> {
+        JButton buttonOK = new JButton("OK");
+        buttonOK.addActionListener(e -> setVisible(false));
+        JButton buttonCancel = new JButton("Cancel");
+        buttonCancel.addActionListener(e -> {
             cancelled = true;
             setVisible(false);
         });
-        this.buttonsPanel = new JPanel();
-        this.buttonsPanel.setBorder(new EmptyBorder(0,4,4,4));
-        this.buttonsPanel.setLayout(new BoxLayout(this.buttonsPanel, BoxLayout.X_AXIS));
-        this.buttonsPanel.add(this.buttonOK);
-        this.buttonsPanel.add(this.buttonCancel);
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setBorder(new EmptyBorder(0,4,4,4));
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+        buttonsPanel.add(buttonOK);
+        buttonsPanel.add(buttonCancel);
 
         this.add(this.optionsTabManager, BorderLayout.CENTER);
-        this.add(this.buttonsPanel, BorderLayout.SOUTH);
+        this.add(buttonsPanel, BorderLayout.SOUTH);
         this.pack();
     }
 
@@ -69,11 +64,9 @@ public class OptionsDialog extends JDialog implements ComponentListener {
         else mainFrame.RefreshPanels();
     }
 
-    private OptionsTabManager optionsTabManager;
-    private JButton buttonOK, buttonCancel;
-    private JPanel buttonsPanel;
+    private final OptionsTabManager optionsTabManager;
     private boolean cancelled = false;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     final class OptionsTabManager extends JTabbedPane {
         OptionsTabManager() {
@@ -106,6 +99,6 @@ public class OptionsDialog extends JDialog implements ComponentListener {
                 configPanelEntry.getValue().RestoreOriginalValues();
             }
         }
-        private HashMap<String, ConfigPanel> configPanels;
+        private final HashMap<String, ConfigPanel> configPanels;
     }
 }

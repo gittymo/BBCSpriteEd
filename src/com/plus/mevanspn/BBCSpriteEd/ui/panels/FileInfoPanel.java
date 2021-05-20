@@ -58,6 +58,6 @@ public class FileInfoPanel extends JPanel {
         }
     }
 
-    private MainFrame mainFrame;
-    private JLabel spriteDimensions, spriteDisplayMode, spriteDataSizes, frameDataSizes, frameCount;
+    private final MainFrame mainFrame;
+    private final JLabel spriteDimensions, spriteDisplayMode, spriteDataSizes, frameDataSizes, frameCount;
 }

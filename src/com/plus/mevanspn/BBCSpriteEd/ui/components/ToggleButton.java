@@ -38,5 +38,5 @@ public abstract class ToggleButton extends ToolbarButton {
     private final ImageIcon onImageIcon;
     private final ImageIcon offImageIcon;
     private boolean state;
-    private KeyPressEventMatcher keyPressEventMatcher;
+    private final KeyPressEventMatcher keyPressEventMatcher;
 }

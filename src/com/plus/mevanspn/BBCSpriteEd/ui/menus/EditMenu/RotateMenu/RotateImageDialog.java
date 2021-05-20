@@ -1,11 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu.RotateMenu;
 
-import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 final public class RotateImageDialog extends JDialog {
     public RotateImageDialog(RotateMenu rotateMenu) {

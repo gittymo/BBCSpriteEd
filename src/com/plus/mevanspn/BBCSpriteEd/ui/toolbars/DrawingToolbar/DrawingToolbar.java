@@ -2,12 +2,10 @@ package com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
-import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButton;
-import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButtonState;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.*;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 final public class DrawingToolbar extends JToolBar {
     public DrawingToolbar(MainFrame mainFrame) {

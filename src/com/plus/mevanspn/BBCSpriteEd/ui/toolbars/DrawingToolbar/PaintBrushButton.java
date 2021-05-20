@@ -5,12 +5,8 @@ import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.IndexColorModel;
-import java.awt.image.WritableRaster;
+import java.awt.event.*;
+import java.awt.image.*;
 import java.util.LinkedList;
 
 final public class PaintBrushButton extends DrawingToolbarButton implements MouseListener {

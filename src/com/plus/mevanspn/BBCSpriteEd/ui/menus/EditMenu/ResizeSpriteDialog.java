@@ -6,7 +6,6 @@ import java.awt.*;
 public final class ResizeSpriteDialog extends JDialog {
     public ResizeSpriteDialog(EditMenu editMenu) {
         super(editMenu.GetMainFrame(), "Resize Sprite", true);
-        this.editMenu = editMenu;
         final int originalWidth = editMenu.GetMainFrame().GetSprite().GetWidth();
         final int originalHeight = editMenu.GetMainFrame().GetSprite().GetHeight();
         JLabel newImageWidthLabel = new JLabel("New Width");
@@ -48,6 +47,4 @@ public final class ResizeSpriteDialog extends JDialog {
         this.setVisible(false);
         this.dispose();
     }
-
-    private EditMenu editMenu;
 }

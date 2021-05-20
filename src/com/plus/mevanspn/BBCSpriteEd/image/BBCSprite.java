@@ -2,11 +2,9 @@ package com.plus.mevanspn.BBCSpriteEd.image;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.IndexColorModel;
+import java.awt.image.*;
 import java.io.*;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 final public class BBCSprite {
     public BBCSprite(int width, int height, DisplayMode displayMode, MainFrame mainFrame) {

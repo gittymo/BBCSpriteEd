@@ -1,8 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu;
 
-import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
-import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
-import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
+import com.plus.mevanspn.BBCSpriteEd.image.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.menus.EditMenu.RotateMenu.RotateMenu;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
