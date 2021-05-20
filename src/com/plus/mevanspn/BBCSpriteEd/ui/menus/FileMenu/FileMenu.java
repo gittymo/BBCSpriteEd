@@ -52,6 +52,12 @@ final public class FileMenu extends JMenu {
         });
         this.add(saveAsFileMenuItem);
         this.add(new JSeparator());
+        JMenuItem optionsMenuItem = new JMenuItem("Options...");
+        optionsMenuItem.addActionListener(e -> {
+            mainFrame.GetOptionsDialog().setVisible(true);
+        });
+        this.add(optionsMenuItem);
+        this.add(new JSeparator());
         JMenuItem exitApp = new JMenuItem("Quit");
         exitApp.addActionListener(e -> mainFrame.Quit());
         this.add(exitApp);

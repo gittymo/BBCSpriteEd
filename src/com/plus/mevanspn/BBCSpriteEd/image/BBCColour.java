@@ -75,6 +75,14 @@ final public class BBCColour extends Color {
         return coloursCopy;
     }
 
+    public static int GetLuminance(BBCColour bbcColour) {
+        int luminance = 0;
+        if (bbcColour != null) {
+            luminance = (int) ((bbcColour.red * 0.299) + (bbcColour.green * 0.587) + (bbcColour.blue * 0.114));
+        }
+        return luminance;
+    }
+
     public final static BBCColour[] PHYSICAL_COLOURS = new BBCColour[] {
             new BBCColour(0, 0, 0), new BBCColour(255,0,0),
             new BBCColour(0,255,0), new BBCColour(255,255,0),

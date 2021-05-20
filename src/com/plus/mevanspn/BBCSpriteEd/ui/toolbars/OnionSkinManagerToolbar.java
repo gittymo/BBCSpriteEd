@@ -22,6 +22,10 @@ public final class OnionSkinManagerToolbar extends JToolBar {
         this.add(onionSkinToggle);
     }
 
+    public boolean OnionSkinningEnabled() {
+        return onionSkinToggle.GetState();
+    }
+
     private final ToggleButton onionSkinToggle;
     private final MainFrame mainFrame;
 }

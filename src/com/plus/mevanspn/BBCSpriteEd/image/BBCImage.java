@@ -1,5 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.image;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
@@ -29,6 +30,22 @@ final public class BBCImage extends BufferedImage {
 
     public BBCImage(BBCImage originalImage) {
         this(originalImage, originalImage.GetSprite().GetColourModel());
+    }
+
+    public BufferedImage GetOnionSkinImage(boolean past) {
+        final BufferedImage onionSkinImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        byte[] sourceDataElements = new byte[getWidth() * getHeight()];
+        getRaster().getDataElements(0, 0, getWidth(), getHeight(), sourceDataElements);
+        int[] destRGBElements = new int[getWidth() * getHeight()];
+        for (int i = 0; i < sourceDataElements.length; i++) {
+            final int colourIndex = sourceDataElements[i];
+            if (colourIndex < GetSprite().GetColours().length) {
+                final int luminance = BBCColour.GetLuminance(GetSprite().GetColours()[colourIndex]);
+                destRGBElements[i] = new Color(past ? luminance : 0, !past ? luminance : 0, 0).getRGB();
+            }
+        }
+        onionSkinImage.setRGB(0, 0,getWidth(),getHeight(), destRGBElements, 0, getWidth());
+        return onionSkinImage;
     }
 
     public BBCSprite GetSprite() {
