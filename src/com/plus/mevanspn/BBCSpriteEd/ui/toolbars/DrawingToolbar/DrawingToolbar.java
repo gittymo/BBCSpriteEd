@@ -25,6 +25,13 @@ final public class DrawingToolbar extends JToolBar {
                         new MultiFunctionButtonState("img/fillrect.png", "Filled Rectangle",
                                 DRAW_RECT_FILL, new KeyPressEventMatcher('R', false, true, false))
                 }, "Draw outline/filled rectangles. (Key: R/Alt+R)", this));
+        this.add("oval",
+                new MultiFunctionButton(new MultiFunctionButtonState[] {
+                        new MultiFunctionButtonState("img/oval.png", "Outlined Circle/Oval", DRAW_OVAL_OPEN,
+                                new KeyPressEventMatcher('C')),
+                        new MultiFunctionButtonState("img/filloval.png", "Filled Circle/Oval",
+                                DRAW_OVAL_FILL, new KeyPressEventMatcher('C', false, true, false))
+                }, "Draw outline/filled circles and ovals. (Key: C/Alt+C)", this));
         this.add("line", new DrawingToolbarButton("img/line.png",
                 "Draw straight lines (Key: L).", this, new KeyPressEventMatcher('L')));
         this.add("floodfill", new DrawingToolbarButton("img/fill.png",
@@ -74,4 +81,6 @@ final public class DrawingToolbar extends JToolBar {
 
     public static int DRAW_RECT_OPEN = 0;
     public static int DRAW_RECT_FILL = 1;
+    public static int DRAW_OVAL_OPEN = 0;
+    public static int DRAW_OVAL_FILL = 1;
 }

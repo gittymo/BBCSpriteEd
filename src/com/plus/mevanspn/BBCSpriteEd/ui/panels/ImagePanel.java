@@ -153,12 +153,17 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     if (isActiveDrawingTool("line")) {
                         g2.drawLine(drawPointA.x, drawPointA.y, drawPointB.x, drawPointB.y);
                     } else if (isActiveDrawingTool("rectangle") || (isActiveDrawingTool("paintbrush")
-                                 && ((PaintBrushButton) getActiveDrawingToolbarButton()).GetMode() == PaintBrushButton.CAPTURE_MODE)) {
+                                 && ((PaintBrushButton) getActiveDrawingToolbarButton()).GetMode() == PaintBrushButton.CAPTURE_MODE) ||
+                                isActiveDrawingTool("oval")) {
                         final int left = Math.min(drawPointA.x, drawPointB.x);
                         final int top = Math.min(drawPointA.y, drawPointB.y);
                         final int right = Math.max(drawPointA.x, drawPointB.x);
                         final int bottom = Math.max(drawPointA.y, drawPointB.y);
-                        g2.drawRect(left, top, right - left, bottom - top);
+                        if (isActiveDrawingTool("rectangle") || isActiveDrawingTool("paintbrush")) {
+                            g2.drawRect(left, top, right - left, bottom - top);
+                        } else {
+                            g2.drawOval(left, top, right - left, bottom - top);
+                        }
                     } else if (isActiveDrawingTool("paintbrush")) {
                         final PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
                         if (paintBrushButton.GetMode() == PaintBrushButton.DRAWING_MODE) {
@@ -235,6 +240,10 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     final int rectButtonState = ((MultiFunctionButton) getActiveDrawingToolbarButton()).GetStateValue();
                     final boolean isFilled = rectButtonState == DrawingToolbar.DRAW_RECT_FILL;
                     activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, mainFrame.GetActiveColourIndex());
+                } else if (isActiveDrawingTool("oval")) {
+                    final int ovalButtonState = ((MultiFunctionButton) getActiveDrawingToolbarButton()).GetStateValue();
+                    final boolean isFilled = ovalButtonState == DrawingToolbar.DRAW_OVAL_FILL;
+                    activeImage.DrawOval(left, top, right - left, bottom - top, isFilled, mainFrame.GetActiveColourIndex());
                 } else if (isActiveDrawingTool("translate")) {
                     BBCImage newFrameImage = new BBCImage(activeImage.GetSpriteFrame());
                     float zoom = mainFrame.GetZoom() >= 1 ? (int) mainFrame.GetZoom() : 1;
@@ -248,9 +257,9 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                         paintBrushButton.CreateBrush(activeImage, new Rectangle(left, top, right - left, bottom - top));
                         overlayPoint = getGridAlignedXY(e.getX(), e.getY());
                     }
-                    mainFrame.RefreshPanels();
                 }
                 ResetDrawPoints();
+                mainFrame.RefreshPanels();
             }
         }
     }

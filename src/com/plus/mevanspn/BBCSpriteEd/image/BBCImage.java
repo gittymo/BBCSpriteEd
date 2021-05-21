@@ -67,8 +67,7 @@ final public class BBCImage extends BufferedImage {
     }
 
     public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
-        if (colourIndex < bbcSpriteFrame.GetColours().length &&
-                width >= 0 && height >= 0) {
+        if (colourIndex < bbcSpriteFrame.GetColours().length && width >= 0 && height >= 0) {
             if (left + width > getWidth()) width = getWidth() - left;
             if (top + height > getHeight()) height = getHeight() - top;
             Graphics2D g2 = (Graphics2D) getGraphics();
@@ -78,6 +77,16 @@ final public class BBCImage extends BufferedImage {
         }
     }
 
+    public void DrawOval(int left, int top, int width, int height, boolean filled, byte colourIndex) {
+        if (colourIndex < bbcSpriteFrame.GetColours().length && width >=0 && height >= 0) {
+            if (left + width > getWidth()) width = getWidth() - left;
+            if (top + height > getHeight()) height = getHeight() - top;
+            Graphics2D g2 = (Graphics2D) getGraphics();
+            g2.setColor(bbcSpriteFrame.GetSprite().GetColours()[colourIndex]);
+            if (filled) g2.fillOval(left, top, width, height);
+            else g2.drawOval(left, top, width, height);
+        }
+    }
     public void DrawLine(Point pointA, Point pointB, byte colourIndex) {
         if (colourIndex < bbcSpriteFrame.GetColours().length && pointA != null && pointB != null) {
             Graphics2D g2 = (Graphics2D) getGraphics();
