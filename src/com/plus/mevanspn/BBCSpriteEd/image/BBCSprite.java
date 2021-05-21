@@ -135,8 +135,9 @@ final public class BBCSprite {
 
     public void MoveFrame(int currentIndex, int newIndex) {
         if (currentIndex != newIndex && currentIndex >= 0 && newIndex >=0 && currentIndex < frames.size() && newIndex < frames.size()) {
-            frames.add(newIndex, frames.get(currentIndex));
-            frames.remove(currentIndex);
+            final BBCSpriteFrame tempFrame = frames.get(currentIndex);
+            frames.remove(tempFrame);
+            frames.add(newIndex, tempFrame);
         }
     }
 
