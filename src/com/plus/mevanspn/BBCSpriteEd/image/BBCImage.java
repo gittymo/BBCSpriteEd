@@ -67,7 +67,7 @@ final public class BBCImage extends BufferedImage {
     }
 
     public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
-        if (colourIndex < bbcSpriteFrame.GetSprite().GetColours().length &&
+        if (colourIndex < bbcSpriteFrame.GetColours().length &&
                 width >= 0 && height >= 0) {
             if (left + width > getWidth()) width = getWidth() - left;
             if (top + height > getHeight()) height = getHeight() - top;
@@ -79,7 +79,7 @@ final public class BBCImage extends BufferedImage {
     }
 
     public void DrawLine(Point pointA, Point pointB, byte colourIndex) {
-        if (colourIndex < bbcSpriteFrame.GetSprite().GetColours().length && pointA != null && pointB != null) {
+        if (colourIndex < bbcSpriteFrame.GetColours().length && pointA != null && pointB != null) {
             Graphics2D g2 = (Graphics2D) getGraphics();
             g2.setColor(bbcSpriteFrame.GetSprite().GetColours()[colourIndex]);
             g2.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
@@ -95,7 +95,7 @@ final public class BBCImage extends BufferedImage {
     }
 
     public void FloodFill(Point p, byte colourToUseIndex, byte colourToReplace, boolean started) {
-        if (colourToUseIndex < bbcSpriteFrame.GetSprite().GetColours().length && p.x >= 0 && p.x < getWidth() && p.y >=0 && p.y < getHeight()) {
+        if (colourToUseIndex < bbcSpriteFrame.GetColours().length && p.x >= 0 && p.x < getWidth() && p.y >=0 && p.y < getHeight()) {
             // final int colourToUse = bbcSprite.GetColours()[colourToUseIndex].getRGB();
 
             byte[] colourToReplaceArray = new byte[1];
@@ -166,7 +166,7 @@ final public class BBCImage extends BufferedImage {
         WritableRaster wr = this.getRaster();
         byte[] dataElements = new byte[getWidth() * getHeight()];
         wr.getDataElements(0, 0, getWidth(), getHeight(), dataElements);
-        Arrays.fill(dataElements, (byte) bbcSpriteFrame.GetSprite().GetColours().length);
+        Arrays.fill(dataElements, (byte) bbcSpriteFrame.GetColours().length);
         wr.setDataElements(0, 0, getWidth(), getHeight(), dataElements);
     }
 

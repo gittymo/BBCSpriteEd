@@ -83,6 +83,26 @@ final public class MainFrame extends JFrame {
         }
     }
 
+    public boolean SpriteIsNull() {
+        return sprite == null;
+    }
+
+    public boolean SpriteFrameIsNull(int frameIndex) {
+        return sprite != null ? sprite.GetFrame(frameIndex) == null : true;
+    }
+
+    public boolean ActiveSpriteFrameIsNull() {
+        return SpriteFrameIsNull(sprite.GetActiveFrameIndex());
+    }
+
+    public boolean SpriteFrameImageIsNull(int frameIndex) {
+        return !SpriteFrameIsNull(frameIndex) ? sprite.GetActiveFrame().GetRenderedImage() == null : null;
+    }
+
+    public boolean ActiveSpriteFrameImageIsNull() {
+        return SpriteFrameIsNull(sprite.GetActiveFrameIndex());
+    }
+
     public float GetZoom() {
         return zoom;
     }
@@ -99,6 +119,11 @@ final public class MainFrame extends JFrame {
 
     public BBCSpriteFrame GetActiveFrame() {
         return sprite != null ? sprite.GetActiveFrame() : null;
+    }
+
+    public BBCImage GetActiveImage() {
+        final BBCSpriteFrame spriteFrame = GetActiveFrame();
+        return spriteFrame != null ? spriteFrame.GetRenderedImage() : null;
     }
 
     public void SetActiveFrameIndex(int index) {
@@ -157,7 +182,7 @@ final public class MainFrame extends JFrame {
     public ConfigPanel GetConfigPanel(String id) { return optionsDialog.GetConfigPanel(id); }
 
     public void UpdateTimeline() {
-        if (sprite != null) timelinePanel.SetActiveFrame(sprite.GetCurrentFrameIndex());
+        if (sprite != null) timelinePanel.SetActiveFrame(sprite.GetActiveFrameIndex());
         timelinePanel.Refresh();
     }
 

@@ -12,7 +12,7 @@ final public class AnimationMenu extends AppMenu {
         JMenuItem nextFrame = new JMenuItem("Next Frame");
         nextFrame.addActionListener(e -> {
             final BBCSprite currentSprite = parent.GetSprite();
-            final int currentFrameIndex = currentSprite.GetCurrentFrameIndex();
+            final int currentFrameIndex = currentSprite.GetActiveFrameIndex();
             if (currentFrameIndex < currentSprite.GetFrameCount() - 1) {
                 currentSprite.SetActiveFrame(currentSprite.GetFrame(currentFrameIndex + 1));
                 parent.UpdateTimeline();
@@ -23,7 +23,7 @@ final public class AnimationMenu extends AppMenu {
         JMenuItem previousFrame = new JMenuItem("Previous Frame");
         previousFrame.addActionListener(e -> {
             final BBCSprite currentSprite = parent.GetSprite();
-            final int currentFrameIndex = currentSprite.GetCurrentFrameIndex();
+            final int currentFrameIndex = currentSprite.GetActiveFrameIndex();
             if (currentFrameIndex > 0) {
                 currentSprite.SetActiveFrame(currentSprite.GetFrame(currentFrameIndex - 1));
                 parent.UpdateTimeline();

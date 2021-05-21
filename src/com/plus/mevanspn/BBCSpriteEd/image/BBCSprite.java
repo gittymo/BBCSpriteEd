@@ -59,6 +59,16 @@ final public class BBCSprite {
         return frameIndex >= 0 && frameIndex < frames.size() ? frames.get(frameIndex) : null;
     }
 
+    public BBCImage GetImage(int frameIndex) {
+        return frameIndex >= 0 && frameIndex < frames.size() && frames.get(frameIndex) != null ?
+                frames.get(frameIndex).GetRenderedImage() : null;
+    }
+
+    public BufferedImage GetOnionSkinImage(int frameIndex, boolean past) {
+        final BBCImage image = GetImage(frameIndex);
+        return image != null ? image.GetOnionSkinImage(past) : null;
+    }
+
     public int GetFrameIndex(BBCSpriteFrame bsf) {
         return frames.indexOf(bsf);
     }
@@ -71,7 +81,7 @@ final public class BBCSprite {
         return frames.size();
     }
 
-    public int GetCurrentFrameIndex() {
+    public int GetActiveFrameIndex() {
         return GetFrameIndex(activeFrame);
     }
 
@@ -157,7 +167,7 @@ final public class BBCSprite {
 
     public void DeleteFrame(int frameIndex) {
         if (frameIndex >= 0 && frameIndex < frames.size()) {
-            final int activeFrameIndex = GetCurrentFrameIndex();
+            final int activeFrameIndex = GetActiveFrameIndex();
             BBCSpriteFrame newActiveFrame = frameIndex == activeFrameIndex ? frameIndex > 0 ?
                     GetFrame(frameIndex - 1) : frameIndex < frames.size() - 1 ? GetFrame(frameIndex + 1) : null : activeFrame;
             frames.remove(frameIndex);

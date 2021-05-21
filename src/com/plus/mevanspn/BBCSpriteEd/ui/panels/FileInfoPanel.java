@@ -38,7 +38,7 @@ public class FileInfoPanel extends JPanel {
             if (bbcSprite != null && bbcSprite.GetWidth() > 0 && bbcSprite.GetHeight() > 0 && bbcSprite.GetFrameCount() > 0) {
                 spriteDimensions.setText("Size: " + bbcSprite.GetWidth() + " x " + bbcSprite.GetHeight());
                 spriteDisplayMode.setText("Display Mode: " + bbcSprite.GetDisplayMode().number);
-                frameCount.setText("Frame " + (bbcSprite.GetCurrentFrameIndex() + 1) + " of " + bbcSprite.GetFrameCount());
+                frameCount.setText("Frame " + (bbcSprite.GetActiveFrameIndex() + 1) + " of " + bbcSprite.GetFrameCount());
                 final int rawFrameSize = (bbcSprite.GetWidth() * bbcSprite.GetHeight()) / (8 / bbcSprite.GetDisplayMode().GetBitsPerPixel());
                 final int rawSpriteSize = rawFrameSize * bbcSprite.GetFrameCount();
                 int compressedSpriteSize = 0, compressedFrameSize = 0;

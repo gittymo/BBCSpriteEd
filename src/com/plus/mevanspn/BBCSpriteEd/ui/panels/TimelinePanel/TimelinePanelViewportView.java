@@ -29,7 +29,7 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
     }
 
     void DuplicateFrame(boolean atEnd) {
-        final int frameToDuplicate = clickPoint != null ? GetClickFrame() : sprite.GetCurrentFrameIndex();
+        final int frameToDuplicate = clickPoint != null ? GetClickFrame() : sprite.GetActiveFrameIndex();
         if (frameToDuplicate > -1) {
             sprite.DuplicateFrame(sprite.GetFrame(frameToDuplicate), atEnd);
         }
@@ -39,7 +39,7 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
         if (clickPoint != null) {
             final int previousFrame = GetClickFrame();
             sprite.AddFrame(previousFrame + 1);
-        } else sprite.AddFrame(sprite.GetCurrentFrameIndex() + 1);
+        } else sprite.AddFrame(sprite.GetActiveFrameIndex() + 1);
     }
 
     void InsertFrameBefore() {
@@ -53,7 +53,7 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
         if (clickPoint != null) {
             final int targetFrameIndex = GetClickFrame();
             sprite.DeleteFrame(targetFrameIndex);
-        } else sprite.DeleteFrame(sprite.GetCurrentFrameIndex());
+        } else sprite.DeleteFrame(sprite.GetActiveFrameIndex());
     }
 
     void AddFrame() {
@@ -107,8 +107,8 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
                 if (frameImage != null) {
                     g2.drawImage(frameImage, x, y, scaledWidth, parent.GetPreviewHeight(), null);
                 }
-                g2.setColor(frameImage != null ? i == sprite.GetCurrentFrameIndex() ? Color.BLUE : Color.BLACK : Color.RED);
-                g2.setStroke(new BasicStroke(i == sprite.GetCurrentFrameIndex() ? 2.0f : 1.0f));
+                g2.setColor(frameImage != null ? i == sprite.GetActiveFrameIndex() ? Color.BLUE : Color.BLACK : Color.RED);
+                g2.setStroke(new BasicStroke(i == sprite.GetActiveFrameIndex() ? 2.0f : 1.0f));
                 g2.drawRect(x - 1, y - 1, scaledWidth + 2, parent.GetPreviewHeight() + 2);
                 x += scaledWidth + SEPARATOR_WIDTH;
             }
