@@ -67,13 +67,13 @@ final public class BBCImage extends BufferedImage {
     }
 
     public void DrawRectangle(int left, int top, int width, int height, boolean filled, byte colourIndex) {
-        if (colourIndex < bbcSpriteFrame.GetColours().length && width >= 0 && height >= 0) {
+        if (colourIndex < bbcSpriteFrame.GetColours().length && width > 0 && height > 0) {
             if (left + width > getWidth()) width = getWidth() - left;
             if (top + height > getHeight()) height = getHeight() - top;
             Graphics2D g2 = (Graphics2D) getGraphics();
             g2.setColor(bbcSpriteFrame.GetSprite().GetColours()[colourIndex]);
-            if (filled) g2.fillRect(left, top, width + 1, height + 1);
-            else g2.drawRect(left, top, width, height);
+            if (filled) g2.fillRect(left, top, width, height);
+            else g2.drawRect(left, top, width - 1, height - 1);
         }
     }
 
@@ -83,10 +83,11 @@ final public class BBCImage extends BufferedImage {
             if (top + height > getHeight()) height = getHeight() - top;
             Graphics2D g2 = (Graphics2D) getGraphics();
             g2.setColor(bbcSpriteFrame.GetSprite().GetColours()[colourIndex]);
-            if (filled) g2.fillOval(left, top, width, height);
-            else g2.drawOval(left, top, width, height);
+            if (filled) g2.fillOval(left, top, width - 1, height - 1);
+            g2.drawOval(left, top, width - 1, height - 1);
         }
     }
+
     public void DrawLine(Point pointA, Point pointB, byte colourIndex) {
         if (colourIndex < bbcSpriteFrame.GetColours().length && pointA != null && pointB != null) {
             Graphics2D g2 = (Graphics2D) getGraphics();
@@ -97,8 +98,10 @@ final public class BBCImage extends BufferedImage {
 
     public void PaintImage(BufferedImage image, Point origin) {
         if (image != null && origin != null) {
-            final int imageX = origin.x - (image.getWidth() > 1 ? image.getWidth() / 2 : 0);
-            final int imageY = origin.y - (image.getHeight() > 1 ? image.getHeight() / 2 : 0);
+            int xOffset = (int) Math.round(image.getWidth() / 2.0);
+            int yOffset = (int) Math.round(image.getHeight() / 2.0);
+            final int imageX = origin.x - xOffset;
+            final int imageY = origin.y - yOffset;
             getGraphics().drawImage(image, imageX, imageY, null);
         }
     }

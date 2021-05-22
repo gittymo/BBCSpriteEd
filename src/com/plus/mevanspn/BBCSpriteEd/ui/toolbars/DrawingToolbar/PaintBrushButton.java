@@ -12,15 +12,13 @@ import java.util.LinkedList;
 final public class PaintBrushButton extends DrawingToolbarButton implements MouseListener {
     public PaintBrushButton(DrawingToolbar drawingToolbar) {
         super("img/paintbrush.png",
-                "Paint using shapes and preselected areas of the image (Key: P, C to toggle capture when tool active).",
+                "Paint using shapes and preselected areas of the image (Key: P, G to toggle capture when tool active).",
                 drawingToolbar, new KeyPressEventMatcher('P'));
         Reset();
         this.addMouseListener(this);
     }
 
     public void CreateBrush(BBCImage sourceImage, Rectangle sourceArea) {
-        sourceArea.width++;
-        sourceArea.height++;
         BufferedImage brushImage = new BufferedImage(sourceArea.width, sourceArea.height, sourceImage.getType(), sourceImage.GetSprite().GetColourModel());
         WritableRaster sourceImageRaster = sourceImage.getRaster();
         byte[] sourceAreaSamples = new byte[sourceArea.width * sourceArea.height];
@@ -95,7 +93,7 @@ final public class PaintBrushButton extends DrawingToolbarButton implements Mous
         super.KeyPressed(keyEvent);
         final char keyChar = keyEvent.getKeyChar();
         if (GetDrawingToolbar().IsActiveButton(this)) {
-            if (keyChar == 'c' || keyChar == 'C') {
+            if (keyChar == 'g' || keyChar == 'G') {
                 if (GetActiveBrush() != null) {
                     GetDrawingToolbar().GetMainFrame().RefreshPanels();
                     SetMode(GetMode() == PaintBrushButton.CAPTURE_MODE ? PaintBrushButton.DRAWING_MODE : PaintBrushButton.CAPTURE_MODE);
