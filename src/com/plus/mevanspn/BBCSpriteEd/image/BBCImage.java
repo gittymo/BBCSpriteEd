@@ -7,13 +7,13 @@ import java.util.Arrays;
 
 final public class BBCImage extends BufferedImage {
     public BBCImage(BBCSpriteFrame bbcSpriteFrame) {
-        super(bbcSpriteFrame.GetWidth(), bbcSpriteFrame.GetHeight(), BBCImage.TYPE_BYTE_INDEXED, BBCColour.GenerateIndexColourModel(bbcSpriteFrame.GetSprite().GetColours()));
+        super(bbcSpriteFrame.GetWidth(), bbcSpriteFrame.GetHeight(), BBCImage.TYPE_BYTE_INDEXED, BBCColour.GenerateIndexColorModel(bbcSpriteFrame.GetSprite().GetColours()));
         this.bbcSpriteFrame = bbcSpriteFrame;
         makeTransparent();
     }
 
     public BBCImage(int width, int height, BBCSpriteFrame bbcSpriteFrame) {
-        super(width, height, BBCImage.TYPE_BYTE_INDEXED, BBCColour.GenerateIndexColourModel(bbcSpriteFrame.GetSprite().GetColours()));
+        super(width, height, BBCImage.TYPE_BYTE_INDEXED, BBCColour.GenerateIndexColorModel(bbcSpriteFrame.GetSprite().GetColours()));
         this.bbcSpriteFrame = bbcSpriteFrame;
         makeTransparent();
     }

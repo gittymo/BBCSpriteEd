@@ -47,7 +47,7 @@ final public class BBCSpriteFrame {
     }
 
     public void UpdateColourModel() {
-        this.renderedImage = new BBCImage(this.renderedImage, BBCColour.GenerateIndexColourModel(bbcSprite.GetColours()));
+        this.renderedImage = new BBCImage(this.renderedImage, BBCColour.GenerateIndexColorModel(bbcSprite.GetColours()));
     }
 
     public void SetRenderedImage(BBCImage newRenderedImage) {

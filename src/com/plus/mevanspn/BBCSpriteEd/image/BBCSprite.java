@@ -213,7 +213,7 @@ final public class BBCSprite {
     }
 
     public IndexColorModel GetColourModel() {
-        return BBCColour.GenerateIndexColourModel(colours);
+        return BBCColour.GenerateIndexColorModel(colours);
     }
 
     public void RollBack() {
