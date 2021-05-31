@@ -23,8 +23,9 @@ final public class MainFrame extends JFrame {
     public MainFrame() {
         super("BBC Sprite Editor - By Morgan Evans");
         this.sprite = null;
-        this.zoom = 16;
+        this.zoom = new Zoom(this);
         this.timelinePreviewHeight = 32;
+        this.selectionColour = new BBCColour(192, 160, 255);
 
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,18 +104,24 @@ final public class MainFrame extends JFrame {
         return SpriteFrameIsNull(sprite.GetActiveFrameIndex());
     }
 
-    public float GetZoom() {
+    public Zoom GetZoom() {
         return zoom;
     }
 
     public void SetZoom(float newZoom) {
-        if (newZoom >= 0.25 && newZoom <= 32 && newZoom != zoom) zoom = newZoom;
+        if (newZoom >= 0.25 && newZoom <= 32 && newZoom != zoom.ZOOM) zoom.Update(newZoom);
         ResizeImagePane();
     }
 
     public byte GetActiveColourIndex() {
         return (drawingToolbar.GetActiveButton() == drawingToolbar.GetButton("eraser")) ?
                 (byte) GetSprite().GetDisplayMode().colours.length : colourPickerToolbar.GetActiveColourIndex();
+    }
+
+    public BBCColour GetActiveColour() {
+        BBCColour activeColour = null;
+        if (GetSprite() != null) activeColour = GetSprite().GetColours()[GetActiveColourIndex()];
+        return activeColour;
     }
 
     public BBCSpriteFrame GetActiveFrame() {
@@ -131,6 +138,10 @@ final public class MainFrame extends JFrame {
         RefreshPanels();
     }
 
+    public Color GetSelectionColour() {
+        return selectionColour;
+    }
+
     public void RefreshPanels() {
         if (imagePanel != null) imagePanel.repaint();
         if (timelinePanel != null) UpdateTimeline();
@@ -141,8 +152,8 @@ final public class MainFrame extends JFrame {
 
     public void ResizeImagePane() {
         imagePanel.setPreferredSize(new Dimension(
-                (int) (sprite.GetWidth() * zoom * sprite.GetHorizontalPixelRatio()) + 8,
-                (int) (sprite.GetHeight() * zoom) + 8));
+                (int) (sprite.GetWidth() * zoom.X) + 8,
+                (int) (sprite.GetHeight() * zoom.Y) + 8));
         scrollPane.revalidate();
         imagePanel.repaint();
     }
@@ -194,10 +205,11 @@ final public class MainFrame extends JFrame {
         System.exit(-1);
     }
 
-    private BBCSprite sprite;
-    private float zoom;
-    private final int timelinePreviewHeight;
+    public Zoom zoom;
 
+    private Color selectionColour;
+    private BBCSprite sprite;
+    private final int timelinePreviewHeight;
     private ImagePanel imagePanel;
     private JScrollPane scrollPane;
     private ColourPickerToolbar colourPickerToolbar;

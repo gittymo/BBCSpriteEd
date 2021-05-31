@@ -3,10 +3,12 @@ package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressBroadcaster;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.OnionSkinManagerToolbar;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.Bounds;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.Zoom;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,24 +33,27 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     }
 
     private Rectangle GetImageArea() {
-        final BBCSpriteFrame activeSpriteFrame = mainFrame.GetActiveFrame();
-        if (activeSpriteFrame == null) return null;
-        final float zoom = mainFrame.GetZoom();
-        final int panelWidth = this.getWidth();
-        final int panelHeight = this.getHeight();
-        final int imageWidth = (int) (activeSpriteFrame.GetWidth() * zoom * activeSpriteFrame.GetHorizontalPixelRatio());
-        final int imageHeight = (int) (activeSpriteFrame.GetHeight() * zoom);
-        return new Rectangle((panelWidth - imageWidth) / 2, (panelHeight - imageHeight) / 2, imageWidth, imageHeight);
+        Rectangle imageArea = null;
+        final BBCImage bbcImage = mainFrame.GetActiveImage();
+        if (bbcImage != null) {
+            final int panelWidth = this.getWidth();
+            final int panelHeight = this.getHeight();
+            final Rectangle renderedImageDimensions = bbcImage.GetRenderDimensions(mainFrame.zoom);
+            imageArea = new Rectangle((panelWidth - renderedImageDimensions.width) / 2,
+                    (panelHeight - renderedImageDimensions.height) / 2, renderedImageDimensions.width,
+                    renderedImageDimensions.height);
+        }
+        return imageArea;
     }
 
     private Point GetPixelPositionInImage(int x, int y) {
-        final Rectangle r = GetImageArea();
         final BBCSpriteFrame spriteFrame = mainFrame.GetActiveFrame();
-        if (r != null && spriteFrame != null) {
-            final float zoom = mainFrame.GetZoom();
+        if (spriteFrame != null) {
+            Rectangle r = GetImageArea();
+            final Zoom zoom = mainFrame.GetZoom();
             Point p = new Point();
-            p.x = (int) ((x - r.x) / (zoom * spriteFrame.GetHorizontalPixelRatio()));
-            p.y = (int) ((y - r.y) / zoom);
+            p.x = (int) ((x - r.x) / (zoom.X));
+            p.y = (int) ((y - r.y) / zoom.Y);
             return p;
         } else return null;
     }
@@ -76,35 +81,33 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     private Point getGridAlignedXY(int x, int y) {
         Rectangle imageArea = GetImageArea();
         if (imageArea != null) {
-            final float zoom = mainFrame.GetZoom();
-            final float hZoom = zoom * mainFrame.GetSprite().GetHorizontalPixelRatio();
-            if (zoom <= 1) {
+            final Zoom zoom = mainFrame.GetZoom();
+            if (zoom.Y <= 1) {
                 return new Point(x < imageArea.x ? imageArea.x : x >= imageArea.x + imageArea.width ? imageArea.x + imageArea.width - 1 : x,
                         y < imageArea.y ? imageArea.y : y >= imageArea.y + imageArea.height ? imageArea.y + imageArea.height - 1 : y);
             } else {
-                int alignedX = (int) (Math.floor((x - imageArea.x) / hZoom) * hZoom);
-                int alignedY = (int) (Math.floor((y - imageArea.y) / zoom) * zoom);
+                int alignedX = (int) (Math.floor((x - imageArea.x) / zoom.X) * zoom.X);
+                int alignedY = (int) (Math.floor((y - imageArea.y) / zoom.Y) * zoom.Y);
                 return new Point(imageArea.x + alignedX, imageArea.y + alignedY);
             }
         } else return null;
     }
 
-    boolean isActiveDrawingTool(String buttonKeyValue) {
+    private boolean isActiveDrawingTool(String buttonKeyValue) {
         return mainFrame.IsActiveDrawingToolbarButton(buttonKeyValue);
     }
 
     private BufferedImage generateOvalOverlay(int width, int height, boolean filled) {
         final BBCImage activeFrameImage = mainFrame.GetActiveImage();
         if (activeFrameImage != null & width > 0 & height > 0) {
-            final int vZoom = (int) mainFrame.GetZoom();
-            final int hZoom = (int) (vZoom * mainFrame.GetSprite().GetHorizontalPixelRatio());
-            width = width / hZoom;
-            height = height / vZoom;
-            BufferedImage ovalOverlayImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            final Zoom zoom = mainFrame.zoom;
+            final int renderWidth = (width / zoom.iX) + 1;
+            final int renderHeight = (height / zoom.iY) + 1;
+            BufferedImage ovalOverlayImage = new BufferedImage(renderWidth, renderHeight, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = (Graphics2D) ovalOverlayImage.getGraphics();
-            g2.setColor(mainFrame.GetSprite().GetColours()[mainFrame.GetActiveColourIndex()]);
-            if (filled) g2.fillOval(0, 0, width - 1, height - 1);
-            g2.drawOval(0,0, width - 1, height - 1);
+            g2.setColor(activeFrameImage.GetActiveColour());
+            if (filled) g2.fillOval(0, 0, renderWidth - 1, renderHeight - 1);
+            g2.drawOval(0,0, renderWidth - 1, renderHeight - 1);
             return ovalOverlayImage;
         } else return null;
     }
@@ -112,15 +115,14 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
     private BufferedImage generateRectangleOverlay(int width, int height, boolean filled, Color colour) {
         final BBCImage activeFrameImage = mainFrame.GetActiveImage();
         if (activeFrameImage != null & width > 0 & height > 0) {
-            final int vZoom = (int) mainFrame.GetZoom();
-            final int hZoom = (int) (vZoom * mainFrame.GetSprite().GetHorizontalPixelRatio());
-            width = width / hZoom;
-            height = height / vZoom;
-            BufferedImage rectOverlayImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            final Zoom zoom = mainFrame.zoom;
+            final int renderWidth = (width / zoom.iX) + 1;
+            final int renderHeight = (height / zoom.iY) + 1;
+            BufferedImage rectOverlayImage = new BufferedImage(renderWidth, renderHeight, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = (Graphics2D) rectOverlayImage.getGraphics();
             g2.setColor(colour);
-            if (filled) g2.fillRect(0, 0, width, height);
-            else g2.drawRect(0,0, width - 1, height - 1);
+            if (filled) g2.fillRect(0, 0, renderWidth, renderHeight);
+            else g2.drawRect(0,0, renderWidth - 1, renderHeight - 1);
             return rectOverlayImage;
         } else return null;
     }
@@ -129,14 +131,13 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         final BBCImage activeFrameImage = mainFrame.GetActiveImage();
         if (activeFrameImage != null && pointA != null && pointB != null) {
             final Rectangle imageArea = GetImageArea();
-            final int vZoom = (int) mainFrame.GetZoom();
-            final int hZoom = (int) (vZoom * mainFrame.GetSprite().GetHorizontalPixelRatio());
+            final Zoom zoom = mainFrame.zoom;
             Point originPointA = new Point(pointA.x - imageArea.x, pointA.y - imageArea.y);
             Point originPointB = new Point(pointB.x - imageArea.x, pointB.y - imageArea.y);
             final int hDiff = originPointA.x < originPointB.x ? originPointA.x : originPointB.x;
             final int vDiff = originPointA.y < originPointB.y ? originPointA.y : originPointB.y;
-            final Point pixelPointA = new Point((originPointA.x - hDiff) / hZoom, (originPointA.y - vDiff) / vZoom);
-            final Point pixelPointB = new Point((originPointB.x - hDiff) / hZoom, (originPointB.y - vDiff) / vZoom);
+            final Point pixelPointA = new Point((originPointA.x - hDiff) / zoom.iX, (originPointA.y - vDiff) / zoom.iY);
+            final Point pixelPointB = new Point((originPointB.x - hDiff) / zoom.iX, (originPointB.y - vDiff) / zoom.iY);
             final int left = Math.min(pixelPointA.x, pixelPointB.x);
             final int top = Math.min(pixelPointA.y, pixelPointB.y);
             final int right = Math.max(pixelPointA.x, pixelPointB.x);
@@ -154,108 +155,156 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
         return null;
     }
 
+    private Point getImageOffset(Zoom zoom) {
+        int imageOffsetX = isActiveDrawingTool("translate") ? drawPointB.x - drawPointA.x : 0;
+        int imageOffsetY = isActiveDrawingTool("translate") ? drawPointB.y - drawPointA.y : 0;
+        if (zoom.ZOOM > 1) {
+            imageOffsetX = (imageOffsetX / zoom.iX) * zoom.iX;
+            imageOffsetY = (imageOffsetY / zoom.iY) * zoom.iY;
+        }
+        return new Point(imageOffsetX, imageOffsetY);
+    }
+
+    private void drawBackgroundImage(Graphics2D g2, Rectangle r) {
+        g2.drawImage(GetBackgroundImage(), r.x, r.y, r.width, r.height, null);
+    }
+
+    private void drawOnionSkinImages(Graphics2D g2, Rectangle r) {
+        final OnionSkinManagerToolbar onionSkinManagerToolbar = mainFrame.GetOnionSkinManagerToolbar();
+        if (onionSkinManagerToolbar != null && onionSkinManagerToolbar.OnionSkinningEnabled()) {
+            final int currentFrameIndex = mainFrame.GetSprite().GetActiveFrameIndex();
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            if (currentFrameIndex > 0) {
+                final int pastFrame = Math.max(currentFrameIndex - onionSkinManagerToolbar.GetPastFramesToDisplay(), 0);
+                for (int f = pastFrame; f < currentFrameIndex; f++) {
+                    BufferedImage pastImage = mainFrame.GetSprite().GetOnionSkinImage(f, true);
+                    if (pastImage != null) g2.drawImage(pastImage, r.x, r.y, r.width, r.height, null);
+                }
+            }
+            if (currentFrameIndex < mainFrame.GetSprite().GetFrameCount() - 1) {
+                final int futureFrame =
+                        currentFrameIndex + onionSkinManagerToolbar.GetFutureFramesToDisplay() >= mainFrame.GetSprite().GetFrameCount() ?
+                                mainFrame.GetSprite().GetFrameCount() - 1 : currentFrameIndex + onionSkinManagerToolbar.GetFutureFramesToDisplay();
+                for (int f = futureFrame; f > currentFrameIndex; f--) {
+                    BufferedImage futureImage = mainFrame.GetSprite().GetOnionSkinImage(f, false);
+                    if (futureImage != null) g2.drawImage(futureImage, r.x, r.y, r.width, r.height, null);
+                }
+            }
+            g2.setComposite(AlphaComposite.SrcOver);
+        }
+    }
+
+    private void drawGrid(Zoom zoom, Graphics2D g2, Rectangle r) {
+        if (zoom.ZOOM > 4) {
+            g2.setColor(new Color(0, 0, 128, 255));
+            g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+                    1.0f, new float[]{1.0f}, 1.0f));
+            for (float x = zoom.X; x < r.width; x += zoom.X) {
+                g2.drawLine((int) x + r.x, r.y, (int) x + r.x, r.y + r.height);
+            }
+            for (float y = zoom.Y; y < r.height; y += zoom.Y) {
+                g2.drawLine(r.x, (int) y + r.y, r.x + r.width, (int) y + r.y);
+            }
+            g2.setStroke(new BasicStroke());
+        }
+    }
+
+    private void drawActiveImage(Graphics2D g2, Rectangle r, Point imageOffset) {
+        g2.drawImage(mainFrame.GetActiveImage(), r.x + imageOffset.x, r.y + imageOffset.y,
+                r.width, r.height, null);
+    }
+
+    private void drawLine(Graphics2D g2, Bounds bounds, Zoom zoom) {
+        final BufferedImage lineImage = generateLineOverlay(drawPointA, drawPointB);
+        if (lineImage != null) {
+            g2.drawImage(lineImage, bounds.left, bounds.top, (int) (lineImage.getWidth() * zoom.X),
+                    (int) (lineImage.getHeight() * zoom.Y),null);
+        }
+    }
+
+    private void drawRectangle(Graphics2D g2, Bounds bounds, Zoom zoom) {
+        final boolean filled = ((MultiFunctionButton) getActiveDrawingToolbarButton()).GetStateValue() == DrawingToolbar.DRAW_RECT_FILL;
+        final BufferedImage rectImage = generateRectangleOverlay(bounds.width, bounds.height, filled,
+                mainFrame.GetActiveColour());
+        if (rectImage != null) {
+            g2.drawImage(rectImage, bounds.left, bounds.top, rectImage.getWidth() * zoom.iX,
+                    rectImage.getHeight() * zoom.iY, null);
+        }
+    }
+
+    private void drawOval(Graphics2D g2, Bounds bounds, Zoom zoom) {
+        final boolean filled = ((MultiFunctionButton) getActiveDrawingToolbarButton()).GetStateValue() == DrawingToolbar.DRAW_OVAL_FILL;
+        final BufferedImage ovalImage = generateOvalOverlay(bounds.width, bounds.height, filled);
+        if (ovalImage != null) {
+            g2.drawImage(ovalImage, bounds.left, bounds.top, ovalImage.getWidth() * zoom.iX,
+                    ovalImage.getHeight() * zoom.iY, null);
+        }
+    }
+
+    private void drawSelectionRectangle(Graphics2D g2, Bounds bounds) {
+        final BufferedImage selectImage = generateRectangleOverlay(bounds.width, bounds.height, false,
+                Color.ORANGE);
+        if (selectImage != null) {
+            g2.drawImage(selectImage, bounds.left, bounds.top, bounds.width, bounds.height, null);
+        }
+    }
+
+    private void drawPaintbrush(Graphics2D g2, Zoom zoom) {
+        final PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
+        if (paintBrushButton.GetMode() == PaintBrushButton.DRAWING_MODE) {
+            final BufferedImage paintBrushImage = paintBrushButton.GetActiveBrush();
+            if (paintBrushImage != null) {
+                final int scaledBrushWidth = (int) (paintBrushImage.getWidth() * zoom.X);
+                final int scaledBrushHeight = (int) (paintBrushImage.getHeight() * zoom.Y);
+                int xOffset = (int) (Math.round(paintBrushImage.getWidth() / 2.0) * zoom.X);
+                int yOffset = (int) (Math.round(paintBrushImage.getHeight() / 2.0) * zoom.Y);
+                g2.drawImage(paintBrushImage, overlayPoint.x - xOffset, overlayPoint.y - yOffset,
+                        scaledBrushWidth, scaledBrushHeight, null);
+            }
+        }
+    }
+
+    private void drawBorder(Graphics2D g2, Rectangle r) {
+        g2.setColor(Color.BLACK);
+        g2.drawRect(r.x - 1, r.y - 1, r.width + 1, r.height + 1);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        final float zoom = mainFrame.GetZoom();
-        final float hZoom = zoom * mainFrame.GetSprite().GetHorizontalPixelRatio();
+        final Zoom zoom = mainFrame.zoom;
         final BBCSpriteFrame spriteFrame = mainFrame.GetActiveFrame();
         if (spriteFrame != null) {
+            final Point imageOffset = getImageOffset(zoom);
             Rectangle r = GetImageArea();
-            int imageOffsetX = isActiveDrawingTool("translate") ? drawPointB.x - drawPointA.x : 0;
-            int imageOffsetY = isActiveDrawingTool("translate") ? drawPointB.y - drawPointA.y : 0;
-            if (zoom > 1) {
-                imageOffsetX = (imageOffsetX / (int) (zoom * mainFrame.GetSprite().GetHorizontalPixelRatio())) * (int) (zoom * mainFrame.GetSprite().GetHorizontalPixelRatio());
-                imageOffsetY = (imageOffsetY / (int) mainFrame.GetZoom()) * (int) zoom;
-            }
             if (r != null) {
-                g2.drawImage(GetBackgroundImage(), r.x, r.y, r.width, r.height, null);
-                final OnionSkinManagerToolbar onionSkinManagerToolbar = mainFrame.GetOnionSkinManagerToolbar();
-                if (onionSkinManagerToolbar != null && onionSkinManagerToolbar.OnionSkinningEnabled()) {
-                    final int currentFrameIndex = mainFrame.GetSprite().GetActiveFrameIndex();
-                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
-                    if (currentFrameIndex > 0) {
-                        final int pastFrame = Math.max(currentFrameIndex - onionSkinManagerToolbar.GetPastFramesToDisplay(), 0);
-                        for (int f = pastFrame; f < currentFrameIndex; f++) {
-                            BufferedImage pastImage = mainFrame.GetSprite().GetOnionSkinImage(f,true);
-                            if (pastImage != null) g2.drawImage(pastImage, r.x, r.y, r.width, r.height, null);
-                        }
-                    }
-                    if (currentFrameIndex < mainFrame.GetSprite().GetFrameCount() - 1) {
-                        final int futureFrame =
-                                currentFrameIndex + onionSkinManagerToolbar.GetFutureFramesToDisplay() >= mainFrame.GetSprite().GetFrameCount() ?
-                                        mainFrame.GetSprite().GetFrameCount() - 1 : currentFrameIndex + onionSkinManagerToolbar.GetFutureFramesToDisplay();
-                        for (int f = futureFrame; f > currentFrameIndex; f--) {
-                            BufferedImage futureImage = mainFrame.GetSprite().GetOnionSkinImage(f,false);
-                            if (futureImage != null) g2.drawImage(futureImage, r.x, r.y, r.width, r.height, null);
-                        }
-                    }
-                    g2.setComposite(AlphaComposite.SrcOver);
-                }
-                g2.drawImage(spriteFrame.GetRenderedImage(), r.x + imageOffsetX, r.y + imageOffsetY, r.width, r.height, null);
-
-                if (zoom > 4) {
-                    g2.setColor(new Color(0, 0, 128, 255));
-                    g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-                            1.0f, new float[]{1.0f}, 1.0f));
-                    for (float x = zoom * spriteFrame.GetHorizontalPixelRatio(); x < r.width; x += zoom * spriteFrame.GetHorizontalPixelRatio()) {
-                        g2.drawLine((int) x + r.x, r.y, (int) x + r.x, r.y + r.height);
-                    }
-                    for (float y = zoom; y < r.height; y += zoom) {
-                        g2.drawLine(r.x, (int) y + r.y, r.x + r.width, (int) y + r.y);
-                    }
-                    g2.setStroke(new BasicStroke());
-                }
-                if (drawPointA != null && drawPointB != null && mainFrame.GetActiveColourIndex() < mainFrame.GetSprite().GetColours().length) {
-                    BBCColour outlineColour = !isActiveDrawingTool("paintbrush") ?
-                            spriteFrame.GetColours()[mainFrame.GetActiveColourIndex()] : new BBCColour(192, 160, 255);
-                    final int left = Math.min(drawPointA.x, drawPointB.x);
-                    final int top = Math.min(drawPointA.y, drawPointB.y);
-                    final int right = Math.max(drawPointA.x, drawPointB.x);
-                    final int bottom = Math.max(drawPointA.y, drawPointB.y);
+                drawBackgroundImage(g2, r);
+                drawOnionSkinImages(g2, r);
+                drawActiveImage(g2, r, imageOffset);
+                drawGrid(zoom, g2, r);
+                if (drawPointA != null && drawPointB != null) {
+                    final Bounds bounds = new Bounds(drawPointA, drawPointB);
+                    Color outlineColour = !isActiveDrawingTool("paintbrush") ?
+                            spriteFrame.GetColours()[mainFrame.GetActiveColourIndex()] : mainFrame.GetSelectionColour();
                     g2.setColor(outlineColour);
-                    if (isActiveDrawingTool("line") && mouseDown) {
-                        final BufferedImage lineImage = generateLineOverlay(drawPointA, drawPointB);
-                        if (lineImage != null) g2.drawImage(lineImage, left, top, (int) (lineImage.getWidth() * hZoom), (int) (lineImage.getHeight() * zoom),null);
-                    } else if (isActiveDrawingTool("rectangle") || (isActiveDrawingTool("paintbrush")
-                                 && ((PaintBrushButton) getActiveDrawingToolbarButton()).GetMode() == PaintBrushButton.CAPTURE_MODE) ||
-                                isActiveDrawingTool("oval")) {
-                        if (isActiveDrawingTool("rectangle")) {
-                            final boolean filled = ((MultiFunctionButton) getActiveDrawingToolbarButton()).GetStateValue() == DrawingToolbar.DRAW_RECT_FILL;
-                            final BufferedImage rectImage = generateRectangleOverlay(right - left, bottom - top, filled,
-                                    mainFrame.GetSprite().GetColours()[mainFrame.GetActiveColourIndex()]);
-                            if (rectImage != null) {
-                                g2.drawImage(rectImage, left, top, right - left, bottom - top, null);
-                            }
-                        } else if (isActiveDrawingTool("oval")) {
-                            final boolean filled = ((MultiFunctionButton) getActiveDrawingToolbarButton()).GetStateValue() == DrawingToolbar.DRAW_OVAL_FILL;
-                            final BufferedImage ovalImage = generateOvalOverlay(right - left, bottom - top, filled);
-                            if (ovalImage != null) {
-                                g2.drawImage(ovalImage, left, top, right - left, bottom - top, null);
-                            }
-                        } else if (isActiveDrawingTool("paintbrush")) {
-                            final BufferedImage selectImage = generateRectangleOverlay(right - left, bottom - top, false,
-                                    Color.ORANGE);
-                            if (selectImage != null) {
-                                g2.drawImage(selectImage, left, top, right - left, bottom - top, null);
+                    if (mouseDown) {
+                        if (isActiveDrawingTool("line")) drawLine(g2, bounds, zoom);
+                        else if (isActiveDrawingTool("rectangle")) drawRectangle(g2, bounds, zoom);
+                        else if (isActiveDrawingTool("oval")) drawOval(g2, bounds, zoom);
+                        else if (isActiveDrawingTool("paintbrush")) {
+                            final PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
+                            if (paintBrushButton.GetMode() != PaintBrushButton.DRAWING_MODE) {
+                                drawSelectionRectangle(g2, bounds);
                             }
                         }
-                    } else if (isActiveDrawingTool("paintbrush")) {
-                        final PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
-                        if (paintBrushButton.GetMode() == PaintBrushButton.DRAWING_MODE) {
-                            final BufferedImage paintBrushImage = paintBrushButton.GetActiveBrush();
-                            final int scaledBrushWidth = (int) (paintBrushImage.getWidth() * hZoom);
-                            final int scaledBrushHeight = (int) (paintBrushImage.getHeight() * zoom);
-                            int xOffset = (int) (Math.round(paintBrushImage.getWidth() / 2.0) * hZoom);
-                            int yOffset = (int) (Math.round(paintBrushImage.getHeight() / 2.0) * zoom);
-                            g2.drawImage(paintBrushImage, overlayPoint.x - xOffset, overlayPoint.y - yOffset,
-                                    scaledBrushWidth, scaledBrushHeight, null);
+                    } else {
+                        if (isActiveDrawingTool("paintbrush")) {
+                            drawPaintbrush(g2, zoom);
                         }
                     }
                 }
-                g2.setColor(Color.BLACK);
-                g2.drawRect(r.x - 1, r.y - 1, r.width + 1, r.height + 1);
+                drawBorder(g2, r);
             }
         }
     }
@@ -322,9 +371,9 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     activeImage.DrawOval(left, top, right - left, bottom - top, isFilled, mainFrame.GetActiveColourIndex());
                 } else if (isActiveDrawingTool("translate")) {
                     BBCImage newFrameImage = new BBCImage(activeImage.GetSpriteFrame());
-                    float zoom = mainFrame.GetZoom() >= 1 ? (int) mainFrame.GetZoom() : 1;
-                    final int offsetX = (int) Math.ceil((drawPointB.x - drawPointA.x) / (zoom * mainFrame.GetSprite().GetHorizontalPixelRatio()));
-                    final int offsetY = (int) Math.ceil((drawPointB.y - drawPointA.y) / zoom);
+                    final Zoom zoom = mainFrame.zoom;
+                    final int offsetX = (int) Math.ceil((drawPointB.x - drawPointA.x) / (zoom.X));
+                    final int offsetY = (int) Math.ceil((drawPointB.y - drawPointA.y) / zoom.Y);
                     newFrameImage.getGraphics().drawImage(activeImage, offsetX, offsetY, null);
                     activeImage.GetSpriteFrame().SetRenderedImage(newFrameImage);
                 } else if (isActiveDrawingTool("paintbrush")) {
