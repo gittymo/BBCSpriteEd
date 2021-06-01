@@ -60,7 +60,7 @@ public abstract class ToolbarButton extends JButton implements KeyPressListener,
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(28,28);
+        return new Dimension(32,32);
     }
 
     @Override

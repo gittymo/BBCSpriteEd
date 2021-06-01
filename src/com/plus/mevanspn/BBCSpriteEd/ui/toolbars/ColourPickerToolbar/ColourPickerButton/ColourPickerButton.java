@@ -52,7 +52,7 @@ public final class ColourPickerButton extends ToolbarButton implements ActionLis
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(24,24);
+        return new Dimension(32,32);
     }
 
     @Override
