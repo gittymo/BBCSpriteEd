@@ -138,14 +138,9 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             final int vDiff = originPointA.y < originPointB.y ? originPointA.y : originPointB.y;
             final Point pixelPointA = new Point((originPointA.x - hDiff) / zoom.iX, (originPointA.y - vDiff) / zoom.iY);
             final Point pixelPointB = new Point((originPointB.x - hDiff) / zoom.iX, (originPointB.y - vDiff) / zoom.iY);
-            final int left = Math.min(pixelPointA.x, pixelPointB.x);
-            final int top = Math.min(pixelPointA.y, pixelPointB.y);
-            final int right = Math.max(pixelPointA.x, pixelPointB.x);
-            final int bottom = Math.max(pixelPointA.y, pixelPointB.y);
-            final int width = (right - left) + 1;
-            final int height = (bottom - top) + 1;
-            if (width > 0 && height > 0) {
-                BufferedImage lineOverlayImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            final Bounds bounds = new Bounds(pixelPointA, pixelPointB);
+            if (bounds.width > 0 && bounds.height > 0) {
+                BufferedImage lineOverlayImage = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g2 = (Graphics2D) lineOverlayImage.getGraphics();
                 g2.setColor(mainFrame.GetSprite().GetColours()[mainFrame.GetActiveColourIndex()]);
                 g2.drawLine(pixelPointA.x, pixelPointA.y, pixelPointB.x, pixelPointB.y);
@@ -285,8 +280,8 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 drawGrid(zoom, g2, r);
                 if (drawPointA != null && drawPointB != null) {
                     final Bounds bounds = new Bounds(drawPointA, drawPointB);
-                    Color outlineColour = !isActiveDrawingTool("paintbrush") ?
-                            spriteFrame.GetColours()[mainFrame.GetActiveColourIndex()] : mainFrame.GetSelectionColour();
+                    Color outlineColour = !isActiveDrawingTool("paintbrush") ? mainFrame.GetActiveColour()
+                            : mainFrame.GetSelectionColour();
                     g2.setColor(outlineColour);
                     if (mouseDown) {
                         if (isActiveDrawingTool("line")) drawLine(g2, bounds, zoom);
@@ -319,11 +314,9 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 if (isActiveDrawingTool("pencil") || isActiveDrawingTool("eraser")) {
                     activeImage.SetPixel(p.x, p.y, mainFrame.GetActiveColourIndex());
                     repaint(this.getVisibleRect());
-                    mainFrame.UpdateTimeline();
                 } else if (isActiveDrawingTool("floodfill")) {
                     activeImage.FloodFill(p, mainFrame.GetActiveColourIndex(), (byte) 0, false);
                     repaint(this.getVisibleRect());
-                    mainFrame.UpdateTimeline();
                 } else if (isActiveDrawingTool("paintbrush")) {
                     PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
                     if (paintBrushButton.GetMode() == PaintBrushButton.DRAWING_MODE) {
@@ -355,20 +348,19 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             final Point pixelPointA = GetPixelPositionInImage(drawPointA.x, drawPointA.y);
             final Point pixelPointB = GetPixelPositionInImage(drawPointB.x, drawPointB.y);
             if (pixelPointA != null & pixelPointB != null) {
-                final int left = Math.min(pixelPointA.x, pixelPointB.x);
-                final int top = Math.min(pixelPointA.y, pixelPointB.y);
-                final int right = Math.max(pixelPointA.x, pixelPointB.x);
-                final int bottom = Math.max(pixelPointA.y, pixelPointB.y);
+                final Bounds bounds = new Bounds(pixelPointA, pixelPointB);
                 if (isActiveDrawingTool("line")) {
                     activeImage.DrawLine(pixelPointA, pixelPointB, mainFrame.GetActiveColourIndex());
                 } else if (isActiveDrawingTool("rectangle")) {
                     final int rectButtonState = ((MultiFunctionButton) getActiveDrawingToolbarButton()).GetStateValue();
                     final boolean isFilled = rectButtonState == DrawingToolbar.DRAW_RECT_FILL;
-                    activeImage.DrawRectangle(left, top, right - left, bottom - top, isFilled, mainFrame.GetActiveColourIndex());
+                    activeImage.DrawRectangle(bounds.left, bounds.top, bounds.width, bounds.height, isFilled,
+                            mainFrame.GetActiveColourIndex());
                 } else if (isActiveDrawingTool("oval")) {
                     final int ovalButtonState = ((MultiFunctionButton) getActiveDrawingToolbarButton()).GetStateValue();
                     final boolean isFilled = ovalButtonState == DrawingToolbar.DRAW_OVAL_FILL;
-                    activeImage.DrawOval(left, top, right - left, bottom - top, isFilled, mainFrame.GetActiveColourIndex());
+                    activeImage.DrawOval(bounds.left, bounds.top, bounds.width, bounds.height, isFilled,
+                            mainFrame.GetActiveColourIndex());
                 } else if (isActiveDrawingTool("translate")) {
                     BBCImage newFrameImage = new BBCImage(activeImage.GetSpriteFrame());
                     final Zoom zoom = mainFrame.zoom;
@@ -379,7 +371,7 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 } else if (isActiveDrawingTool("paintbrush")) {
                     PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
                     if (paintBrushButton.GetMode() == PaintBrushButton.CAPTURE_MODE) {
-                        paintBrushButton.CreateBrush(activeImage, new Rectangle(left, top, right - left, bottom - top));
+                        paintBrushButton.CreateBrush(activeImage, bounds.GetRectangle());
                         overlayPoint = getGridAlignedXY(e.getX(), e.getY());
                     }
                 }

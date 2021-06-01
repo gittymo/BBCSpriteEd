@@ -5,20 +5,27 @@ import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 public abstract class ToggleButton extends ToolbarButton {
     public ToggleButton(String onIconFile, String offIconFile, KeyPressEventMatcher keyPressEventMatcher) {
         super(keyPressEventMatcher);
         this.keyPressEventMatcher = keyPressEventMatcher;
-        this.onImageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(onIconFile)));
-        this.offImageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(offIconFile)));
+        this.onImageIcon = loadIcon(onIconFile);
+        this.offImageIcon = loadIcon(offIconFile);
         SetState(true);
     }
 
     public void SetState(boolean state) {
         this.state = state;
-        if (state) setIcon(onImageIcon);
-        else setIcon(offImageIcon);
+        if (state) {
+            setIcon(new ImageIcon(onImageIcon));
+            this.iconImage = onImageIcon;
+        }
+        else {
+            setIcon(new ImageIcon(offImageIcon));
+            this.iconImage = offImageIcon;
+        }
         repaint();
     }
 
@@ -35,8 +42,8 @@ public abstract class ToggleButton extends ToolbarButton {
         if (keyPressEventMatcher != null && keyPressEventMatcher.IsMatch(keyEvent,true)) Toggle();
     }
 
-    private final ImageIcon onImageIcon;
-    private final ImageIcon offImageIcon;
+    private final BufferedImage onImageIcon;
+    private final BufferedImage offImageIcon;
     private boolean state;
     private final KeyPressEventMatcher keyPressEventMatcher;
 }

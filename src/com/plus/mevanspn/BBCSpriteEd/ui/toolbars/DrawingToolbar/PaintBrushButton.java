@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 final public class PaintBrushButton extends DrawingToolbarButton implements MouseListener {
     public PaintBrushButton(DrawingToolbar drawingToolbar) {
-        super("img/paintbrush.png",
+        super("paintbrush.png",
                 "Paint using shapes and preselected areas of the image (Key: P, G to toggle capture when tool active).",
                 drawingToolbar, new KeyPressEventMatcher('P'));
         Reset();

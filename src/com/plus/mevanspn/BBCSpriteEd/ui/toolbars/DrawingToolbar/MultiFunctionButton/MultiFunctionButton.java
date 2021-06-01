@@ -32,7 +32,8 @@ public class MultiFunctionButton extends DrawingToolbarButton implements MouseWh
     }
 
     private void setIconToState() {
-        this.setIcon(states.get(stateIndex).GetIcon());
+        this.iconImage = states.get(stateIndex).GetIcon();
+        repaint();
         GetDrawingToolbar().SetActiveButton(this);
     }
 

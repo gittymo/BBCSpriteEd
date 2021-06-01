@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public final class MultiFunctionButtonMenuItem extends JMenuItem {
     public MultiFunctionButtonMenuItem(MultiFunctionButtonState multiFunctionButtonState, MultiFunctionButtonMenu parent) {
-        super(multiFunctionButtonState.GetName(), multiFunctionButtonState.GetIcon());
+        super(multiFunctionButtonState.GetName(), new ImageIcon(multiFunctionButtonState.GetIcon()));
         this.stateValue = multiFunctionButtonState.GetValue();
         this.addActionListener(e -> parent.SetButtonState(stateValue));
     }

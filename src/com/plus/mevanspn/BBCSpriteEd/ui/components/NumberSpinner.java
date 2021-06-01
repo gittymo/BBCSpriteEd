@@ -10,7 +10,7 @@ public class NumberSpinner extends JSpinner implements DerivableComponent {
     }
 
     public NumberSpinner CreateDerivedComponent() {
-        final SpinnerNumberModel spinnerNumberModel = (SpinnerNumberModel)  this.getModel();
+        final SpinnerNumberModel spinnerNumberModel = (SpinnerNumberModel) this.getModel();
         return new NumberSpinner((Integer) this.getValue(), (Integer) spinnerNumberModel.getMinimum(),
                 (Integer) spinnerNumberModel.getMaximum(), (Integer) spinnerNumberModel.getStepSize());
     }

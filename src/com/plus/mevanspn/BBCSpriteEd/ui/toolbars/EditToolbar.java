@@ -7,11 +7,12 @@ import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 final public class EditToolbar extends JToolBar {
     public EditToolbar(MainFrame mainFrame) {
         super();
-        ToolbarButton undoButton = new ToolbarButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/undo.png"))),
+        ToolbarButton undoButton = new ToolbarButton("undo.png",
                 new KeyPressEventMatcher('Z', true, false, false)) {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -30,7 +31,7 @@ final public class EditToolbar extends JToolBar {
         undoButton.setToolTipText("Undo previous operations (Key Ctrl+Z)");
         mainFrame.GetImagePanel().AddKeyPressListener(undoButton);
 
-        ToolbarButton redoButton = new ToolbarButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/redo.png"))),
+        ToolbarButton redoButton = new ToolbarButton("redo.png",
                 new KeyPressEventMatcher('Y',true,false,false)) {
             @Override
             public void actionPerformed(ActionEvent e) {

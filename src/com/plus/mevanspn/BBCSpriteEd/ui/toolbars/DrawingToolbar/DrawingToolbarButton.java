@@ -9,11 +9,7 @@ import java.awt.event.*;
 
 public class DrawingToolbarButton extends ToolbarButton {
     public DrawingToolbarButton(String iconFile, String tooltipText, DrawingToolbar drawingToolbar, KeyPressEventMatcher keyPressEventMatcher) {
-        super(keyPressEventMatcher);
-        try {
-            ImageIcon imageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(iconFile)));
-            this.setIcon(imageIcon);
-        } catch (Exception e) { e.printStackTrace(); }
+        super(iconFile, keyPressEventMatcher);
         this.setToolTipText(tooltipText);
         this.setSelected(false);
         this.drawingToolbar = drawingToolbar;

@@ -21,5 +21,9 @@ public final class Bounds {
         this.height = this.bottom - this.top;
     }
 
+    public Rectangle GetRectangle() {
+        return new Rectangle(left, top, width, height);
+    }
+
     public int left, top, right, bottom, width, height;
 }

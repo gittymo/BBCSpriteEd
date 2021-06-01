@@ -126,6 +126,7 @@ final public class BBCSpriteFrame {
             bos.write((value << 2) + code);
         }
     }
+
     private byte getPackedByte(byte[] data, int index, int bpp) throws PartByteValueException {
         byte value = 0;
         for (int shift = 8 - bpp; shift >= 0; shift -= bpp) {

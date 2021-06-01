@@ -12,33 +12,33 @@ final public class DrawingToolbar extends JToolBar {
         super();
         this.mainFrame = mainFrame;
         this.buttons = new HashMap<>();
-        this.add("pencil", new DrawingToolbarButton("img/pencil.png",
+        this.add("pencil", new DrawingToolbarButton("pencil.png",
                 "Draw freehand lines (Key: D).",
                 this, new KeyPressEventMatcher('D')));
-        this.add("eraser", new DrawingToolbarButton("img/eraser.png",
+        this.add("eraser", new DrawingToolbarButton("eraser.png",
                 "Erase pixels in a freehand fashion (Key: E).",
                 this, new KeyPressEventMatcher('E')));
         this.add("rectangle",
                 new MultiFunctionButton(new MultiFunctionButtonState[] {
-                        new MultiFunctionButtonState("img/rect.png", "Outlined Rectangle", DRAW_RECT_OPEN,
+                        new MultiFunctionButtonState("rect.png", "Outlined Rectangle", DRAW_RECT_OPEN,
                                 new KeyPressEventMatcher('R')),
-                        new MultiFunctionButtonState("img/fillrect.png", "Filled Rectangle",
+                        new MultiFunctionButtonState("fillrect.png", "Filled Rectangle",
                                 DRAW_RECT_FILL, new KeyPressEventMatcher('R', false, true, false))
                 }, "Draw outline/filled rectangles. (Key: R/Alt+R)", this));
         this.add("oval",
                 new MultiFunctionButton(new MultiFunctionButtonState[] {
-                        new MultiFunctionButtonState("img/oval.png", "Outlined Circle/Oval", DRAW_OVAL_OPEN,
+                        new MultiFunctionButtonState("oval.png", "Outlined Circle/Oval", DRAW_OVAL_OPEN,
                                 new KeyPressEventMatcher('C')),
-                        new MultiFunctionButtonState("img/filloval.png", "Filled Circle/Oval",
+                        new MultiFunctionButtonState("filloval.png", "Filled Circle/Oval",
                                 DRAW_OVAL_FILL, new KeyPressEventMatcher('C', false, true, false))
                 }, "Draw outline/filled circles and ovals. (Key: C/Alt+C)", this));
-        this.add("line", new DrawingToolbarButton("img/line.png",
+        this.add("line", new DrawingToolbarButton("line.png",
                 "Draw straight lines (Key: L).", this, new KeyPressEventMatcher('L')));
-        this.add("floodfill", new DrawingToolbarButton("img/fill.png",
+        this.add("floodfill", new DrawingToolbarButton("fill.png",
                 "Fill an enclosed space with the chosen colour (Key: F).",
                 this, new KeyPressEventMatcher('F')));
         this.add("paintbrush", new PaintBrushButton(this));
-        this.add("translate", new DrawingToolbarButton("img/trans.png",
+        this.add("translate", new DrawingToolbarButton("trans.png",
                 "Move the contents of the image (Key: T).",
                 this, new KeyPressEventMatcher('T')));
 

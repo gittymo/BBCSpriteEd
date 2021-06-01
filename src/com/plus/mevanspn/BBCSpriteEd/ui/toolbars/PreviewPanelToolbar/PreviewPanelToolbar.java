@@ -9,7 +9,7 @@ import java.awt.event.*;
 final public class PreviewPanelToolbar extends JToolBar {
     public PreviewPanelToolbar(PreviewPanel previewPanel) {
         super(JToolBar.HORIZONTAL);
-        ToolbarButton rwdButton = new ToolbarButton("img/rwnd.png", null) {
+        ToolbarButton rwdButton = new ToolbarButton("rwnd.png", null) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previewPanel.ToStart();
@@ -19,7 +19,7 @@ final public class PreviewPanelToolbar extends JToolBar {
             public void KeyPressed(KeyEvent keyEvent) { }
         };
 
-        ToolbarButton stopButton = new ToolbarButton("img/stop.png", null) {
+        ToolbarButton stopButton = new ToolbarButton("stop.png", null) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previewPanel.Stop();
@@ -29,7 +29,7 @@ final public class PreviewPanelToolbar extends JToolBar {
             public void KeyPressed(KeyEvent keyEvent) { }
         };
 
-        ToolbarButton pauseButton = new ToolbarButton("img/pause.png", null) {
+        ToolbarButton pauseButton = new ToolbarButton("pause.png", null) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previewPanel.Pause();
@@ -39,7 +39,7 @@ final public class PreviewPanelToolbar extends JToolBar {
             public void KeyPressed(KeyEvent keyEvent) { }
         };
 
-        ToolbarButton playButton = new ToolbarButton("img/play.png", null) {
+        ToolbarButton playButton = new ToolbarButton("play.png", null) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previewPanel.Play();
@@ -49,7 +49,7 @@ final public class PreviewPanelToolbar extends JToolBar {
             public void KeyPressed(KeyEvent keyEvent) { }
         };
 
-        ToolbarButton fwdButton = new ToolbarButton("img/ffwd.png", null) {
+        ToolbarButton fwdButton = new ToolbarButton("ffwd.png", null) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previewPanel.ToEnd();

@@ -120,7 +120,7 @@ final public class MainFrame extends JFrame {
 
     public BBCColour GetActiveColour() {
         BBCColour activeColour = null;
-        if (GetSprite() != null) activeColour = GetSprite().GetColours()[GetActiveColourIndex()];
+        if (GetSprite() != null) activeColour = GetSprite().GetColours()[colourPickerToolbar.GetActiveColourIndex()];
         return activeColour;
     }
 
