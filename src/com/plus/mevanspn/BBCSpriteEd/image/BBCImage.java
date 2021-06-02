@@ -292,7 +292,7 @@ final public class BBCImage extends BufferedImage {
      * @param xoffset Number of pixels to move the image on the horizontal axis.
      * @param yoffset Number of pixels to move the image on the vertical axis.
      */
-    public void TranslateWithWrap(int xoffset, int yoffset) {
+    public void Translate(int xoffset, int yoffset, boolean withWrap) {
         // Make sure the offsets are within the dimensions of the image.
         if (xoffset < 0) {
             while (xoffset <= -getWidth()) xoffset += getWidth();
@@ -318,16 +318,26 @@ final public class BBCImage extends BufferedImage {
         // Create a new byte array to hold the translated image data.
         byte[] translatedImageData = new byte[dataLength];
 
+        // Get the transparent colour index (for non-wrap around pixel replacement)
+        final byte transparentIndex = (byte) GetColours().length;
+
         int i = 0;
+        int startLineOffset = ((yoffset < 0 ? getHeight() + yoffset : yoffset) * getWidth());
+        final int endImageOffset = getHeight() * getWidth();
         for (int y = 0; y < getHeight(); y++) {
-            final int tyOffset = (y + yoffset < 0 ? getHeight() + yoffset : y + yoffset >= getHeight() ?
-                    (y + yoffset) - getHeight() : y + yoffset) * getWidth();
-            final int tyEndOffset = tyOffset + getWidth();
-            int ti = tyOffset + (xoffset < 0 ? getWidth() + xoffset : xoffset);
+            final int endLineOffset = startLineOffset + getWidth();
+            int ti = startLineOffset + (xoffset < 0 ? getWidth() + xoffset : xoffset);
             for (int x = 0; x < getWidth(); x++) {
-                translatedImageData[ti++] = sourceImageData[i++];
-                if (ti == tyEndOffset) ti = tyOffset;
+                if (withWrap || (x + xoffset >= 0 && x + xoffset < getWidth() && y + yoffset >= 0 && y + yoffset < getHeight())) {
+                    translatedImageData[ti++] = sourceImageData[i];
+                } else {
+                    translatedImageData[ti++] = transparentIndex;
+                }
+                if (ti == endLineOffset) ti = startLineOffset;
+                i++;
             }
+            startLineOffset += getWidth();
+            if (startLineOffset == endImageOffset) startLineOffset = 0;
         }
 
         // Replace the original image's data with the translated version.

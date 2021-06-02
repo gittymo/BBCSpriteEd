@@ -2,6 +2,7 @@ package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressBroadcaster;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
+import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.MultiFunctionButton.MultiFunctionButtonMenu;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.OnionSkinManagerToolbar;
 import com.plus.mevanspn.BBCSpriteEd.image.Bounds;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
@@ -209,6 +210,14 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                 r.width, r.height, null);
     }
 
+    private void drawTranslatedImage(Graphics2D g2, Rectangle r, Point imageOffset, boolean withWrap) {
+        final int hOffset = imageOffset.x / mainFrame.zoom.iX;
+        final int vOffset = imageOffset.y / mainFrame.zoom.iY;
+        BBCImage offsetImage = new BBCImage(mainFrame.GetActiveImage());
+        offsetImage.Translate(hOffset, vOffset, withWrap);
+        g2.drawImage(offsetImage, r.x, r.y, r.width, r.height, null);
+    }
+
     private void drawLine(Graphics2D g2, Bounds bounds, Zoom zoom) {
         final BufferedImage lineImage = generateLineOverlay(drawPointA, drawPointB);
         if (lineImage != null) {
@@ -276,7 +285,12 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
             if (r != null) {
                 drawBackgroundImage(g2, r);
                 drawOnionSkinImages(g2, r);
-                drawActiveImage(g2, r, imageOffset);
+                if (!isActiveDrawingTool("translate")) {
+                    drawActiveImage(g2, r, imageOffset);
+                } else {
+                    MultiFunctionButton translateButton = (MultiFunctionButton) getActiveDrawingToolbarButton();
+                    drawTranslatedImage(g2, r, imageOffset, translateButton.GetStateValue() == DrawingToolbar.TRANS_WRAP);
+                }
                 drawGrid(zoom, g2, r);
                 if (drawPointA != null && drawPointB != null) {
                     final Bounds bounds = new Bounds(drawPointA, drawPointB);
@@ -362,12 +376,11 @@ final public class ImagePanel extends JPanel implements MouseListener, MouseMoti
                     activeImage.DrawOval(bounds.left, bounds.top, bounds.width, bounds.height, isFilled,
                             mainFrame.GetActiveColourIndex());
                 } else if (isActiveDrawingTool("translate")) {
-                    BBCImage newFrameImage = new BBCImage(activeImage.GetSpriteFrame());
+                    MultiFunctionButton translateButton = (MultiFunctionButton) getActiveDrawingToolbarButton();
                     final Zoom zoom = mainFrame.zoom;
                     final int offsetX = (int) Math.ceil((drawPointB.x - drawPointA.x) / (zoom.X));
                     final int offsetY = (int) Math.ceil((drawPointB.y - drawPointA.y) / zoom.Y);
-                    newFrameImage.getGraphics().drawImage(activeImage, offsetX, offsetY, null);
-                    activeImage.GetSpriteFrame().SetRenderedImage(newFrameImage);
+                    activeImage.Translate(offsetX, offsetY, translateButton.GetStateValue() == DrawingToolbar.TRANS_WRAP);
                 } else if (isActiveDrawingTool("paintbrush")) {
                     PaintBrushButton paintBrushButton = (PaintBrushButton) getActiveDrawingToolbarButton();
                     if (paintBrushButton.GetMode() == PaintBrushButton.CAPTURE_MODE) {

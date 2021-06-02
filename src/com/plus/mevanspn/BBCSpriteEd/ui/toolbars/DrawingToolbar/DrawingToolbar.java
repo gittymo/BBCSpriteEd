@@ -38,9 +38,13 @@ final public class DrawingToolbar extends JToolBar {
                 "Fill an enclosed space with the chosen colour (Key: F).",
                 this, new KeyPressEventMatcher('F')));
         this.add("paintbrush", new PaintBrushButton(this));
-        this.add("translate", new DrawingToolbarButton("trans.png",
-                "Move the contents of the image (Key: T).",
-                this, new KeyPressEventMatcher('T')));
+        this.add("translate",
+                new MultiFunctionButton(new MultiFunctionButtonState[] {
+                        new MultiFunctionButtonState("trans.png", "Move the contents of the image (destructive)", TRANS_DEST,
+                                new KeyPressEventMatcher('T')),
+                        new MultiFunctionButtonState("transwrap.png", "Move the contents of the image (wrap around)",
+                                TRANS_WRAP, new KeyPressEventMatcher('T', false, true, false))
+                }, "Draw outline/filled rectangles. (Key: R/Alt+R)", this));
 
         SetActiveButton(buttons.get("pencil"));
     }
@@ -83,4 +87,6 @@ final public class DrawingToolbar extends JToolBar {
     public static int DRAW_RECT_FILL = 1;
     public static int DRAW_OVAL_OPEN = 0;
     public static int DRAW_OVAL_FILL = 1;
+    public static int TRANS_DEST = 0;
+    public static int TRANS_WRAP = 1;
 }

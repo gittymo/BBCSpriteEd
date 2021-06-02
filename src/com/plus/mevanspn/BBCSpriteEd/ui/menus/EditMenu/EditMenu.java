@@ -79,7 +79,7 @@ final public class EditMenu extends JMenu {
         wrapImageLeftMenuItem.addActionListener(e->{
             final BBCImage bbcImage = GetMainFrame().GetActiveImage();
             if (bbcImage != null) {
-                bbcImage.TranslateWithWrap(-1,0);
+                bbcImage.Translate(-1,0, true);
                 GetMainFrame().RefreshPanels();
             }
         });
@@ -89,7 +89,7 @@ final public class EditMenu extends JMenu {
         wrapImageRightMenuItem.addActionListener(e->{
             final BBCImage bbcImage = GetMainFrame().GetActiveImage();
             if (bbcImage != null) {
-                bbcImage.TranslateWithWrap(1,0);
+                bbcImage.Translate(1,0, true);
                 GetMainFrame().RefreshPanels();
             }
         });
@@ -99,7 +99,7 @@ final public class EditMenu extends JMenu {
         wrapImageUpMenuItem.addActionListener(e->{
             final BBCImage bbcImage = GetMainFrame().GetActiveImage();
             if (bbcImage != null) {
-                bbcImage.TranslateWithWrap(0,-1);
+                bbcImage.Translate(0,-1, true);
                 GetMainFrame().RefreshPanels();
             }
         });
@@ -109,7 +109,7 @@ final public class EditMenu extends JMenu {
         wrapImageDownMenuItem.addActionListener(e->{
             final BBCImage bbcImage = GetMainFrame().GetActiveImage();
             if (bbcImage != null) {
-                bbcImage.TranslateWithWrap(0,1);
+                bbcImage.Translate(0,1,true);
                 GetMainFrame().RefreshPanels();
             }
         });

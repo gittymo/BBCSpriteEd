@@ -54,7 +54,7 @@ final public class BBCColour extends Color {
      * @param argb The packed alpha, red, green and blue values.
      */
     public BBCColour(int argb) {
-        this(argb & 0x00FF0000, argb & 0x0000FF00, argb & 0x000000FF, argb & 0xFF000000);
+        super(argb);
         this.red = getRed();
         this.green = getGreen();
         this.blue = getBlue();

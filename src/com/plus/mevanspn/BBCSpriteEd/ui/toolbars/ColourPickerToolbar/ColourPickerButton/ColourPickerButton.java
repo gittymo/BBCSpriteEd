@@ -43,7 +43,8 @@ public final class ColourPickerButton extends ToolbarButton implements ActionLis
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(paletteIndex < bbcSprite.GetColours().length ? bbcSprite.GetColours()[paletteIndex] : Color.LIGHT_GRAY);
+        Color fillColour = paletteIndex < bbcSprite.GetColours().length ? (Color) bbcSprite.GetColours()[paletteIndex] : Color.LIGHT_GRAY;
+        g2.setColor(fillColour);
         g2.fillRect(2, 2, getWidth() - 5, getHeight() - 5);
         g2.setColor(Color.BLACK);
         if (active) g2.setStroke(new BasicStroke(2.0f));
