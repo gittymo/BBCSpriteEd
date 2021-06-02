@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.ui.toplevel;
+package com.plus.mevanspn.BBCSpriteEd.image;
 
 import java.awt.*;
 

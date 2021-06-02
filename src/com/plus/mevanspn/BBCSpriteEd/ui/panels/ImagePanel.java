@@ -3,7 +3,7 @@ package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressBroadcaster;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressListener;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.OnionSkinManagerToolbar;
-import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.Bounds;
+import com.plus.mevanspn.BBCSpriteEd.image.Bounds;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.toolbars.DrawingToolbar.*;

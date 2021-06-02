@@ -287,6 +287,54 @@ final public class BBCImage extends BufferedImage {
     }
 
     /**
+     * Translates the image xoffset pixels on the horizontal plane and yoffset pixels on the vertical plane.  The
+     * image wraps around, so that any pixels that are moved off of one side will appear on the other.
+     * @param xoffset Number of pixels to move the image on the horizontal axis.
+     * @param yoffset Number of pixels to move the image on the vertical axis.
+     */
+    public void TranslateWithWrap(int xoffset, int yoffset) {
+        // Make sure the offsets are within the dimensions of the image.
+        if (xoffset < 0) {
+            while (xoffset <= -getWidth()) xoffset += getWidth();
+        } else {
+            while (xoffset >= getWidth()) xoffset -= getWidth();
+        }
+        if (yoffset < 0) {
+            while (yoffset <= -getHeight()) yoffset += getHeight();
+        } else {
+            while (yoffset >= getHeight()) yoffset -= getHeight();
+        }
+
+        // Make sure we are moving the image (i.e. xoffset and yoffset are not both 0).  If so, do nothing and return.
+        if (xoffset == 0 && yoffset == 0) return;
+
+        // Get the size of the image's raster data.
+        final int dataLength = getWidth() * getHeight();
+
+        // Get the raster data for the image
+        byte[] sourceImageData = new byte[dataLength];
+        getRaster().getDataElements(0,0, getWidth(), getHeight(), sourceImageData);
+
+        // Create a new byte array to hold the translated image data.
+        byte[] translatedImageData = new byte[dataLength];
+
+        int i = 0;
+        for (int y = 0; y < getHeight(); y++) {
+            final int tyOffset = (y + yoffset < 0 ? getHeight() + yoffset : y + yoffset >= getHeight() ?
+                    (y + yoffset) - getHeight() : y + yoffset) * getWidth();
+            final int tyEndOffset = tyOffset + getWidth();
+            int ti = tyOffset + (xoffset < 0 ? getWidth() + xoffset : xoffset);
+            for (int x = 0; x < getWidth(); x++) {
+                translatedImageData[ti++] = sourceImageData[i++];
+                if (ti == tyEndOffset) ti = tyOffset;
+            }
+        }
+
+        // Replace the original image's data with the translated version.
+        getRaster().setDataElements(0, 0, getWidth(), getHeight(), translatedImageData);
+    }
+
+    /**
      * Gets the size of the image, taking into account the given zoom level and the horizontal pixel aspect ratio of
      * the sprite's display mode.
      * @param zoom Required zoom level.

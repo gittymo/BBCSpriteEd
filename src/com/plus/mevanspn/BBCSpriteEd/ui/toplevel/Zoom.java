@@ -25,6 +25,12 @@ final public class Zoom {
         this.iZOOM = (int) this.ZOOM;
     }
 
+    public void Update() {
+        final BBCImage bbcImage = mainFrame.GetActiveImage();
+        this.X = bbcImage != null ? this.Y * bbcImage.GetHorizontalPixelAspectRatio() : this.Y;
+        this.iX = (int) this.X;
+    }
+
     public float X, Y, ZOOM;
     public int iX, iY, iZOOM;
     private MainFrame mainFrame;

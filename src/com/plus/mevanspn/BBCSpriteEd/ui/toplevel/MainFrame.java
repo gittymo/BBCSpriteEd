@@ -75,6 +75,7 @@ final public class MainFrame extends JFrame {
         if (sprite != null && sprite.GetActiveFrame() != null) {
             if (sprite.GetFilePath() != null) setTitle("BBC Sprite Editor - By Morgan Evans.  Editing File: " + sprite.GetFilePath().getName());
             else setTitle("BBC Sprite Editor - By Morgan Evans.  Editing New File");
+            zoom.Update();
             ResizeImagePane();
             colourPickerToolbar.CreatePaletteUsingSprite(sprite);
             timelinePanel.SetSprite(sprite);

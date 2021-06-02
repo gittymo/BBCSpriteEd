@@ -72,6 +72,48 @@ final public class EditMenu extends JMenu {
             }
         });
         add(flipVerticalMenuItem);
+
+        add(new JSeparator());
+
+        JMenuItem wrapImageLeftMenuItem = new JMenuItem("Wrap Left");
+        wrapImageLeftMenuItem.addActionListener(e->{
+            final BBCImage bbcImage = GetMainFrame().GetActiveImage();
+            if (bbcImage != null) {
+                bbcImage.TranslateWithWrap(-1,0);
+                GetMainFrame().RefreshPanels();
+            }
+        });
+        add(wrapImageLeftMenuItem);
+
+        JMenuItem wrapImageRightMenuItem = new JMenuItem("Wrap Right");
+        wrapImageRightMenuItem.addActionListener(e->{
+            final BBCImage bbcImage = GetMainFrame().GetActiveImage();
+            if (bbcImage != null) {
+                bbcImage.TranslateWithWrap(1,0);
+                GetMainFrame().RefreshPanels();
+            }
+        });
+        add(wrapImageRightMenuItem);
+
+        JMenuItem wrapImageUpMenuItem = new JMenuItem("Wrap Up");
+        wrapImageUpMenuItem.addActionListener(e->{
+            final BBCImage bbcImage = GetMainFrame().GetActiveImage();
+            if (bbcImage != null) {
+                bbcImage.TranslateWithWrap(0,-1);
+                GetMainFrame().RefreshPanels();
+            }
+        });
+        add(wrapImageUpMenuItem);
+
+        JMenuItem wrapImageDownMenuItem = new JMenuItem("Wrap Down");
+        wrapImageDownMenuItem.addActionListener(e->{
+            final BBCImage bbcImage = GetMainFrame().GetActiveImage();
+            if (bbcImage != null) {
+                bbcImage.TranslateWithWrap(0,1);
+                GetMainFrame().RefreshPanels();
+            }
+        });
+        add(wrapImageDownMenuItem);
     }
 
     public MainFrame GetMainFrame() {
