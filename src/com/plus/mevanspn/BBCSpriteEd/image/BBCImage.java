@@ -185,6 +185,15 @@ final public class BBCImage extends BufferedImage {
         }
     }
 
+    /**
+     * Draws an oval over an area of the image.  The oval can be an outline or be filled.
+     * @param left Coordinate of the left edge of the bounding box that defines the oval.
+     * @param top Coordinate of the top edge of the bounding box that defines the oval.
+     * @param width Width of the bounding box that defines the oval.
+     * @param height Height of the bounding box that defines the oval.
+     * @param filled If true, the oval will be filled.
+     * @param colourIndex Colour index to use for rendering the oval.
+     */
     public void DrawOval(int left, int top, int width, int height, boolean filled, byte colourIndex) {
         if (colourIndex < bbcSpriteFrame.GetColours().length && width >=0 && height >= 0) {
             if (left + width > getWidth()) width = getWidth() - left;
@@ -196,6 +205,12 @@ final public class BBCImage extends BufferedImage {
         }
     }
 
+    /**
+     * Draws a straight line over the current image.
+     * @param pointA Coordindates for the first point of the line.
+     * @param pointB Coordinates for the second point of the line.
+     * @param colourIndex Colour index to use for rendering the line.
+     */
     public void DrawLine(Point pointA, Point pointB, byte colourIndex) {
         if (colourIndex < bbcSpriteFrame.GetColours().length && pointA != null && pointB != null) {
             Graphics2D g2 = (Graphics2D) getGraphics();

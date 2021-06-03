@@ -120,6 +120,10 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
             int y = SEPARATOR_WIDTH / 2;
             final float yRatio = (float) parent.GetPreviewHeight() / (float) sprite.GetHeight();
             final int scaledWidth = (int) (sprite.GetWidth() * yRatio * sprite.GetHorizontalPixelRatio());
+
+            g2.setColor(Color.LIGHT_GRAY);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+
             for (int i = 0; i < sprite.GetFrameCount(); i++) {
                 BufferedImage frameImage = sprite.GetFrame(i) != null ? sprite.GetFrame(i).GetRenderedImage() : null;
                 if (frameImage != null) {
@@ -217,6 +221,7 @@ public final class TimelinePanelViewportView extends JPanel implements MouseList
     @Override
     public void mouseDragged(MouseEvent e) {
         if (mouseDown) {
+            scrollRectToVisible(new Rectangle(e.getX() - (parent.GetPreviewHeight()/2), e.getY(), (int) (parent.GetPreviewHeight() * 1.5), 1));
             if (dragBuffer > -1) dragBuffer--;
             if (dragBuffer == 0) {
                 final int clickedFrame = GetClickFrame(clickPoint);

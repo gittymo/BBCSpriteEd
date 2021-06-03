@@ -6,7 +6,20 @@ import java.awt.image.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * BBCSprite objects are the top-level container for one or more images, representing a static of sequence of animation
+ * for a sprite that can be rendered to the BBC Micro's video memory.
+ */
 final public class BBCSprite {
+    /**
+     * Creates an instance of BBCSprite with the given dimensions and display mode.  This constructor is usually called
+     * by an instance of the MainFrame class, as the two will be linked and interoperate as part of the BBC Sprite
+     * Editor application.
+     * @param width Width of the sprite in pixels.
+     * @param height Height of the sprite in pixels.
+     * @param displayMode Display mode of the sprite
+     * @param mainFrame Reference to a valid instance of the MainFrame class.
+     */
     public BBCSprite(int width, int height, DisplayMode displayMode, MainFrame mainFrame) {
         this.width = width;
         this.height = height;

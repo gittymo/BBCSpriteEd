@@ -19,11 +19,7 @@ final public class BBCColour extends Color {
      */
     public BBCColour(int red, int green, int blue) {
         super(red > 0 ? 255 : 0, green > 0 ? 255 : 0, blue > 0 ? 255 : 0);
-        this.red = getRed();
-        this.green = getGreen();
-        this.blue = getBlue();
-        this.alpha = getAlpha();
-        this.argb = getRGB();
+        setPublicVars();
     }
 
     /**
@@ -38,11 +34,7 @@ final public class BBCColour extends Color {
      */
     public BBCColour(int red, int green, int blue, int alpha) {
         super(red > 0 ? 255 : 0, green > 0 ? 255 : 0, blue > 0 ? 255 : 0, alpha > 0 ? 255 : 0);
-        this.red = getRed();
-        this.green = getGreen();
-        this.blue = getBlue();
-        this.alpha = getAlpha();
-        this.argb = getRGB();
+        setPublicVars();
     }
 
     /**
@@ -54,12 +46,26 @@ final public class BBCColour extends Color {
      * @param argb The packed alpha, red, green and blue values.
      */
     public BBCColour(int argb) {
-        super(argb);
+        super((argb & 0x00FF0000) != 0 ? 255 : 0, (argb & 0x0000FF00) != 0 ? 255 : 0, (argb & 0x000000FF) != 0 ? 255 : 0,
+                ((argb & 0xFF000000) >> 8) != 0 ? 255 : 0);
+        setPublicVars();
+    }
+
+    /**
+     * Internal method, simply populates various publicly accessible variables that provide RGBA and HSV information
+     * about the colour.
+     */
+    private void setPublicVars() {
         this.red = getRed();
         this.green = getGreen();
         this.blue = getBlue();
         this.alpha = getAlpha();
         this.argb = getRGB();
+        float[] hsv = new float[3];
+        Color.RGBtoHSB(this.red, this.green, this.blue, hsv);
+        this.hue = hsv[0];
+        this.saturation = hsv[1];
+        this.value = hsv[2];
     }
 
     /**
@@ -166,6 +172,33 @@ final public class BBCColour extends Color {
     }
 
     /**
+     * Tries to return an index for a colour in the given palette that matches the given red, green and blue values.
+     * @param red Red component value to match.
+     * @param green Green component value to match.
+     * @param blue Blue component value to match.
+     * @param colours Palette to match against.
+     * @return Index of colour within the palette or -1 if no matching colour was found.
+     */
+    public static byte GetPaletteIndexFor(int red, int green, int blue, BBCColour[] colours) {
+        byte bestIndex = -1;
+        double shortestDistance = 255;
+        float hsv[] = new float[3];
+        Color.RGBtoHSB(red, green, blue, hsv);
+        for (int i = 0; i < colours.length; i++) {
+            double distance = Math.pow(
+                    Math.pow(colours[i].red - red, 2) +
+                    Math.pow(colours[i].green - green, 2) +
+                    Math.pow(colours[i].blue - blue, 2), 0.5);
+            if (distance < shortestDistance) {
+                shortestDistance = distance;
+                bestIndex = (byte) i;
+            }
+        }
+
+        return bestIndex;
+    }
+
+    /**
      * Represents the physical colour model of the BBC Micro as an array of BBCColour objects.
      */
     public final static BBCColour[] PHYSICAL_COLOURS = new BBCColour[] {
@@ -199,4 +232,5 @@ final public class BBCColour extends Color {
     public final static BBCColour[] EIGHT_COLOUR_MODE_DEFAULT = PHYSICAL_COLOURS;
 
     public int red, green, blue, alpha, argb;
+    public float hue, saturation, value;
 }
