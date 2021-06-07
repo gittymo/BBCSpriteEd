@@ -1,14 +1,17 @@
 package com.plus.mevanspn.BBCSpriteEd.image.convert;
 
-import com.plus.mevanspn.BBCSpriteEd.image.*;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
-import java.awt.image.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.*;
 
-final public class NoDither {
+final public class OrderedDither {
     public static BBCSprite GetConvertedSprite(String filename, BBCSprite.DisplayMode displayMode, MainFrame mainFrame) {
         BBCSprite sprite = null;
         BufferedImage image = Convert(filename, displayMode);
@@ -42,15 +45,28 @@ final public class NoDither {
                             importImageRasterData, 0, importedImage.getWidth());
 
                     // Create an array of indexes for BBC colours that most closely match the imported pixel data.
+                    int ditherMatrixRow = 0;
                     byte[] bbcImageRasterData = new byte[DATA_SIZE];
                     for (int i = 0; i < DATA_SIZE; i++) {
                         final int impRed = (importImageRasterData[i] & 0x00FF0000) >> 16;
                         final int impGreen = (importImageRasterData[i] & 0x0000FF00) >> 8;
                         final int impBlue = importImageRasterData[i] & 0x000000FF;
-                        final int impAlpha = (importImageRasterData[i] & 0xFF000000) != 0 ? 255 : 0;
-                        byte colourIndex = BBCColour.GetPaletteIndexesFor(impRed, impGreen, impBlue, displayMode.colours)[0];
-                        if (colourIndex < 0) colourIndex = (byte) displayMode.colours.length;
-                        bbcImageRasterData[i] = impAlpha == 255 ? colourIndex : (byte) displayMode.colours.length;
+                        final int impAlpha = (importImageRasterData[i] & 0xFF000000) >> 24;
+                        byte[] colourIndices = BBCColour.GetPaletteIndexesFor(impRed, impGreen, impBlue, displayMode.colours);
+                        byte colourIndex = -1;
+                        if (colourIndices[0] < 0 || impAlpha >= 0) colourIndex = (byte) displayMode.colours.length;
+                        else {
+                            float[] hsv = new float[3];
+                            BBCColour.RGBtoHSB(impRed, impGreen,impBlue,hsv);
+                            final int ditherMatrixSize = ditherMatrix.length * ditherMatrix[0].length;
+                            final int pixelValue = Math.round(BBCColour.GetLuminance(impRed, impGreen, impBlue) / (256 / ditherMatrixSize));
+                            if (i != 0 && i % importedImage.getWidth() == 0) {
+                                ditherMatrixRow = (ditherMatrixRow + 1) % ditherMatrix.length;
+                            }
+                            int matrixValue = ditherMatrix[ditherMatrixRow][i % ditherMatrix[ditherMatrixRow].length];
+                            colourIndex = pixelValue >= matrixValue ? colourIndices[0] : colourIndices[1];
+                        }
+                        bbcImageRasterData[i] = colourIndex;
                     }
 
                     // Use the converted pixel data as the BBCImage raster data.
@@ -63,4 +79,17 @@ final public class NoDither {
 
         return bbcImage;
     }
+
+    private static int[][] ditherMatrix = //new int [][] { { 0, 2}, {3, 1} };
+        //new int[][] { { 1, 9, 3, 11}, { 13, 5, 15, 7}, { 4, 12, 2, 10}, {15, 8, 14, 6}};
+            // new int[][] { { 0, 8, 2, 10}, { 12, 4, 14, 6}, { 3, 11, 1, 9}, {15, 7, 13, 5}};
+                new int[][] {   { 0, 32, 8, 40, 2, 34, 10, 42},
+                                { 48,16,56,24,50,18,58,26},
+                                { 12,44,4,36,14,46,6,38},
+                                { 60,28,52,20,62,30,54,22},
+                                { 3,35,11,43,1,33,9,41},
+                                { 51,19,59,27,49,17,57,25},
+                                { 15,47,7,39,13,45,5,37},
+                                { 63,31,55,23,61,29,53,21}};
+
 }

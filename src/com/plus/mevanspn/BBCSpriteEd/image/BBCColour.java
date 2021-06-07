@@ -171,6 +171,21 @@ final public class BBCColour extends Color {
         return luminance;
     }
 
+    /** Determines the luminance value of a colour represented by three channel values (red, green and blue)
+     * the luminance is Lum = (Red * 0.299) + (Green * 0.587) + (Blue * 0.114).
+     * @param red Red value (0 - 255)
+     * @param green Green value (0 - 255)
+     * @param blue Blue value (0 - 255)
+     * @return Luminance value (0 - 255)
+     */
+    public static int GetLuminance(int red, int green, int blue) {
+        int luminance = 0;
+        if (red >=0 && red < 256 && green >= 0 && green < 256 && blue >=0 && blue < 256) {
+            luminance = (int) ((red * 0.299) + (green * 0.587) + (blue * 0.114));
+        }
+        return Math.round(luminance);
+    }
+
     /**
      * Tries to return an index for a colour in the given palette that matches the given red, green and blue values.
      * @param red Red component value to match.
@@ -179,8 +194,10 @@ final public class BBCColour extends Color {
      * @param colours Palette to match against.
      * @return Index of colour within the palette or -1 if no matching colour was found.
      */
-    public static byte GetPaletteIndexFor(int red, int green, int blue, BBCColour[] colours) {
-        byte bestIndex = -1;
+    public static byte[] GetPaletteIndexesFor(int red, int green, int blue, BBCColour[] colours) {
+        byte[] bestIndices = new byte[2];
+        for (int i = 0; i < bestIndices.length; i++) bestIndices[i] = -1;
+
         double shortestDistance = 255;
         float hsv[] = new float[3];
         Color.RGBtoHSB(red, green, blue, hsv);
@@ -191,11 +208,16 @@ final public class BBCColour extends Color {
                     Math.pow(colours[i].blue - blue, 2), 0.5);
             if (distance < shortestDistance) {
                 shortestDistance = distance;
-                bestIndex = (byte) i;
+                for (int j = bestIndices.length - 1; j > 0; j--) bestIndices[j] = bestIndices[j - 1];
+                bestIndices[0] = (byte) i;
             }
         }
 
-        return bestIndex;
+        for (int j = bestIndices.length - 1; j > 0; j--) {
+            if (bestIndices[j] == -1) bestIndices[j] = bestIndices[j - 1];
+        }
+
+        return bestIndices;
     }
 
     /**

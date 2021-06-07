@@ -96,15 +96,18 @@ final public class BBCSpriteFrame {
                     } else {
                         n = i;
                         ByteArrayOutputStream rawPackedBOS = new ByteArrayOutputStream();
+                        byte lastSampleByte = sampleByte;
                         while (n < rawDataLength && n < i + 64 && rawData[n] != bbcSprite.GetColours().length &&
-                                (n == i || rawData[n] != sampleByte)) {
+                                (n == i || rawData[n] != lastSampleByte)) {
                             byte value = 0;
                             for (int shift = 8 - bpp; shift >= 0 && n < rawDataLength && n < i + 64; shift -= bpp) {
                                 if (rawData[n] == bbcSprite.GetColours().length) break;
+                                if (n != i && rawData[n] == lastSampleByte) break;
+                                lastSampleByte = rawData[n];
                                 value += rawData[n++] << shift;
                             }
-                            if (n < rawDataLength && rawData[n] == sampleByte) n--;
-                            else rawPackedBOS.write(value);
+
+                            rawPackedBOS.write(value);
                         }
                         rawPackedBOS.flush();
                         writeCompressBlockHeader((byte) 2, (byte) (n - i), byteArrayOutputStream);

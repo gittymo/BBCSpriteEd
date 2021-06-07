@@ -1,6 +1,8 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.menus.FileMenu;
 
 import com.plus.mevanspn.BBCSpriteEd.image.convert.NoDither;
+import com.plus.mevanspn.BBCSpriteEd.image.convert.OrderedDither;
+import com.plus.mevanspn.BBCSpriteEd.image.convert.RandomDither;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
@@ -60,7 +62,7 @@ final public class FileMenu extends JMenu {
             importFileChooser.setFileFilter(new FileNameExtensionFilter("Image files","png","jpeg","jpg","bmp","pbm"));
             int rv = importFileChooser.showOpenDialog(mainFrame);
             if (rv == JFileChooser.APPROVE_OPTION) {
-                mainFrame.LoadSprite(NoDither.GetConvertedSprite(importFileChooser.getSelectedFile().getAbsolutePath(), BBCSprite.DisplayMode.ModeTwo, mainFrame));
+                mainFrame.LoadSprite(OrderedDither.GetConvertedSprite(importFileChooser.getSelectedFile().getAbsolutePath(), BBCSprite.DisplayMode.ModeTwo, mainFrame));
             }
         });
         this.add(importImageMenuItem);

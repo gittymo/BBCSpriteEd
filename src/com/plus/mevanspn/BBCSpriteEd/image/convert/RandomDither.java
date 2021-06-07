@@ -1,14 +1,18 @@
 package com.plus.mevanspn.BBCSpriteEd.image.convert;
 
-import com.plus.mevanspn.BBCSpriteEd.image.*;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCColour;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
+import com.plus.mevanspn.BBCSpriteEd.image.BBCSpriteFrame;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
-import java.awt.image.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.*;
+import java.util.Random;
 
-final public class NoDither {
+final public class RandomDither {
     public static BBCSprite GetConvertedSprite(String filename, BBCSprite.DisplayMode displayMode, MainFrame mainFrame) {
         BBCSprite sprite = null;
         BufferedImage image = Convert(filename, displayMode);
@@ -42,15 +46,27 @@ final public class NoDither {
                             importImageRasterData, 0, importedImage.getWidth());
 
                     // Create an array of indexes for BBC colours that most closely match the imported pixel data.
+                    int ditherMatrixRow = 0;
                     byte[] bbcImageRasterData = new byte[DATA_SIZE];
                     for (int i = 0; i < DATA_SIZE; i++) {
                         final int impRed = (importImageRasterData[i] & 0x00FF0000) >> 16;
                         final int impGreen = (importImageRasterData[i] & 0x0000FF00) >> 8;
                         final int impBlue = importImageRasterData[i] & 0x000000FF;
-                        final int impAlpha = (importImageRasterData[i] & 0xFF000000) != 0 ? 255 : 0;
-                        byte colourIndex = BBCColour.GetPaletteIndexesFor(impRed, impGreen, impBlue, displayMode.colours)[0];
-                        if (colourIndex < 0) colourIndex = (byte) displayMode.colours.length;
-                        bbcImageRasterData[i] = impAlpha == 255 ? colourIndex : (byte) displayMode.colours.length;
+                        final int impAlpha = (importImageRasterData[i] & 0xFF000000) >> 24;
+                        byte[] colourIndices = BBCColour.GetPaletteIndexesFor(impRed, impGreen, impBlue, displayMode.colours);
+                        byte colourIndex = -1;
+                        if (colourIndices[0] < 0) colourIndex = (byte) displayMode.colours.length;
+                        else {
+                            float[] hsv = new float[3];
+                            BBCColour.RGBtoHSB(impRed, impGreen,impBlue,hsv);
+                            final int pixelValue = BBCColour.GetLuminance(impRed, impGreen, impBlue);
+                            final int randomValue = (new Random().nextInt()) % 256;
+                            if (i != 0 && i % importedImage.getWidth() == 0) {
+                                ditherMatrixRow = (ditherMatrixRow + 1) % 4;
+                            }
+                            colourIndex = pixelValue >= randomValue ? colourIndices[0] : colourIndices[1];
+                        }
+                        bbcImageRasterData[i] = colourIndex;
                     }
 
                     // Use the converted pixel data as the BBCImage raster data.
