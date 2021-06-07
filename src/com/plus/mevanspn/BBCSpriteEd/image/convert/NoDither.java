@@ -47,9 +47,9 @@ final public class NoDither {
                         final int impRed = (importImageRasterData[i] & 0x00FF0000) >> 16;
                         final int impGreen = (importImageRasterData[i] & 0x0000FF00) >> 8;
                         final int impBlue = importImageRasterData[i] & 0x000000FF;
-                        final int impAlpha = (importImageRasterData[i] & 0xFF000000) != 0 ? 255 : 0;
+                        final int impAlpha = (importImageRasterData[i] & 0xFF000000) >> 24;
                         byte colourIndex = BBCColour.GetPaletteIndexesFor(impRed, impGreen, impBlue, displayMode.colours)[0];
-                        if (colourIndex < 0) colourIndex = (byte) displayMode.colours.length;
+                        if (colourIndex < 0 || impAlpha >= 0) colourIndex = (byte) displayMode.colours.length;
                         bbcImageRasterData[i] = impAlpha == 255 ? colourIndex : (byte) displayMode.colours.length;
                     }
 

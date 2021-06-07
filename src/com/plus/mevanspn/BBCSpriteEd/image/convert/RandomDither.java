@@ -55,7 +55,7 @@ final public class RandomDither {
                         final int impAlpha = (importImageRasterData[i] & 0xFF000000) >> 24;
                         byte[] colourIndices = BBCColour.GetPaletteIndexesFor(impRed, impGreen, impBlue, displayMode.colours);
                         byte colourIndex = -1;
-                        if (colourIndices[0] < 0) colourIndex = (byte) displayMode.colours.length;
+                        if (colourIndices[0] < 0 || impAlpha >= 0) colourIndex = (byte) displayMode.colours.length;
                         else {
                             float[] hsv = new float[3];
                             BBCColour.RGBtoHSB(impRed, impGreen,impBlue,hsv);

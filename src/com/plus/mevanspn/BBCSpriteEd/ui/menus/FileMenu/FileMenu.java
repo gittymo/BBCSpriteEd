@@ -1,5 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.menus.FileMenu;
 
+import com.plus.mevanspn.BBCSpriteEd.image.convert.FloydSteinbergDiffusion;
 import com.plus.mevanspn.BBCSpriteEd.image.convert.NoDither;
 import com.plus.mevanspn.BBCSpriteEd.image.convert.OrderedDither;
 import com.plus.mevanspn.BBCSpriteEd.image.convert.RandomDither;

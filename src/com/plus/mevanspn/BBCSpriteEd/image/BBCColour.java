@@ -195,31 +195,41 @@ final public class BBCColour extends Color {
      * @return Index of colour within the palette or -1 if no matching colour was found.
      */
     public static byte[] GetPaletteIndexesFor(int red, int green, int blue, BBCColour[] colours) {
-        byte[] bestIndices = new byte[2];
-        for (int i = 0; i < bestIndices.length; i++) bestIndices[i] = -1;
+        ColourDistance[] distances = new ColourDistance[colours.length];
+        red = (int) (Math.round(red / 32.0)) * 32;
+        green = (int) (Math.round(green / 32.0)) * 32;
+        blue = (int) (Math.round(blue / 32.0)) * 32;
 
-        double shortestDistance = 255;
-        float hsv[] = new float[3];
-        Color.RGBtoHSB(red, green, blue, hsv);
         for (int i = 0; i < colours.length; i++) {
-            double distance = Math.pow(
+            distances[i] = new ColourDistance((byte) i, Math.pow(
                     Math.pow(colours[i].red - red, 2) +
                     Math.pow(colours[i].green - green, 2) +
-                    Math.pow(colours[i].blue - blue, 2), 0.5);
-            if (distance < shortestDistance) {
-                shortestDistance = distance;
-                for (int j = bestIndices.length - 1; j > 0; j--) bestIndices[j] = bestIndices[j - 1];
-                bestIndices[0] = (byte) i;
-            }
+                    Math.pow(colours[i].blue - blue, 2), 0.5));
         }
 
-        for (int j = bestIndices.length - 1; j > 0; j--) {
-            if (bestIndices[j] == -1) bestIndices[j] = bestIndices[j - 1];
-        }
-
-        return bestIndices;
+        return GetSortedPaletteIndicesByDistance(distances);
     }
 
+    private static byte[] GetSortedPaletteIndicesByDistance(ColourDistance[] colourDistances) {
+        byte[] colourIndices = null;
+        if (colourDistances != null) {
+            colourIndices = new byte[colourDistances.length];
+            for (int i = 0; i < colourDistances.length; i++) {
+                for (int j = colourDistances.length - 1; j > i; j--) {
+                    if (colourDistances[j].IsShorterDistance(colourDistances[i])) {
+                        ColourDistance tempColourDistance = colourDistances[i];
+                        colourDistances[i] = colourDistances[j];
+                        colourDistances[j] = tempColourDistance;
+                    }
+                }
+            }
+
+            for (int i = 0; i < colourDistances.length; i++) {
+                colourIndices[i] = colourDistances[i].index;
+            }
+        }
+        return colourIndices;
+    }
     /**
      * Represents the physical colour model of the BBC Micro as an array of BBCColour objects.
      */
@@ -255,4 +265,26 @@ final public class BBCColour extends Color {
 
     public int red, green, blue, alpha, argb;
     public float hue, saturation, value;
+
+    static class ColourDistance {
+        ColourDistance(byte index, double distance) {
+            this.index = index;
+            this.distance = distance;
+        }
+
+        byte GetIndex() {
+            return index;
+        }
+
+        double GetDistance() {
+            return distance;
+        }
+
+        boolean IsShorterDistance(ColourDistance colourDistance) {
+            return distance < colourDistance.distance;
+        }
+
+        private byte index;
+        private double distance;
+    }
 }

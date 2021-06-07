@@ -53,18 +53,17 @@ final public class OrderedDither {
                         final int impBlue = importImageRasterData[i] & 0x000000FF;
                         final int impAlpha = (importImageRasterData[i] & 0xFF000000) >> 24;
                         byte[] colourIndices = BBCColour.GetPaletteIndexesFor(impRed, impGreen, impBlue, displayMode.colours);
-                        byte colourIndex = -1;
+                        byte colourIndex;
                         if (colourIndices[0] < 0 || impAlpha >= 0) colourIndex = (byte) displayMode.colours.length;
                         else {
-                            float[] hsv = new float[3];
-                            BBCColour.RGBtoHSB(impRed, impGreen,impBlue,hsv);
                             final int ditherMatrixSize = ditherMatrix.length * ditherMatrix[0].length;
-                            final int pixelValue = Math.round(BBCColour.GetLuminance(impRed, impGreen, impBlue) / (256 / ditherMatrixSize));
+                            final int pixelValue = Math.round(BBCColour.GetLuminance(impRed, impGreen, impBlue) / (float) (256 / ditherMatrixSize));
                             if (i != 0 && i % importedImage.getWidth() == 0) {
                                 ditherMatrixRow = (ditherMatrixRow + 1) % ditherMatrix.length;
                             }
                             int matrixValue = ditherMatrix[ditherMatrixRow][i % ditherMatrix[ditherMatrixRow].length];
-                            colourIndex = pixelValue >= matrixValue ? colourIndices[0] : colourIndices[1];
+                            BBCColour secondColour = displayMode.colours[colourIndices[1]];
+                            colourIndex = pixelValue > matrixValue ? colourIndices[0] : (secondColour.value * ditherMatrixSize) > matrixValue ? 0 : colourIndices[1];
                         }
                         bbcImageRasterData[i] = colourIndex;
                     }
@@ -80,8 +79,8 @@ final public class OrderedDither {
         return bbcImage;
     }
 
-    private static int[][] ditherMatrix = //new int [][] { { 0, 2}, {3, 1} };
-        //new int[][] { { 1, 9, 3, 11}, { 13, 5, 15, 7}, { 4, 12, 2, 10}, {15, 8, 14, 6}};
+    private final static int[][] ditherMatrix = //new int [][] { { 0, 2}, {3, 1} };
+        //new int[][] { { 0, 8, 2, 10}, { 12, 4, 14, 6}, { 3, 11, 1, 9}, {15, 7, 13, 5}};
             // new int[][] { { 0, 8, 2, 10}, { 12, 4, 14, 6}, { 3, 11, 1, 9}, {15, 7, 13, 5}};
                 new int[][] {   { 0, 32, 8, 40, 2, 34, 10, 42},
                                 { 48,16,56,24,50,18,58,26},
