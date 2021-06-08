@@ -2,6 +2,7 @@ package com.plus.mevanspn.BBCSpriteEd.image;
 
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
+import javax.swing.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.*;
@@ -365,6 +366,11 @@ final public class BBCSprite {
 
         public int GetBitsPerPixel() {
             return colours.length == 2 ? 1 : colours.length == 4 ? 2 : colours.length == 8 ? 4 : 0;
+        }
+
+        @Override
+        public String toString() {
+            return "Mode " + this.number + " (" + this.colours.length + " colours, " + this.width + "x" + this.height + "px)";
         }
 
         public final float pixelRatio;

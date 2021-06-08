@@ -1,15 +1,10 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.menus.FileMenu;
 
-import com.plus.mevanspn.BBCSpriteEd.image.convert.FloydSteinbergDiffusion;
-import com.plus.mevanspn.BBCSpriteEd.image.convert.NoDither;
-import com.plus.mevanspn.BBCSpriteEd.image.convert.OrderedDither;
-import com.plus.mevanspn.BBCSpriteEd.image.convert.RandomDither;
+import com.plus.mevanspn.BBCSpriteEd.ui.panels.ImageImporterPanel;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.util.Locale;
 
@@ -33,6 +28,7 @@ final public class FileMenu extends JMenu {
                 }
             }
         });
+
         this.add(openFileMenuItem);
         JMenuItem saveAsFileMenuItem = new JMenuItem("Save As...");
         saveAsFileMenuItem.addActionListener(e -> {
@@ -59,12 +55,7 @@ final public class FileMenu extends JMenu {
         this.add(new JSeparator());
         JMenuItem importImageMenuItem = new JMenuItem(("Import image..."));
         importImageMenuItem.addActionListener(e-> {
-            JFileChooser importFileChooser = new JFileChooser();
-            importFileChooser.setFileFilter(new FileNameExtensionFilter("Image files","png","jpeg","jpg","bmp","pbm"));
-            int rv = importFileChooser.showOpenDialog(mainFrame);
-            if (rv == JFileChooser.APPROVE_OPTION) {
-                mainFrame.LoadSprite(OrderedDither.GetConvertedSprite(importFileChooser.getSelectedFile().getAbsolutePath(), BBCSprite.DisplayMode.ModeTwo, mainFrame));
-            }
+            new ImageImporterPanel(mainFrame).setVisible(true);
         });
         this.add(importImageMenuItem);
 
