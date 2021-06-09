@@ -1,13 +1,17 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
-import com.plus.mevanspn.BBCSpriteEd.image.convert.*;
+import com.plus.mevanspn.BBCSpriteEd.image.converters.*;
+import com.plus.mevanspn.BBCSpriteEd.ui.components.ToolbarButton;
+import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -50,10 +54,10 @@ public final class ImageImporterPanel extends JDialog {
             this.imageImporterPanel = imageImporterPanel;
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-            JFileChooser imageFileChooser = new JFileChooser();
-            imageFileChooser.setFileFilter(new FileNameExtensionFilter("Image file types","JPG","JPEG","PNG","BMP","PBM"));
             JButton imageFileChooserButton = new JButton("Open File...");
             imageFileChooserButton.addActionListener(e -> {
+                JFileChooser imageFileChooser = new JFileChooser();
+                imageFileChooser.setFileFilter(new FileNameExtensionFilter("Image file types","JPG","JPEG","PNG","BMP","PBM"));
                 int res = imageFileChooser.showOpenDialog(imageImporterPanel);
                 if (res == JFileChooser.APPROVE_OPTION) imageImporterPanel.LoadImage(imageFileChooser.getSelectedFile().getAbsolutePath());
                 imageFileChooser.setVisible(false);
@@ -129,7 +133,11 @@ public final class ImageImporterPanel extends JDialog {
             @Override
             public Dimension getPreferredSize() {
                 final BufferedImage sourceImage = imageImporterPanel.GetSourceImage();
-                return sourceImage != null ? new Dimension(sourceImage.getWidth(), sourceImage.getHeight()) : new Dimension(320,256);
+                final float zoom = importPreviewImagePanelControls.GetZoom();
+                final BBCSprite.DisplayMode dm = importPreviewImagePanelControls.GetDisplayMode();
+                return sourceImage != null ?
+                        new Dimension((int) (sourceImage.getWidth() * zoom * dm.pixelRatio), (int) (sourceImage.getHeight() * zoom)) :
+                        new Dimension(320,256);
             }
 
             @Override
@@ -158,10 +166,65 @@ public final class ImageImporterPanel extends JDialog {
                 this.add(this.conversionMethodsJComboBox);
 
                 this.displayModeJComboBox = new JComboBox<>(BBCSprite.DisplayMode.values());
-                this.add(this.displayModeJComboBox);
                 this.displayModeJComboBox.addActionListener(e -> {
                     importPreviewPanel.Update();
                 });
+                this.add(this.displayModeJComboBox);
+
+                ToolbarButton zoomInButton = new ToolbarButton("zoomin.png",new KeyPressEventMatcher('+', true, false, false)) {
+                    @Override
+                    public void KeyPressed(KeyEvent keyEvent) {
+                        if (zoom < 16) zoom = zoom * 2;
+                        importPreviewPanel.Update();
+                    }
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (zoom < 16) zoom = zoom * 2;
+                        importPreviewPanel.Update();
+                    }
+                };
+                this.add(zoomInButton);
+
+                ToolbarButton zoomResetButton = new ToolbarButton("zoomreset.png",new KeyPressEventMatcher('.', true, false, false)) {
+                    @Override
+                    public void KeyPressed(KeyEvent keyEvent) {
+                        if (zoom != 1) {
+                            zoom = 1;
+                            importPreviewPanel.Update();
+                        }
+                    }
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (zoom != 1) {
+                            zoom = 1;
+                            importPreviewPanel.Update();
+                        }
+                    }
+                };
+                this.add(zoomResetButton);
+
+                ToolbarButton zoomOutButton = new ToolbarButton("zoomout.png",new KeyPressEventMatcher('-', true, false, false)) {
+                    @Override
+                    public void KeyPressed(KeyEvent keyEvent) {
+                        if (zoom != 1) {
+                            if (zoom < 1) zoom = zoom * 2;
+                            else zoom = zoom / 2;
+                        }
+                        importPreviewPanel.Update();
+                    }
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (zoom != 1) {
+                            if (zoom < 1) zoom = zoom * 2;
+                            else zoom = zoom / 2;
+                        }
+                        importPreviewPanel.Update();
+                    }
+                };
+                this.add(zoomOutButton);
 
                 pack();
             }

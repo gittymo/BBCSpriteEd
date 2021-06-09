@@ -1,4 +1,4 @@
-package com.plus.mevanspn.BBCSpriteEd.image.convert;
+package com.plus.mevanspn.BBCSpriteEd.image.converters;
 
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 
