@@ -1,5 +1,6 @@
 package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 
+import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.converters.*;
 import com.plus.mevanspn.BBCSpriteEd.ui.components.ToolbarButton;
@@ -18,6 +19,7 @@ import java.io.*;
 public final class ImageImporterPanel extends JDialog {
     public ImageImporterPanel(MainFrame mainFrame) {
         super(mainFrame,"Import Image As Sprite...");
+        this.mainFrame = mainFrame;
         getContentPane().setLayout(new BorderLayout());
         this.importerControlsPanel = new ImporterControlsPanel(this);
         getContentPane().add(this.importerControlsPanel, BorderLayout.EAST);
@@ -47,6 +49,7 @@ public final class ImageImporterPanel extends JDialog {
     private ImporterControlsPanel importerControlsPanel;
     private ImportPreviewPanel importPreviewPanel;
     private BufferedImage sourceImage;
+    private MainFrame mainFrame;
 
     class ImporterControlsPanel extends JPanel {
         ImporterControlsPanel(ImageImporterPanel imageImporterPanel) {
@@ -65,9 +68,25 @@ public final class ImageImporterPanel extends JDialog {
             add(imageFileChooserButton);
 
             JButton okButton = new JButton("OK (Import)");
+            okButton.addActionListener(e -> {
+                imageImporterPanel.setVisible(false);
+                BufferedImage convertedImage = importPreviewPanel.importPreviewImagePanel.GetConvertedSprite();
+                BBCSprite convertedSprite = new BBCSprite(convertedImage.getWidth(), convertedImage.getHeight(),
+                        importPreviewPanel.importPreviewImagePanelControls.GetDisplayMode(), mainFrame);
+                BBCImage activeSpriteImage = convertedSprite.GetActiveFrame().GetRenderedImage();
+                byte[] convertedImageRasterData = new byte[convertedImage.getWidth() * convertedImage.getHeight()];
+                convertedImage.getRaster().getDataElements(0, 0, convertedImage.getWidth(),
+                        convertedImage.getHeight(), convertedImageRasterData);
+                activeSpriteImage.getRaster().setDataElements(0, 0, convertedImage.getWidth(),
+                        convertedImage.getHeight(), convertedImageRasterData);
+                mainFrame.LoadSprite(convertedSprite);
+            });
             add(okButton);
 
             JButton cancelButton = new JButton("Cancel (Don't Import");
+            cancelButton.addActionListener(e -> {
+                imageImporterPanel.setVisible(false);
+            });
             add(cancelButton);
             pack();
         }
@@ -113,6 +132,12 @@ public final class ImageImporterPanel extends JDialog {
                 this.importPreviewPanel = importPreviewPanel;
             }
 
+            BufferedImage GetConvertedSprite() {
+                final BBCSprite.DisplayMode dm = importPreviewImagePanelControls.GetDisplayMode();
+                final IImageConverter imc = importPreviewImagePanelControls.GetConversionMethod();
+                return imc.Convert(sourceImage, dm);
+            }
+
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -121,8 +146,7 @@ public final class ImageImporterPanel extends JDialog {
                     final ImportPreviewImagePanelControls importPreviewImagePanelControls = importPreviewPanel.GetControl();
                     final float zoom = importPreviewImagePanelControls.GetZoom();
                     final BBCSprite.DisplayMode dm = importPreviewImagePanelControls.GetDisplayMode();
-                    final IImageConverter imc = importPreviewImagePanelControls.GetConversionMethod();
-                    BufferedImage resultingImage = imc.Convert(sourceImage, dm);
+                    final BufferedImage resultingImage = GetConvertedSprite();
                     final int xoffset = (int) (getWidth() - (resultingImage.getWidth() * (zoom * dm.pixelRatio))) / 2;
                     final int yoffset = (int) (getHeight() - (resultingImage.getHeight() * zoom)) / 2;
                     g.drawImage(resultingImage, xoffset, yoffset, (int) (resultingImage.getWidth() * (zoom * dm.pixelRatio)),
