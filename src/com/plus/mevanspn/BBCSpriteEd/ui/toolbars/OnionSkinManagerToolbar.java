@@ -11,13 +11,11 @@ import java.awt.event.ActionEvent;
 public final class OnionSkinManagerToolbar extends JToolBar {
     public OnionSkinManagerToolbar(MainFrame mainFrame) {
         super(JToolBar.HORIZONTAL);
-        this.onionSkinToggle = new ToggleButton("OnionOn.png", "OnionOff.png", new KeyPressEventMatcher('O')) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onionSkinToggle.Toggle();
-                mainFrame.GetImagePanel().repaint();
-            }
-        };
+        this.onionSkinToggle = new ToggleButton("OnionOn.png", "OnionOff.png", new KeyPressEventMatcher('O'));
+        this.onionSkinToggle.addActionListener(e -> {
+            mainFrame.GetImagePanel().repaint();
+        });
+
         this.onionSkinToggle.setToolTipText("Toggle onion skinning on/off (Key O).");
         mainFrame.AddKeyPressListener(onionSkinToggle);
         this.add(onionSkinToggle);

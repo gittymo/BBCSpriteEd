@@ -3,12 +3,14 @@ package com.plus.mevanspn.BBCSpriteEd.ui.panels;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCImage;
 import com.plus.mevanspn.BBCSpriteEd.image.BBCSprite;
 import com.plus.mevanspn.BBCSpriteEd.image.converters.*;
+import com.plus.mevanspn.BBCSpriteEd.ui.components.ToggleButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.components.ToolbarButton;
 import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 import com.plus.mevanspn.BBCSpriteEd.ui.toplevel.MainFrame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -55,47 +57,84 @@ public final class ImageImporterPanel extends JDialog {
         ImporterControlsPanel(ImageImporterPanel imageImporterPanel) {
             super();
             this.imageImporterPanel = imageImporterPanel;
-            this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-            JButton imageFileChooserButton = new JButton("Open File...");
-            imageFileChooserButton.addActionListener(e -> {
-                JFileChooser imageFileChooser = new JFileChooser();
-                imageFileChooser.setFileFilter(new FileNameExtensionFilter("Image file types","JPG","JPEG","PNG","BMP","PBM"));
-                int res = imageFileChooser.showOpenDialog(imageImporterPanel);
-                if (res == JFileChooser.APPROVE_OPTION) imageImporterPanel.LoadImage(imageFileChooser.getSelectedFile().getAbsolutePath());
-                imageFileChooser.setVisible(false);
-            });
-            add(imageFileChooserButton);
-
-            JButton okButton = new JButton("OK (Import)");
-            okButton.addActionListener(e -> {
-                imageImporterPanel.setVisible(false);
-                BufferedImage convertedImage = importPreviewPanel.importPreviewImagePanel.GetConvertedSprite();
-                BBCSprite convertedSprite = new BBCSprite(convertedImage.getWidth(), convertedImage.getHeight(),
-                        importPreviewPanel.importPreviewImagePanelControls.GetDisplayMode(), mainFrame);
-                BBCImage activeSpriteImage = convertedSprite.GetActiveFrame().GetRenderedImage();
-                byte[] convertedImageRasterData = new byte[convertedImage.getWidth() * convertedImage.getHeight()];
-                convertedImage.getRaster().getDataElements(0, 0, convertedImage.getWidth(),
-                        convertedImage.getHeight(), convertedImageRasterData);
-                activeSpriteImage.getRaster().setDataElements(0, 0, convertedImage.getWidth(),
-                        convertedImage.getHeight(), convertedImageRasterData);
-                mainFrame.LoadSprite(convertedSprite);
-            });
-            add(okButton);
-
-            JButton cancelButton = new JButton("Cancel (Don't Import");
-            cancelButton.addActionListener(e -> {
-                imageImporterPanel.setVisible(false);
-            });
-            add(cancelButton);
+            this.setLayout(new BorderLayout());
+            this.add(new FileLoaderPanel(), BorderLayout.NORTH);
+            this.add(new SpriteSourceOptionsPanel(), BorderLayout.CENTER);
+            this.add(new DialogConfirmationPanel(), BorderLayout.SOUTH);
             pack();
         }
+
         private ImageImporterPanel imageImporterPanel;
+
+        class SpriteSourceOptionsPanel extends JPanel {
+            SpriteSourceOptionsPanel() {
+                super();
+                ButtonGroup sourceOptionsButtonGroup = new ButtonGroup();
+
+                JRadioButton wholeImageRadioButton = new JRadioButton("Whole Image");
+                sourceOptionsButtonGroup.add(wholeImageRadioButton);
+
+                JRadioButton selectionRadioButton = new JRadioButton("Selection");
+                sourceOptionsButtonGroup.add(selectionRadioButton);
+
+                JRadioButton tilesRadioButton = new JRadioButton("Tiles");
+                sourceOptionsButtonGroup.add(tilesRadioButton);
+
+                add(wholeImageRadioButton);
+                add(selectionRadioButton);
+                add(tilesRadioButton);
+
+                pack();
+            }
+        }
+
+        class FileLoaderPanel extends JPanel {
+            FileLoaderPanel() {
+                JButton imageFileChooserButton = new JButton("Open File...");
+                imageFileChooserButton.addActionListener(e -> {
+                    JFileChooser imageFileChooser = new JFileChooser();
+                    imageFileChooser.setFileFilter(new FileNameExtensionFilter("Image file types","JPG","JPEG","PNG","BMP","PBM"));
+                    int res = imageFileChooser.showOpenDialog(imageImporterPanel);
+                    if (res == JFileChooser.APPROVE_OPTION) imageImporterPanel.LoadImage(imageFileChooser.getSelectedFile().getAbsolutePath());
+                    imageFileChooser.setVisible(false);
+                });
+                add(imageFileChooserButton);
+                pack();
+            }
+        }
+
+        class DialogConfirmationPanel extends JPanel {
+            DialogConfirmationPanel() {
+                JButton okButton = new JButton("Import");
+                okButton.addActionListener(e -> {
+                    imageImporterPanel.setVisible(false);
+                    BufferedImage convertedImage = importPreviewPanel.importPreviewImagePanel.GetConvertedSprite();
+                    BBCSprite convertedSprite = new BBCSprite(convertedImage.getWidth(), convertedImage.getHeight(),
+                            importPreviewPanel.importPreviewImagePanelControls.GetDisplayMode(), mainFrame);
+                    BBCImage activeSpriteImage = convertedSprite.GetActiveFrame().GetRenderedImage();
+                    byte[] convertedImageRasterData = new byte[convertedImage.getWidth() * convertedImage.getHeight()];
+                    convertedImage.getRaster().getDataElements(0, 0, convertedImage.getWidth(),
+                            convertedImage.getHeight(), convertedImageRasterData);
+                    activeSpriteImage.getRaster().setDataElements(0, 0, convertedImage.getWidth(),
+                            convertedImage.getHeight(), convertedImageRasterData);
+                    mainFrame.LoadSprite(convertedSprite);
+                });
+                add(okButton);
+
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(e -> {
+                    imageImporterPanel.setVisible(false);
+                });
+                add(cancelButton);
+                pack();
+            }
+        }
     }
 
     class ImportPreviewPanel extends JPanel {
         ImportPreviewPanel(ImageImporterPanel imageImporterPanel) {
             super();
+            this.setBorder(new EmptyBorder(4,4,4,4));
             this.imageImporterPanel = imageImporterPanel;
             setLayout(new BorderLayout());
             this.importPreviewImagePanel = new ImportPreviewImagePanel(this);
@@ -117,7 +156,7 @@ public final class ImageImporterPanel extends JDialog {
             return imageImporterPanel.GetSourceImage();
         }
 
-        public ImportPreviewImagePanelControls GetControl() {
+        public ImportPreviewImagePanelControls GetControls() {
             return importPreviewImagePanelControls;
         }
 
@@ -143,7 +182,7 @@ public final class ImageImporterPanel extends JDialog {
                 super.paintComponent(g);
                 final BufferedImage sourceImage = imageImporterPanel.GetSourceImage();
                 if (sourceImage != null) {
-                    final ImportPreviewImagePanelControls importPreviewImagePanelControls = importPreviewPanel.GetControl();
+                    final ImportPreviewImagePanelControls importPreviewImagePanelControls = importPreviewPanel.GetControls();
                     final float zoom = importPreviewImagePanelControls.GetZoom();
                     final BBCSprite.DisplayMode dm = importPreviewImagePanelControls.GetDisplayMode();
                     final BufferedImage resultingImage = GetConvertedSprite();
@@ -151,6 +190,22 @@ public final class ImageImporterPanel extends JDialog {
                     final int yoffset = (int) (getHeight() - (resultingImage.getHeight() * zoom)) / 2;
                     g.drawImage(resultingImage, xoffset, yoffset, (int) (resultingImage.getWidth() * (zoom * dm.pixelRatio)),
                             (int) (resultingImage.getHeight() * zoom), null);
+                    if (importPreviewImagePanelControls.ShowGrid() && zoom >= 4) {
+                        Graphics2D g2 = (Graphics2D) g;
+                        g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+                                1.0f, new float[] { 1.0f, 1.0f}, 1.0f));
+                        g2.setColor(new Color(0, 0, 128, 255));
+                        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.33f));
+                        for (float x = zoom * dm.pixelRatio; x < resultingImage.getWidth() * zoom * dm.pixelRatio; x += zoom * dm.pixelRatio) {
+                            g2.drawLine(xoffset + (int) x, yoffset, xoffset + (int) x, yoffset + (int) (resultingImage.getHeight() * zoom));
+                        }
+                        for (float y = zoom; y < resultingImage.getHeight() * zoom; y += zoom) {
+                            g2.drawLine(xoffset, yoffset + (int) y, xoffset + (int) (resultingImage.getWidth() * zoom * dm.pixelRatio),
+                                    yoffset + (int) y);
+                        }
+                    }
+                    g.setColor(Color.BLACK);
+                    g.drawRect(xoffset, yoffset, (int) (resultingImage.getWidth() * zoom * dm.pixelRatio), (int) (resultingImage.getHeight() * zoom));
                 }
             }
 
@@ -177,6 +232,7 @@ public final class ImageImporterPanel extends JDialog {
                 super();
                 this.importPreviewPanel = importPreviewPanel;
                 this.zoom = 1;
+                this.showGrid = true;
                 this.conversionMethodsJComboBox = new JComboBox<>(new IImageConverter[] {
                         new NoDitherImageConverter(),
                         new OrderedDitherImageConverter(),
@@ -250,10 +306,19 @@ public final class ImageImporterPanel extends JDialog {
                 };
                 this.add(zoomOutButton);
 
+                ToggleButton gridToggleButton = new ToggleButton("showgrid.png","hidegrid.png", new KeyPressEventMatcher('g', false, false, false));
+                gridToggleButton.addActionListener(e -> {
+                    showGrid = !showGrid;
+                    importPreviewPanel.Update();
+                });
+                this.add(gridToggleButton);
+
                 pack();
             }
 
             public float GetZoom() { return zoom; }
+
+            public boolean ShowGrid() { return showGrid; }
 
             public BBCSprite.DisplayMode GetDisplayMode() {
                 return (BBCSprite.DisplayMode) displayModeJComboBox.getSelectedItem();
@@ -266,6 +331,7 @@ public final class ImageImporterPanel extends JDialog {
             private JComboBox<IImageConverter> conversionMethodsJComboBox;
             private JComboBox<BBCSprite.DisplayMode> displayModeJComboBox;
             private float zoom;
+            private boolean showGrid;
             private ImportPreviewPanel importPreviewPanel;
         }
     }

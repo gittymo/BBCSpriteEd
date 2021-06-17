@@ -4,6 +4,8 @@ import com.plus.mevanspn.BBCSpriteEd.ui.interfaces.KeyPressEventMatcher;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
@@ -11,7 +13,7 @@ import java.awt.image.BufferedImage;
  * ToggleButton objects are essentially ToolbarButtons that have two states which can be flipped between.  Each state
  * can have its own icon so that the state can be visually represented.
  */
-public abstract class ToggleButton extends ToolbarButton {
+public class ToggleButton extends ToolbarButton implements ActionListener {
     /**
      * Creates an instance of a ToggleButton.  The ToggleButton will use the icons whose images are loaded from the
      * provided filenames.  An optional KeyPressEventMatcher can be provided to map key presses to the button.
@@ -62,6 +64,11 @@ public abstract class ToggleButton extends ToolbarButton {
      */
     public void Toggle() {
         SetState(!this.state);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Toggle();
     }
 
     /**
